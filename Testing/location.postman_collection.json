@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "aa57f6bd-d17e-43ca-9b92-deccc89df410",
+		"name": "location",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getLocations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/wwn/index.php/location/list?limit=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"wwn",
+						"index.php",
+						"location",
+						"list"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postLocation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "address",
+							"value": "1523 Bloor Street West toronto ontario Canada",
+							"type": "text"
+						},
+						{
+							"key": "uid",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/location/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"location",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

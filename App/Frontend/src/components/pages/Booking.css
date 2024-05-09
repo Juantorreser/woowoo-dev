@@ -1,0 +1,153 @@
+/*Styling for the booking modal on the search page*/
+
+/*Inner container for the booking modal*/
+.bookerSelected {
+	display: flex;
+	position: relative;
+	margin: 1em;
+	padding: 1em;
+	width: 100%;
+	max-width: 100%;
+	background: rgb(255, 255, 255);
+	flex-flow: column;
+	border-radius: 20px;
+}
+
+/*Unused*/
+.timeContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+}
+
+/*Unused, would be used to make a checkered grid on the booking calendar*/
+.slotOdd {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	background-color: #ffffff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+	z-index: 1;
+	width: 100%;
+}
+.slotEven {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	background-color: theme.palette.background.orange;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+	width: 100%;
+}
+
+/*Unused, not sure as to the use-case, may be a separate version of the "slotOdd/slotEven" styling*/
+.timeButton_Even {
+	minWidth: 0;
+	borderRadius: 0;
+}
+.timeButton_Even:hover {
+	background-color: #faeb3e;
+}
+.timeButton_Odd {
+	min-width: 0;
+	border-radius: 0;
+	background-color: rgba(0, 0, 0, 0.08);
+}
+.timeButton_Odd:hover {
+	background-color: #faeb3e;
+}
+
+/*Unused, likely meant for the text for the days of the week (Sun/Mon/etc)*/
+.weekText {
+	text-align: center;
+}
+
+/*Unused, not sure as to the supposed use-case*/
+.narrowContainer {
+	width: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+@media (max-width: 480px) {
+	.narrowContainer {
+		width: 100%;
+	}
+}
+
+/*Styling applied to the calendar, renders the orange background*/
+.calendar {
+	width: 100%;
+	border-radius: 4px;
+	background-color: #fff3e0;
+	border: 1px solid #f26924;
+}
+
+/*Container for the content of the booking modal*/
+.bookingPage {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	flex: 1 1 auto;
+	padding-bottom: 5%;
+}
+
+/*Container for the calendar*/
+.bookingCalendar {
+	width: 45%;
+	max-width: 450px;
+	position: relative;
+}
+
+/*Unused, likely meant for any text that shows up beneath the calendar*/
+.noServicesBookingLabel {
+	text-align: center;
+}
+
+.bookingFormContainer {
+	width: 45%;
+	max-width: 450px;
+	justify-content: center;
+	position: relative;
+}
+
+/*Container for the booking form*/
+.bookingPageContainer {
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	grid-template-columns: 30% 30%;
+	grid-row-gap: 5px;
+	grid-column-gap: 20px;
+	width: 100%;
+	grid-auto-rows: 1fr;
+}
+
+/*Container for the service field on the booking form*/
+.bookingServiceContainer {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	grid-row-start: 1;
+	grid-row-end: 2;
+}
+
+/*Container for the time field on the booking form*/
+.bookingTimeContainer {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	grid-row-start: 2;
+	grid-row-end: 3;
+}
+
+/*Styling for the Submit button on the booking form*/
+.bookingSubmitButton {
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	grid-column-start: 1;
+	grid-column-end: 3;
+	grid-row-start: 3;
+	grid-row-end: 4;
+}

@@ -1,0 +1,332 @@
+import { app } from '../firebase/firebase-config';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { getAuth, updatePassword, updateEmail, reauthenticateWithCredential	} from 'firebase/auth';
+import * as yup from 'yup';
+import { Formik, Form, Field } from 'formik';
+import options from '../dropdown/Services.js';
+import { MultiSelect } from 'react-multi-select-component';
+import './account.css';
+
+const auth = getAuth(app);
+
+// TODO: Same issue here as with sign-up, this is never used and absolutely should be
+const schema = yup.object({
+    // Schema determines what's allowed in the form and what's not.
+    firstName: yup
+        .string()
+        .trim()
+        .min(1, 'Your name must be at least 1 character!')
+        .max(20, 'Your name cannot be more than 20 characters.')
+        .matches(
+            /^[a-zA-Z]+$/,
+            'Invalid name. Use Upper or Lowercase letters only.'
+        )
+        .required('Your first name is required'),
+    lastName: yup
+        .string()
+        .trim()
+        .min(1, 'Your name must be at least 1 character!')
+        .max(20, 'Your name cannot be more than 20 characters.')
+        .matches(
+            /^[a-zA-Z]+$/,
+            'Invalid name. Use Upper or Lowercase letters only.'
+        )
+        .required('Your last name is required'),
+    email: yup
+        .string()
+        .email()
+        .required('Please enter an email address'),
+    password: yup
+        .string()
+        .min(6, 'Your password must be at least 6 characters')
+        .required('A password is required'),
+    passwordConfirm: yup
+        .string()
+        .oneOf([yup.ref('password'), null], 'Passwords must match')
+        .required('Please confirm your password'),
+    address: yup.string().notRequired(),
+    city: yup.string().notRequired(),
+    country: yup.string().notRequired(),
+    postalCode: yup.string().notRequired(),
+    province: yup.string().notRequired(),
+	isHealer: yup.bool().required(),
+	description: yup
+		.string()
+		.when('isHealer', {
+			is: (val) => val === true,
+			then: yup.string().required()
+		})
+		.matches(
+            /^[a-zA-Z.!'":;, @#$%^&*()-_=+`~{}\\|/]+$/
+		),
+	terms: yup.bool().required()
+});
+
+const AccountForm = ({userDetails, userLocation}) => {
+	const [ services, setServices] = useState([]);
+	// TODO: "setSubmitting" is apparently never used but "submitting" is, figure out if this is deletable
+	const [ submitting, setSubmitting ] = useState(false);
+
+	return (
+		<div className="accountInfoEditorContainer">
+		{
+			submitting ? 
+			<div>
+				<p>Making Changes</p>
+			</div>
+			:
+			<Formik
+				initialValues={{
+					firstName: userDetails.firstName,
+					lastName: userDetails.lastName,
+					email: userDetails.email,
+					password: "",
+					confirmPassword: "",
+					address: userLocation.address,
+					postalCode: userDetails.postalCode,
+					country: userDetails.country,
+					city: userDetails.city,
+					isHealer: userDetails.isHealer,
+					description: userDetails.description,
+					services: userDetails.services,
+					format: userDetails.format
+				}}
+			onSubmit={(values, actions) => {
+				console.log(values);
+				//setSubmitting keeps track of whether you are in the midst of submitting data
+				actions.setSubmitting(true);
+				(async () => {
+					services.forEach((service) => {
+						values.services.push(service.value)
+					})
+					
+				})();
+			}}
+			>
+			{({handleSubmit, values}) => (
+				<Form 
+					className="accountInfoEditorForm"
+					onSubmit={handleSubmit}
+				>
+					<div className="accountInfoEditorContainerContainer">
+						<p>First Name:</p>
+						<Field
+							type="text"
+							id="firstName"
+							name="firstName"
+							label="First Name"
+							autoComplete="fname"
+							autoFocus
+							required
+							/>
+						<p>Last Name:</p>
+						<Field
+							type="text"
+							id="lastName"
+							name="lastName"
+							label="Last Name"
+							autoComplete="lname"
+							required
+						/>
+						<p>Email:</p>
+						<Field
+							id="email"
+							label="Email"        
+							type="email"
+							name="email"
+							autoComplete="email"
+							required
+						/>
+						<p>Password:</p>
+						<Field
+							label="Password"
+							type="password"
+							name="password"
+							id="password"
+							autoComplete="current-password"
+							required
+						/>
+						<p>Confirm Password:</p>
+						<Field
+							label="Confirm Password"
+							type="password"
+							name="confirmPassword"
+							id="confirmPassword"
+							autoComplete="current-password-confirm"
+							required
+						/>
+						<br/>
+					
+						<p>Address:</p>
+						<Field
+							label="Address"
+							type="text"
+							name="address"
+							id="address"
+							autoComplete="address"
+						/>
+						<p>City:</p>
+						<Field
+							label="City"
+							type="text"
+							name="city"
+							id="city"
+							autoComplete="city"
+						/>
+						<p>Province:</p>
+						<Field
+							label="Province"
+							type="text"
+							name="province"
+							id="province"
+							autoComplete="province"
+						/>
+						<p>Country:</p>
+						<Field
+							label="Country"
+							type="text"
+							name="country"
+							id="country"
+							autoComplete="country"
+						/>
+						<p>Postal Code:</p>
+						<Field
+							label="Postal code"
+							type="text"
+							name="postalCode"
+							id="postalCode"
+							autoComplete="postalCode"
+						/>
+
+						<div className="nonTextSignupForm">
+							<div className="selectBox">
+								<p>Are you a healer?</p>
+								<Field 
+									name="isHealer" 
+									type="checkbox"
+									id="isHealer"
+								/>
+							</div>
+							{
+								values.isHealer ? (
+									<>
+										<p>Services Offered:</p>
+										<MultiSelect
+											options={options}
+											value={services}
+											onChange={setServices}
+											labelledBy="Services"
+										/>
+										<p>Delivery Format: </p>
+										<Field 
+											name="format" 
+											as="select" 
+											id="format"
+										>
+											<option value={0} label="Both Online and In-Person"></option>
+											<option value={1} label="In-Person Only"></option>
+											<option value={2} label="Online Only"></option>
+										</Field>
+										<p>Personal Description:</p>
+										<Field
+											name="description" 
+											as="textarea"
+											id="description"
+										/>
+										<br/>
+									</>
+								) : null
+							}
+							<button type="submit" className="btn--login">Save</button>
+						</div>
+					</div>
+				</Form>
+				)}
+			</Formik>
+		}
+		</div>
+	);
+}
+
+const Account = () => {
+	// TODO: userState is apparently never used, figure out if this is deletable
+	const [ userState, setUserState ] = useState(null);
+	const [ userDetails, setUserDetails ] = useState(null);
+	const [ userLocation, setUserLocation ] = useState(null);
+
+	useEffect(() => {
+		auth.onAuthStateChanged((user) => {
+			setUserState(user);
+			axios.post('http://localhost:8080/users/healers', {
+				fbid: user.uid
+			}).then((response) => {	
+				setUserDetails(response.data[0]);
+				try{
+					axios.post('http://localhost:8080/locations', 
+						response.data.map((user) => user.uid)
+					).then((response) => {
+						setUserLocation(response.data[0]);
+					});
+				}
+				catch (err) {
+					console.log(err);
+				}
+			});
+		});
+	}, []);
+	
+
+	return (
+		<>
+		{
+			userLocation ? 
+			<>
+				<div className="userProfile">
+					<div className="userContainer">
+						<div className = "healerSelectedColumn2">
+							<div className="healerSelectedTop" id="user-name">
+								<p>{userDetails.firstName} {userDetails.lastName}</p>
+							</div>
+							<div className="healerSelectedMiddle" id="services">
+								<p>{userDetails.services}</p>
+							</div>
+							<hr/>
+							<div className="healerSelectedBottom">
+								<div className='icons'>
+									<div className="icons">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="description" id="accountDescription">
+							<p>{userDetails.description}</p>
+						</div>
+					</div>
+					<div className="reviewContainer">
+						<div className="accountEditorHeaderContainer">
+							<div className="reviewTop">
+								<h1 className="reviewHeader">Edit Account Info</h1>
+							</div>
+							<div className="reviewMiddle">
+								<div className="accountEditUnderText">
+									<p>Save when finished making changes.</p>
+								</div>
+							</div>
+						</div>
+						
+						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
+						
+					</div>
+				</div> 
+			</>
+			: 
+			<>
+				<p className="loading">Loading...</p>
+			</>
+		}
+		</>
+	)
+}
+
+export default Account;

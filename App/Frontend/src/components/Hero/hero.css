@@ -1,0 +1,149 @@
+/*File for generic styling across all pages*/
+
+/*Generic styling applied to everything*/
+* {
+	font-family: 'Poppins', sans-serif;
+	box-sizing: border-box;
+}
+
+/*Generic styling applied to the body itself*/
+body {
+	margin: 0px !important;
+	
+	/*Calendar loads a bunch of crap, these prevent those from loading*/
+	color: initial !important;
+	font-size: initial !important;
+	font-family: initial !important;
+	font-weight: initial !important;
+	line-height: initial !important;
+	letter-spacing: initial !important;
+	background-color: initial !important;
+}
+
+/*Generic styling applied to all <p> tags*/
+p{
+    margin:0;
+    vertical-align: middle;
+}
+
+/*This is the horizontal black bar that is used to separate several divs, mostly on the search page.*/
+hr{
+    color: #000000;
+    border-color:#000000;
+    margin-top: .7em;
+}
+
+/*Generic styling applied to all <li> tags*/
+li {
+    list-style-type: none;
+}
+
+/*Generic styling applied to all <pre> tags*/
+pre {
+	/* Stolen from https://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag */
+	/*Allows word wrapping on pre tags*/
+    white-space: pre-wrap;       /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/*Generic styling applied to all <p1> tags. However, we've been using <p> and <pre> tags mostly so this goes unused.*/
+p1{
+	font-size:1.5em;
+	font-weight:400;
+}
+
+/*Generic styling for a custom scrollbar*/
+/* width */
+::-webkit-scrollbar {
+	width: 10px;
+	padding: 5px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #666;
+}
+
+/*Generic lake background that can be seen on multiple pages*/
+.hero {
+	width: 100%;
+	/*height: 83vh;*/
+	height: 100%;
+	background: url('../../Images/bkg.jpg') no-repeat center center/cover;
+	position: fixed;
+}
+
+/*Styling applied to the container in the hero div*/
+.hero .container {
+	height: 90vh;
+	display: grid;
+	grid-template-columns: repeat(2,1fr);
+}
+
+/*Styling applied to the left div in the hero div, I believe it only ever contains the Woo Woo Network text*/
+.hero .left {
+	flex-direction: column;
+	justify-content: center;
+	display: flex;
+	padding-top: 300px;
+	padding-left: 2rem;
+	position: absolute;
+}
+
+/*Styling applied to the right div in the hero div, I believe it's only ever used on the home page*/
+.hero .right {
+	position: absolute;
+	flex-direction: column;
+	justify-content: center;
+	width: 100%;
+	display: flex;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -100%);
+	align-items: center;
+}
+
+/*Styling applied to main headers in the hero div, I believe it's only ever applied to the Woo Woo Network text that can be seen on a few pages in the top-left corner*/
+.hero h1 {
+	color: black;
+	font-size: 500%;
+	font-weight: 300;
+	margin-top: -6rem;
+	position: static;
+	font-family: 'Noto', sans-serif;
+	left: 5%;
+	transform: translate(0, -210%);
+	outline: #000000;
+	text-shadow: 1px 1px 0 rgb(49, 49, 49);
+	/*This bit here prevents text from being selectable*/
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+/*Styling applied to smaller headers in the hero div, used for the text in the center of the home page*/
+.hero h2 {
+	color: black;
+	font-weight:bold;
+}
+
+/*Adds a small amount of padding on the right of a div*/
+.smallPaddingRight {
+	padding-right: 10px;
+}
+
+/*Removes the margins on a div*/
+.noMargin {
+	margin: 0;
+}

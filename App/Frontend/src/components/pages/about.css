@@ -1,0 +1,44 @@
+/*Styling for the about and privacy policy pages*/
+
+/*Styling applied to the text on the about page*/
+.aboutText {
+	font-family: 'Poppins', sans-serif;
+	font-size: 1.15em;
+	background-color: rgba(255, 255, 255, 1);
+	padding: 3px 7px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 800px;
+	max-width: 100%;
+	overflow-y: auto;
+	border: 3px solid rgba(60, 60, 60, 1);
+	border-radius: 10px;
+}
+
+/*The container for the text on the about page*/
+.aboutContainer {
+	display: flex;
+	position: absolute;
+	height: auto;
+	width: 100%;
+	height: 90%;
+}
+
+/*Container for the privacy policy*/
+.policyContainer {
+	position: absolute;
+	width: 100%;
+	height: 90%;
+	display: flex;
+}
+
+/*Container for the privacy policy embed*/
+.privacyPolicy {
+	height: 1000px;
+	width: 800px;
+	max-height: 90%;
+	max-width: 100%;
+	margin: auto;
+	display: block;
+}

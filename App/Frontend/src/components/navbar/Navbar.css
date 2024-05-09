@@ -1,0 +1,68 @@
+/*Styling for the navigation bar that can be seen at the top of all pages*/
+
+/*Container for the navbar*/
+.navbar-items {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+    font-family: 'Poppins', sans-serif;
+	position: relative;
+}
+
+/*Container for the Woo Woo Network logo on the navbar*/
+.logo-container {
+    width: 9vh;
+    height: 9vh;
+    justify-self: start;
+    object-fit: fill;
+    position: relative;
+}
+
+/*Styling applied to the Woo Woo Network logo*/
+.logo {
+	height: 100%;
+	width: auto;
+}
+
+/*Container for the buttons in the middle of the navbar*/
+.nav-menu {
+    display: flex;
+    grid-template-columns: repeat(3,auto);
+    grid-gap: 10px;
+    list-style: none;
+    text-align: center;
+    width: 100%;
+    justify-content:left;
+	margin-left: 2vw;
+}
+
+/*Styling applied to the buttons in the middle of the navbar*/
+.nav-links {
+    color:black;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    z-index: 100;
+}
+.nav-links:hover {
+    background-color: #E7E5E5;
+    border-radius: 10px;
+    transition: all 0.3s ease-out;
+}
+
+/*Container for the buttons on the right of the navbar*/
+.sign-up-buttons {
+    display: flex;
+}
+
+/*Styling applied to the buttons on the right of the navbar*/
+.sign-up-buttons button {
+	margin-left: 0;
+}
+
+/*Styling applied to the sign-in button on the navbar*/
+.sign-in-button button {
+	background: initial;
+}

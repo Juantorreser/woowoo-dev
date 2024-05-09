@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "578f55cf-4af1-47ad-a27e-f3777ffb5919",
+		"name": "image",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "postPfp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Cassie/Downloads/6.jpg"
+						},
+						{
+							"key": "uid",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "pfp",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/upload/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"upload",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postServiceImage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Cassie/Downloads/c66a41618b5675e1506abb4c91e07720.jpg"
+						},
+						{
+							"key": "uid",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "serviceINSERTNAMEHERE",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/upload/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"upload",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPfp",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "get",
+						"value": "79",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "type",
+							"value": "XXXXX",
+							"type": "text"
+						},
+						{
+							"key": "uid",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/image/?uid=1&type=pfp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"image",
+						""
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "1"
+						},
+						{
+							"key": "type",
+							"value": "pfp"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getServiceImage",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "get",
+						"value": "79",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/image/?uid=1&type=service",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"image",
+						""
+					],
+					"query": [
+						{
+							"key": "uid",
+							"value": "1"
+						},
+						{
+							"key": "type",
+							"value": "service"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,80 @@
+/*Some styling on the page itself is loaded from healerFrame.css*/
+
+/*The purple box behind the user info on the account page*/
+.userProfile{
+	position: fixed;
+	background-color: #AB81CD;
+	display: flex;
+	height: 85%;
+	width: 100%;
+	margin: 0 auto;
+}
+
+/*The container for the left half of the account page*/
+.userContainer {
+	display: inline-block;
+	position: relative;
+	margin: 1em 1em 1em 1em;
+	width: 100%;
+	background: rgb(255, 255, 255);
+	flex-direction: row;
+	flex-wrap: wrap;
+	border-radius: 20px 0 0 20px;
+}
+
+/*The container for the header on the account pages right side*/
+.accountEditorHeaderContainer {
+	padding: 10px 10px 10px 0;
+	margin: 10px 20px 0 20px;
+	border-bottom: 2px solid black;
+}
+
+/*The second line of text on the account pages right half, under the heading*/
+.accountEditUnderText {
+	align-items: center;
+	font-size: 100%;
+	height: 1em;
+	padding-right: 30px;
+	text-align: right;
+}
+
+/*The outer container for the bottom half of the right side of the account page*/
+.accountInfoEditorContainer {
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+/*The inner container that holds the actual form on the account page's right side*/
+.accountInfoEditorContainerContainer {
+	width: 290px;
+	max-width: 90%;
+	padding: 23px 0;
+	display: block;
+	position: relative;
+	border-radius: 3px;
+	/*background-color: white;*/
+	align-items: center;
+	margin: 0 auto;
+}
+.accountInfoEditorContainerContainer p {
+	margin-bottom: -10px;
+	margin-top: 5px;
+}
+
+/*The form on the account page*/
+.accountInfoEditorForm {
+	/*background-color: white;*/
+	margin: 0 0.8vw;
+	max-width: 100%;
+	border-radius: 3px;
+	overflow-y: scroll;
+}
+
+/*Styling for the account page's scrollbar*/
+.accountInfoEditorForm::-webkit-scrollbar-track {
+	margin: 1vh;
+}
+.accountInfoEditorForm::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+}

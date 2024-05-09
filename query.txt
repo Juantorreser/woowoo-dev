@@ -1,0 +1,121 @@
+use woowoodev;
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Tyler','Johnson','tylerbljohnson@gmail.com','testtest',1,
+    'Set as format 1',
+    1,'CA','Victoria','1,2',NOW(),NOW(),1
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Steven','Sonvisen','sonvisenss@gmail.com','testtest',1,
+    'Set as format 0',
+    1,'CA','Victoria','3,4',NOW(),NOW(),0
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Kimberlee','Klein','eelrebmik@gmail.com','testtest',1,
+    'Set as format 2',
+    1,'CA','Vancouver','2,3',NOW(),NOW(),2
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Test','Manson','tylerbljohnson@gmail.com','testtest',1,
+    'Set as format 0',
+    1,'CA','Victoria','1,3',NOW(),NOW(),0
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Pest','Danson','sonvisenss@gmail.com','testtest',1,
+    'Set as format 1',
+    1,'CA','Victoria','1,4',NOW(),NOW(),1
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,createdAt,updatedAt,format
+)
+values (
+    'Guest','Lanson','eelrebmik@gmail.com','testtest',1,
+    'Set as format 0',
+    1,'CA','Vancouver','2,4',NOW(),NOW(),0
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    3,
+    3,
+    '1127 Haultain St, Victoria',
+    48.436130,
+    -123.350330,
+    NOW(),
+    NOW()
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    1,
+    1,
+    '100 Maplebank Rd',
+    48.440160,
+    -123.431120,
+    NOW(),
+    NOW()
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    2,
+    2,
+    '117 Mocha Close',
+    48.4624872,
+    -123.4887198,
+    NOW(),
+    NOW()
+);
+
+insert into services (sid, service, description, createdAt, updatedAt) 
+    values (1, 'Reiki', 'A japanese form of healing.', NOW(), NOW());
+insert into services (sid, service, description, createdAt, updatedAt) 
+    values (2, 'Yoga', 'A healing form of stretching', NOW(), NOW());
+insert into services (sid, service, description, createdAt, updatedAt) 
+    values (3, 'Meditation', 'Mindfulness and inner reflection to become at peace.', NOW(), NOW());
+insert into services (sid, service, description, createdAt, updatedAt) 
+    values (4, 'Naturopathy', 'Mushrooms and stuff?', NOW(), NOW());

@@ -1,0 +1,273 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Arial";
+    font-size: 14px;
+}
+
+nav {
+    margin: 10px 10px 6px 20px;
+    min-width: 800px;
+}
+
+ul li {
+    display: inline;
+    margin: 0px 5px 0px 0px;
+    font-size: 16px;
+    background-color: #EEEEEE;
+    padding: 7px 20px;
+    border-radius: 6px 6px 0px 0px;
+    border-bottom: 1px solid black;
+}
+
+ul:first-child {
+    margin-left: 10px;
+}
+
+#selected-tab {
+    border: 1px solid black;
+    border-bottom: none;
+    background: white;
+}
+
+h1 {
+    font-size: 28px;
+    margin: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;  
+}
+
+select {
+    border-radius: 6px 0px 0px 6px;
+    background-color: #F9F9F9;
+    width: 100px;
+    height: 30px;
+}
+
+input[type="text"] {
+    height: 30px;
+    border: 1px solid #9C9C9C;
+}
+
+#btn-search {
+    border: 0px;
+    background-color: #0066C5;
+    color: white;
+    border-radius: 0px 6px 6px 0px;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+}
+
+input[type="submit"]:hover {
+    background-color: #178dfc;
+}
+
+#container {
+    padding: 0px 10px 10px 10px;
+    margin: 0px 20px 20px 20px;
+    border: 1px solid black;
+    border-radius: 6px;
+    min-width: 800px;
+}
+
+#select-search-filter {
+    border-radius: 6px 0px 0px 6px;
+    border-right: 0px;
+    width: 80px;
+}
+
+#top-bar {
+    margin: 10px 0px 0px 0px;
+    width: 100%;
+}
+
+#top-bar-query {
+    float: left;
+}
+
+#top-bar-toggles {
+    float: right;
+}
+
+button {
+    border: 1px solid #9C9C9C;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+input[type="submit"] {
+    border: 1px solid #9C9C9C;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+#btn-clear {
+    background-color: #F9F9F9;
+}
+
+#btn-clear:hover {
+    background-color: white;
+}
+
+#btn-enable {
+    background-color: #c4ffc4;
+    color: #0A5603;
+    border-color: #0A5603;
+}
+
+#btn-enable:hover {
+    background-color: #dffddf;
+}
+
+#btn-disable {
+    background-color: #fcc8c8;
+    color: #AA0000;
+    border-color: #AA0000;
+}
+
+#btn-disable:hover {
+    background-color: #fcdcdc;
+}
+
+#btn-remove {
+    background-color: #fcc8c8;
+    color: #AA0000;
+    border-color: #AA0000;
+}
+
+#btn-remove:hover {
+    background-color: #fcdcdc;
+}
+
+#select-visibility-filter {
+    border-radius: 6px;
+    width: 80px;
+}
+
+table {
+    margin: 10px 0px 0px 0px;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th {
+    background: #DCDCDC;
+    padding: 5px 0px;
+}
+
+thead tr th:first-child  {
+    border-radius: 6px 0px 0px 0px;
+    min-width: 5px;
+}
+
+thead tr th:last-child  {
+    border-radius: 0px 6px 0px 0px;
+}
+
+tr:nth-child(odd) {
+    background: #F4F4F4;
+}
+
+tr:nth-child(even) {
+    background: #FFFFFF;
+}
+
+td {
+    padding: 10px 10px;
+    text-align: center;
+}
+
+#footer {
+    width: 100%;
+    text-align: center;
+}
+
+.page-change {
+    color: rgb(78, 151, 247);
+    padding: 20px;
+}
+
+.page-change:hover {
+    color: rgb(78, 151, 247);
+    padding: 20px;
+    text-decoration: underline;
+}
+
+tr img {
+    width: 20px;
+    height: 20px;
+}
+
+form {
+    display: inline-block;
+}
+
+.empty {
+    clear: both;
+}
+
+#email-box {
+    border-radius: 5px;
+    width: 300px;
+    height: 35px;
+    border: 1px solid black;
+}
+
+#password-box {
+    border-radius: 5px;
+    width: 300px;
+    height: 35px;
+    border: 1px solid black;
+}
+
+#admin-login-form {
+    position: fixed; /* or absolute */
+    top: 45%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -45%);
+
+    text-align: center;
+}
+
+#admin-login-form input[type="email"] {
+    margin-top: 10px;
+    padding-left: 8px;
+}
+
+#admin-login-form input[type="password"] {
+    margin-top: 10px;
+    padding-left: 8px;
+}
+
+#admin-login-form h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
+#admin-login-form input[type="submit"] {
+    margin-top: 10px;
+    height: 40px;
+    width: 100px;
+    font-size: 16px;
+}
+
+#admin-login-form input[type="submit"]:hover {
+    background-color: white;
+}
+
+#admin-login-form p {
+    background-color: lightcoral;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}

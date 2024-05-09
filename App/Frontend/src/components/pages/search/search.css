@@ -1,0 +1,345 @@
+/*Styling applied to items on the search page*/
+/*More styling can be found in dropdown.css and healerFrame.css*/
+/*"Healer item" refers to an individual result on the search page. Containing the healers name, 2 or so services, modal buttons, and some or all of the healers description*/
+
+/*Outer container for the left portion of the search page*/
+.healerFrame{
+	position: fixed;
+    display: block;
+    width: 45%;
+    float: left;
+    height: 88.5%;
+    overflow-y: scroll; 
+    overflow-x: hidden; 
+}
+
+/*Inner container for the left portion of the search page*/
+.top_left{
+	width: 100%;
+	height: 100%;
+}
+
+/*Container for the right portion of the search page*/
+.mapFrame{
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	border-left: 3px solid black;
+	float: right;
+	width: 55%;
+	height: 88.5%;
+	z-index: -5;
+	top: 80px;
+	right: 0;
+}
+
+/*Seemingly unrendered despite the div being loaded. Likely an early attempt at a separator for the search page.*/
+.center_bar{
+	color: #000000;
+	border-color:#000000;
+	height: 100%;
+}
+
+/*Unused. Might've been meant to be a container for sortBar*/
+.sort{
+    display: flex;
+    flex-direction: row;
+}
+
+/*Container for the search dropdowns.*/
+.sortBar{
+	margin-left: 0;
+	margin-right: auto;
+	width: 100%;
+	/*margin-top: -10em;*/
+	height: 2.5em;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-content: center;
+}
+/*Styling applied to all divs in the above*/
+.sortBar div {
+	width: 100%;
+}
+
+/*Containers for each dropdown*/
+.sortBar .dd-wrapper {
+	position: relative;
+	max-width: 33.3333333%
+}
+
+/*Slight widening of the far right "dropdown" so there isn't a single column of pixels that aren't covered by dropdowns*/
+.sortBar .formatButtonWrapper {
+	max-width: 33.4%
+}
+
+/*Container for the container of the dropdown button text (inner container is a div with no classes attached)*/
+.sortBar .dd-menu {
+	border: 1px solid black;
+	height: 27px;
+	text-align: center;
+	background: #b4acd3;
+	/*background: lightgrey;*/
+	position: relative;
+}
+
+/*Styling applied to the items contained in the dropdowns*/
+.sortBar pre {
+	margin: 0;
+}
+
+/*Outer container for the top portion of the left part of the search page*/
+.healerResults{
+	position: relative;
+	background-color: white;
+	box-shadow: -1px 12px 20px rgb(255, 255, 255);
+	
+}
+
+/*Inner container for the top portion of the left part of the search page*/
+.page-deets {
+    width: 100%;
+}
+
+/*Styling applied to the big "Search" text on the search page*/
+.page-deets h1 {
+	margin-bottom: 0;
+	font-weight: 500;
+	font-size: 6em;
+	font-family: 'Noto', sans-serif;
+	position: absolute;
+	left: 5%;
+	top: -50px;
+	color: white;
+	outline: #000000;
+	text-shadow:
+	1px 1px 0 rgb(49, 49, 49);
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+/*Styling applied to the image behind the big "Search" text on the search page*/
+.page-deets .img_region{
+    overflow: hidden;
+    border-radius:0.5%;
+    object-fit: cover;
+    width: 100%;
+    height: 10em;
+    margin: 0 0 0 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 5px 4px rgb(201, 201, 201);
+}
+
+/*Container for the distance slider and related elements on the search page*/
+.slidecontainer {
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+/*Container for the lower portion of the left part of the search page*/
+.users {
+	overflow-y: scroll; 
+	font-family: 'noto', serif;
+	text-align: left;
+	width: 100%;
+	overflow: hidden;
+}
+
+/*Styling applied to all divs in the lower portion of the left part of the search page*/
+.users div {
+	border-radius: 0%;
+}
+
+/*Unused, meant for a healer image to load as part of the healer item*/
+.img_healer{
+    border-radius:2%;
+    object-fit: cover;
+    width:11.3em;
+    height:11.3em ;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    box-shadow: 3px 3px #000000;
+}
+
+/*Container for a healer item and the overlay-button that opens the healer info modal*/
+.healer{
+    margin: 1em; 
+	padding: 10px 10px 0 10px; /*padding-bottom is effectively done by .healerColumn2:after's height property*/
+    background: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: row;
+    height: 13.3em;
+    box-shadow: -4px 5px 4px rgb(201, 201, 201);
+	cursor: pointer;
+	position: relative;
+	-webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+    -ms-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+.healer:hover {
+	background-color: #F59D78;
+}
+
+/*The fade out for when a healer items description is too long. This is the orange version that shows when you hover over the div.*/
+.healer:after { 
+	content: "";
+	position: absolute;
+	z-index: 1;
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	width: 100%;
+	height: 1.7em;
+	background-image: 	linear-gradient(to bottom, 
+						rgba(245, 157, 120, 0.1), 
+						rgba(245, 157, 120, 1) 80%);
+	transition: 0.05s;
+	opacity: 0;
+}
+.healer:hover:after {
+	opacity: 1;
+}
+
+/*The fade out for when a healer items description is too long. This is the white version that shows normally.*/
+.healerColumn2:after { 
+	content: "";
+	position: absolute;
+	z-index: 1;
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	background-image: 	linear-gradient(to bottom, 
+						rgba(255,255,255, 0.1), 
+						rgba(255,255,255, 1) 80%);
+	width: 100%;
+	height: 1.7em;
+	transition: 0.05s;
+	opacity: 1;
+}
+.healer:hover .healerColumn2:after {
+	opacity: 0;
+}
+
+/*The slightly lighter shade of orange when you hover over one of the icons on a healer item.*/
+.healerImgHovered:hover {
+	background-color: #ffb596; 
+	
+	/*Alternative options:*/
+	/*background-color: initial;*/ /*This just reverts the background color to it's usual white color*/
+	/*-webkit-filter: brightness(90%);*/ /*This darkens the div a bit, however this also affects child divs. 
+	Can set the brightness over 100% to brighten the div instead*/
+}
+
+/*Unused. Early alternative to healerColumn2*/
+.healerColumn1 {
+    height: 12em;
+    padding: 10px;
+    margin: 10px;
+}
+
+/*Inner container for a healer item.*/
+.healerColumn2 {
+    /*padding: 10px 0 10px 0;*/
+    /*margin: 10px 10px 0 10px;*/
+    height: 100%;
+	width: 100%;
+	overflow-y: hidden;
+	-webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+    -ms-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+
+/*Container for the healers name and modal buttons in a healer item*/
+.healerTop {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: space-between;
+    margin: 0;
+    padding: 0;
+    height: 1.2em;
+    margin-top: 0em;
+    font-size: xx-large;
+    padding-left: 10px;
+}
+
+/*Container for the healers services in a healer item*/
+.healerMiddle {
+    align-items: center;
+    font-size: x-large;
+    height: 1em;
+	padding-left: 10px;
+}
+
+/*Container for a healers description in a healer item*/
+.healerBottom {
+    height: 100%;
+    vertical-align: middle;
+	padding-left: 10px;
+	width: 100%;
+	display: flex;
+	overflow-y: hidden;
+}
+
+/*Styling applied to a healers description text*/
+.healerBottom pre {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+}
+
+/*Container for the modal buttons in a healer item*/
+.icons{
+	margin-right: 0;
+}
+
+/*Styling applied to each individual modal button in a healer item*/
+.icon{
+	margin-left: 0.2em;
+	vertical-align: top;
+	height: 1em;
+}
+
+/*Inner container for a healers pop up on the map screen on the search page (Outer container is rendered by Google Maps)*/
+.markerContainer {
+	/*min-height: 100px;*/
+	position: relative;
+	max-height: 200px;
+	min-width: 200px;
+	max-width: 350px;
+	overflow: hidden;
+}
+
+/*Container for a healers name in the pop up on the map screen on the search page.*/
+.markerHealer {
+	/*height: 50%;*/
+	font-size: large;
+	text-align: center;
+	width: 100%;
+	background: #B896A0;
+}
+
+/*Container for a healers description in the pop up on the map screen on the search page.*/
+.markerDescription {
+	max-height: 165px;
+	font-size: small;
+	overflow-y: auto;
+	margin-top: 10px;
+	position: relative;
+}

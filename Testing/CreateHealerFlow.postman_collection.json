@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "b771f1ed-25cb-4257-abd0-f3db4c7f5294",
+		"name": "CreateHealerFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1) postUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "firstName",
+							"value": "Sophie",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Grutten",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "sophiegrutten@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password123",
+							"type": "text"
+						},
+						{
+							"key": "enabled",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "region",
+							"value": "toronto",
+							"type": "text"
+						},
+						{
+							"key": "account",
+							"value": "Sophie Grutten",
+							"type": "text"
+						},
+						{
+							"key": "facebook",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "twitter",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2) postLocation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "address",
+							"value": "1523 Bloor Street West toronto ontario Canada",
+							"type": "text"
+						},
+						{
+							"key": "uid",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/location/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"location",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3) postSocial",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "uid",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "in",
+							"value": "Healers0phie",
+							"type": "text"
+						},
+						{
+							"key": "fb",
+							"value": "SophieGrutten",
+							"type": "text"
+						},
+						{
+							"key": "tw",
+							"value": "Sophie_Heals_213",
+							"type": "text"
+						},
+						{
+							"key": "enabled",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/social",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"social"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

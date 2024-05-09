@@ -1,0 +1,96 @@
+/*I believe this is unused*/
+:root{
+    --nav:#9D96B8;
+}
+
+/*Generic styling applied to all buttons*/
+.btn{
+	margin-left: 1rem;
+    margin-right: 1rem;
+    width: 8.5rem;
+    padding:10px 25px;
+    border-radius: none;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+.btn:hover {
+    transition: all 0.3s ease-out;
+    background:#F59D78;
+    transition: 200ms;
+}
+
+/*Styling applied to the sign in and sign up buttons in the navbar*/
+.btn--primary{
+    background-color: #9D96B8;
+    border-radius: 5px;
+}
+
+/*More styling applied to the sign in and sign up buttons in the navbar, this was done by the last team so I have no idea if this does something for something else*/
+.btn--bar{
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    font-size: 20px;
+    color: black;
+}
+
+/*Meant to be used for the navbar sign in/out buttons but the <Button> tag eats it and styling was done with the knowledge that it doesn't load.*/
+.btn--outline{
+    background-color: none;
+    color: #F59D78;
+    padding: 10px 20px;
+    border-radius: 2px;
+    transition: all 0.3s ease-out;
+}
+
+/*I believe this is unused*/
+.btn--cards{
+    border-radius: 2px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    color: black;
+}
+
+/*I believe this is unused*/
+.btn--learn{
+    margin-top: -150px;
+}
+
+/*Despite the name, is used for the Register, Sign In, and Save buttons on the Sign Up, Sign In, and Account pages respectively*/
+.btn--login{
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 8rem;
+    border: none;
+    cursor:pointer;
+    font-family: 'Poppins', sans-serif;
+	background-color: blanchedalmond;
+	padding: 0.4rem 1rem;
+    border-radius: 2px;
+    font-size: 20px;
+    color: black;
+	text-align: center;
+	border: 1px;
+	border-color: black;
+}
+.btn--login:hover{
+	transition: all 0.3s ease-out;
+    background:#FFDFB2;
+    transition: 200ms;
+}
+
+/*Unused*/
+.btn--changePage{
+	text-align: center;
+	padding: 0.25em 0.5em;
+	margin: 1em;
+	border-radius: 0.2em;
+	width: 6rem;
+	height: 3rem;
+}
+.btn--changePage:hover{
+	
+}

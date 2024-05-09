@@ -1,0 +1,83 @@
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,format,createdAt,updatedAt
+)
+values (
+    'Tyler','Johnson','tylerbljohnson@gmail.com','testtest',1,
+    'Tyler is the front-end developer and as such, does not provide healing services.',
+    1,'CA','Victoria','reiki, yoga',1,NOW(),NOW()
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,format,createdAt,updatedAt
+)
+values (
+    'Steven','Sonvisen','sonvisenss@gmail.com','testtest',1,
+    'Steven is the back-end developer and as such, does not provide healing services.',
+    1,'CA','Victoria','reiki, yoga',1,NOW(),NOW()
+);
+
+insert into users (
+    firstName,lastName,email,password,account,description,enabled,region,city,services,format,createdAt,updatedAt
+)
+values (
+    'Kimberlee','Klein','eelrebmik@gmail.com','testtest',1,
+    'Kimberlee created Woo-Woo Network and hopes to bring great healing services to people everywhere.',
+    1,'CA','Vancouver','reiki, yoga',2,NOW(),NOW()
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    3,
+    3,
+    '1127 Haultain St, Victoria',
+    48.436130,
+    -123.350330,
+    NOW(),
+    NOW()
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    1,
+    1,
+    '100 Maplebank Rd',
+    48.440160,
+    -123.431120,
+    NOW(),
+    NOW()
+);
+
+insert into locations (
+    lid,
+    uid,
+    address,
+    lat,
+    lng,
+    createdAt,
+    updatedAt
+)
+values (
+    2,
+    2,
+    '117 Mocha Close',
+    48.4624872,
+    -123.4887198,
+    NOW(),
+    NOW()
+);

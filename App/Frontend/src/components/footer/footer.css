@@ -1,0 +1,15 @@
+/*Styling applied to the footer that can be seen on all pages*/
+
+/*Generic styling for the footer*/
+footer {
+	position:fixed;
+	bottom:0;
+	width:100%;
+	background-color: white;
+	padding-left: 0.5vw;
+}
+
+/*Styling applied to the link that is shown on the footer*/
+.footerLink {
+    display: block;
+}

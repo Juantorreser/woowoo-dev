@@ -1,0 +1,254 @@
+/*Despite the name this file also contains styling for the sign-up page*/
+
+/*The giant purple triangle in the background of the sign in/up pages*/
+.triangle {
+	width: 100%;
+	height: 100%;
+	background-image:
+	linear-gradient(to bottom right, #9D96B8 75%, transparent 0),
+	linear-gradient(to bottom right, #9D96B8 25%, transparent 0);
+	background-size: 50.05% 100%;
+	background-repeat: no-repeat;
+	background-position: left,right;
+}
+
+/*The signin form's inner container*/
+.loginForm{
+	position:absolute;
+	width:100vw;
+	display:flex;
+	flex-direction:column;
+	flex-wrap:nowrap;
+	margin:0px;
+	overflow:auto;
+	padding:0px;
+	padding-top:0px;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	align-items:center;
+	justify-content:center;
+}
+
+/*Unused, would contain header text for the sign-in form*/
+.topBlurb{
+	font-size: 1.5em;
+	margin: 1em;
+	margin-left: 1.6em;
+	text-align: center;
+}
+
+/*Container for the email/password field on the sign-in page*/
+.middleBlurb{
+	margin: 1em;
+	display: flex;
+	flex-direction:row;
+}
+
+/*Container for the sign-in button and link to the sign-up page on the sign-in page*/
+.bottomBlurb{
+    margin: 1em;
+    display: flex;
+    flex-direction:column;
+}
+
+/*Styling for the field labels on the sign-in page, got rid of it because I preferred the minimalism look*/
+.formTag{
+	/*
+	border-radius:0.4em;
+	height: 2.5em;
+	width: 7em;
+	text-align: center;
+	margin-bottom: 1em;
+	margin-left: 50%;
+	background-color: blanchedalmond;
+	transform: translate(-50%, 0%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	*/
+}
+
+/*Outer container for the sign-up form*/
+.signupFormContainer{
+	position:relative;
+	width:100vw;
+	display:flex;
+	flex-direction:column;
+	flex-wrap:nowrap;
+	margin:0px;
+	overflow:auto;
+	padding:0px;
+	/*top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);*/
+	align-items:center;
+	justify-content:center;
+}
+
+/*The sign-up form*/
+.signupForm{
+	background-color: white;
+	/*padding: 2vh 2vw;*/
+	width: 400px;
+	max-width: 100%;
+	border-radius: 3px;
+	overflow-y: scroll;
+}
+
+/*The inner container for the sign-up page*/
+.signupPageContainer {
+	width: 290px;
+	max-width: 90%;
+	height: 450px;
+	padding: 23px 0;
+	display: block;
+	position: relative;
+	border-radius: 3px;
+	background-color: white;
+	align-items: center;
+	margin: 0 auto;
+}
+
+/*Unused, was used for spacing when the checkbox and text were on the same line*/
+.signupCheckbox {
+	width: 20px;
+}
+
+/*The bottom half of the sign-up page and account edit forms, "nonText" refers to the rest of the forms input fields not being of type text*/
+.nonTextSignupForm {
+	position: relative;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+	padding-top: 23px;
+	padding-bottom: 46px;
+}
+.nonTextSignupForm p {
+	width: 100%;
+}
+
+/*Multi-select field on the sign-up and account pages*/
+.nonTextSignupForm .multi-select {
+	margin: 10px 0 10px 0;
+	width: 100%;
+	display: block;
+}
+
+/*Container for the checkboxes and accompanying text on the sign-up page and account edit forms*/
+.selectBox {
+	padding: 0px 0 17px 0;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+.selectBox p {
+	padding-top: 10px;
+	padding-bottom: 5px;
+	width: initial;
+}
+
+/*I believe this is unused as the multi-select on the sign up page and account edit pages do not use the input tag*/
+.nonTextSignupForm .multi-select input {
+	width: initial;
+}
+
+/*"Personal description" field on the sign-up page and account edit forms*/
+#signUpDescription {
+	height: 100px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	width: 100%;
+	margin: 10px 0;
+}
+
+/*Styling for the sign-up and account edit forms input fields, not including the multi-select or textarea*/
+input, select {
+	width: 100%;
+	margin: 8px auto;
+	padding: 5px;
+	display: inline-block;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+/*Unused*/
+.signupButtonContainer{
+	display: flex;
+}
+
+/*Styling for form labels site-wide. Moves the label down a bit to make it clear which box it refers to*/
+form p {
+	margin-bottom: -10px;
+	margin-top: 5px;
+}
+
+/*The text that displays under a field when the input is bad*/
+.warning {
+  display: block !important;
+  font-size: 0.75rem !important;
+  margin-top: -0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  color: #f14668 !important;
+}
+
+/*I believe these two tags are unused*/
+.signupPage{
+	display:none;
+}
+#signupPage1{
+	display:block;
+}
+
+/*I believe this is unused*/
+.signin{
+	text-align: center;
+	padding: 0.25em 0.5em;
+	margin: 1em;
+	border-radius: 0.2em;
+}
+.signin:hover {
+	transition: 0.3s;
+	background-color: #EAFFFD;
+	opacity:0.9;
+}
+
+/*I believe this is unused*/
+.formField{
+	text-align: center;
+	width: 20em;
+	height: 3.8em;
+	background-color:#EAFFFD; 
+	border-radius:0.4em;
+}
+
+/*Unused. Register button styling is done in button.css*/
+.register{
+	text-align: center;
+	padding: 0.25em 0.5em;
+	margin: 1em;
+	border-radius: 0.2em;
+}
+.register:hover {
+	transition: 0.3s;
+	background-color: #EAFFFD;
+	opacity:0.9;
+}
+
+/*Unused. Login button styling is done in button.css*/
+.loginButton{
+	text-align: center;
+	border: 1px;
+	border-color: black;
+}
+
+/*Styling for the field containers on the sign-in page*/
+fieldset {
+	border: 0;
+	padding-left: 2em;
+	padding-right: 2em;
+}

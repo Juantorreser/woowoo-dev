@@ -1,0 +1,50 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:  
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+          image: mysql:8.0
+          env:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_DATABASE: woowoodev
+          ports:
+              - '8888:3306'
+          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Database
+        run: mysql -h 127.0.0.1 --port 8888 -u root -e 'CREATE DATABASE IF NOT EXISTS woowoodev;'
+
+      - uses: actions/checkout@v2
+      - uses: bahmutov/npm-install@v1
+        with:
+          working-directory: |
+            App/Backend
+
+      - name: Backend Run
+        run: npm start &
+        working-directory: App/Backend
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          record: false
+          install-command: npm ci --legacy-peer-deps
+          working-directory: App/Frontend
+          start: npm start &
+          wait-on: 'https://localhost:4200, http://localhost:8080'
+          browser: chrome
+          headed: false
+        env:
+          NODE_TLS_REJECT_UNAUTHORIZED: 0

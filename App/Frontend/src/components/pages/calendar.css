@@ -1,0 +1,98 @@
+/*Styling for the calendar on the booking modal*/
+
+/*Styling for the left and right buttons on the calendar*/
+.rdrNextPrevButton {
+	background-color: #CEFA3E;
+	min-width: 24px;
+}
+.rdrNextPrevButton:hover {
+   background-color: #faeb3e;
+}
+
+/*Container for the calendar itself*/
+.rdrCalendarWrapper {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+/*Unused as the div doesn't contain or load anything*/
+.rdrDateDisplayWrapper {
+	width: 100%;
+}
+
+/*Container for the top part of the calendar*/
+.rdrMonthAndYearWrapper {
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+/*Outer container for the bottom part of the calendar*/
+.rdrMonths {
+	width: 100%;
+}
+.rdrMonthsVertical {
+	width: 100%;
+}
+
+/*Inner container for the bottom part of the calendar*/
+.rdrMonth {
+	width: 100%;
+}
+
+/*Container for the day text at the top of the bottom part of the calendar (Sun/Mon/etc)*/
+.rdrWeekDays {}
+
+/*Styling for the day text*/
+.rdrWeekDay {
+	color: black;
+}
+
+/*Container for the day buttons in the calendar*/
+.rdrDays {}
+
+/*Styling for the day buttons in the calendar*/
+.rdrDay {}
+
+/*Container for the day text in the calendar*/
+.rdrDayNumber {
+	color: #B1EB3B;
+}
+
+/*Styling for the text in the calendar*/
+.rdrDayNumber span {
+	color: black;
+}
+
+/*Container for the month and year buttons on the calendar*/
+.rdrMonthAndYearPickers {
+	display: flex;
+}
+
+/*Container for the year button on the calendar*/
+.rdrYearPicker {
+	margin: 0;
+	flex-grow: 2;
+	min-width: 0;
+}
+
+/*Styling for the year button on the calendar*/
+.rdrYearPicker select {
+	width: 100%;
+}
+
+/*Container for the month button on the calendar*/
+.rdrMonthPicker {
+	margin: 0;
+	flex-grow: 4;
+	min-width: 0;
+}
+
+/*Styling for the month button on the calendar*/
+.rdrMonthPicker select {
+	width: 100%;
+}
