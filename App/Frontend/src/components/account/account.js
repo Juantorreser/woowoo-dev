@@ -21,13 +21,32 @@ const Account = () => {
 	const [ userLocation, setUserLocation ] = useState(null);
 
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
+	// useEffect(() => {
+	// 	//this method checks if the user is authenticated with firebase and essentially logged in.
+	// 	auth.onAuthStateChanged((user) => {
+	// 		setUserState(user);
+	// 		axios.post('http://localhost:8080/users/healers', {
+	// 			fbid: user.uid
+	// 		}).then((response) => {	
+	// 			setUserDetails(response.data[0]);
+	// 			try{
+	// 				axios.post('http://localhost:8080/locations', 
+	// 					response.data.map((user) => user.uid)
+	// 				).then((response) => {
+	// 					setUserLocation(response.data[0]);
+	// 				});
+	// 			}
+	// 			catch (err) {
+	// 				console.log(err);
+	// 			}
+	// 		});
+	// 	});
+	// }, []); 
 	useEffect(() => {
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged((user) => {
 			setUserState(user);
-			axios.post('http://localhost:8080/users/healers', {
-				fbid: user.uid
-			}).then((response) => {	
+			axios.get('http://localhost:8080/users').then((response) => {	
 				setUserDetails(response.data[0]);
 				try{
 					axios.post('http://localhost:8080/locations', 
@@ -41,7 +60,7 @@ const Account = () => {
 				}
 			});
 		});
-	}, []);
+	}, []); 
 	
 	return (
 		<>
