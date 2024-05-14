@@ -42,12 +42,25 @@ const Account = () => {
 	// 		});
 	// 	});
 	// }, []); 
+
+
 	useEffect(() => {
 		//this method checks if the user is authenticated with firebase and essentially logged in.
-		auth.onAuthStateChanged((user) => {
+		auth.onAuthStateChanged( (user) => {
+			const chosenUser = {};
+			console.log(user);
 			setUserState(user);
-			axios.get('http://localhost:8080/users').then((response) => {	
-				setUserDetails(response.data[0]);
+			axios.get('http://localhost:8080/users').then( async (response) => {
+				////self added in from CodeGuru
+				
+				console.log("chosenUser: "+chosenUser);
+				//setUserDetails(chosenUser);
+				for(const i of response.data){
+					if (i.email == user.email){
+						setUserDetails(i);
+					}
+				}
+				//setUserDetails(response.data[0]);
 				try{
 					axios.post('http://localhost:8080/locations', 
 						response.data.map((user) => user.uid)
@@ -62,6 +75,8 @@ const Account = () => {
 		});
 	}, []); 
 	
+
+
 	return (
 		<>
 		{

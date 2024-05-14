@@ -6,7 +6,7 @@ const Service = db.service;
 const services = require('./servicesController');
 const Location = db.location;
 const locations = require('./locationController');
-const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;   //Op meaning operator. You can think of it as a conditional clause.
 const { off } = require("process");
 const { sequelize } = require("../models");
 
@@ -340,3 +340,6 @@ exports.findAllEnabled = async (req, res) => {
       });
     });
 };
+
+
+
