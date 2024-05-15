@@ -151,7 +151,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 			setOptions(responseOptions);
 		});
 	};
-	
+
+	var arr = userDetails.services.split(",");
+
 	//TODO: Null values in Formik's initial values displays an error, see about finding a way to have null values replaced with an empty string
 	return (
 		<div className="accountInfoEditorContainer">
@@ -178,7 +180,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					locationChanges: userDetails.locationChanges,
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
-					services: userDetails.services,
+					services: arr,
 					format: userDetails.format
 				}}
 				validationSchema={schema}
