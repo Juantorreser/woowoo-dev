@@ -27,7 +27,7 @@ exports.createUser = async (req, res) => {
     lastName: req.body.lastName,
     email: req.body.email,
     emailVerified: false,
-    password: req.body.password,
+    password: req.body.password,   //need to hash this.
     account: req.body.isHealer ? 1 : 0,
     description: req.body.description ? req.body.description : null,
     address: req.body.address ? req.body.address : null,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 //import { useHistory } from 'react-router-dom';
 
 /* DEV NOTES: 
@@ -19,6 +20,7 @@ import {
 
 import { Formik, Form, Field } from 'formik';
 import { Calendar } from 'react-date-range';
+// import {DateTime} from 'react-datetime';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import './Booking.css';
@@ -48,7 +50,7 @@ const DefaultDayPicker = (props) => {
 		new Date(endDate.setTime(dateSelected.getTime() + 6 * 86400000))
 		);
 	}
-
+	//unknown.
 	useEffect(() => {
 	}, []);
 
@@ -80,6 +82,8 @@ const BookingForm = ({props}) => {
 			}}
 			onSubmit={(values, actions) => {
 				console.log(values);
+				//not sure yet.
+				axios.post('http://localhost:8080/appointments', {values});
 			}}
 		>
 			{({handleSubmit, values}) => (
