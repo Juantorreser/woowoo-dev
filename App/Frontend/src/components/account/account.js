@@ -136,7 +136,10 @@ const Account = () => {
 const AccountForm = ({userDetails, userLocation}) => {
 	//services is for storing the selected service options -- options is for the service listing response
 	//from the API/database
-	const [ services, setServices] = useState([]);
+
+	const [ services, setServices] = useState([userDetails.services]);
+	console.log(services);
+
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
 	const [ options, setOptions ] = useState([]);
@@ -194,9 +197,11 @@ const AccountForm = ({userDetails, userLocation}) => {
 						services.forEach((service) => {
 							values.services.push(service.value)
 						})
-						
+						//Not sure yet.
+						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
 					})();
 				}}
+				
 			>
 			{({handleSubmit, values}) => (
 				<Form 
@@ -346,9 +351,11 @@ const AccountForm = ({userDetails, userLocation}) => {
 											onChange={setServices}
 											labelledBy="Services"
 										/>
-									) : null
+
+									) : <p>Not a healer</p>
 								}
-							<button type="submit" className="btn--login">Save</button>
+							<button type='submit' className="btn--login">Save</button>
+
 						</div>
 					</div>
 				</Form>

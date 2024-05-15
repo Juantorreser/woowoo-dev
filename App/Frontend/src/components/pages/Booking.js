@@ -112,7 +112,8 @@ const BookingForm = ({props}) => {
 									as="select"
 									id="time"
 								>
-
+									{/* TODO: add in timer function */}
+									
 								</Field>
 							</div>
 							<div className="bookingSubmitButton">
