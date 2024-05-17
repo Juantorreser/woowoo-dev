@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const  {argon2} = require('argon2');   //used for hashing and salting password
+
 module.exports = (sequelize, Sequelize) => {    //is the same as normal export.
   
     const user = sequelize.define("user", {
@@ -66,14 +66,6 @@ module.exports = (sequelize, Sequelize) => {    //is the same as normal export.
     //     console.log('Error in hashing password'+ err);
     //   }
     // })
-    (async function(){
-      try{
-        const hash = await argon2.hash(user.password);
-        user.password = hash;
-      }
-      catch(err){
-        console.log("Having issue with hashing: "+ err);
-      }
-    })()
+    
     return user;
   };

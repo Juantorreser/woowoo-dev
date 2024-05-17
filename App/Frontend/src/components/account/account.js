@@ -47,14 +47,12 @@ const Account = () => {
 	useEffect(() => {
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged( (user) => {
-			const chosenUser = {};
 			console.log(user);
 			setUserState(user);
 			axios.get('http://localhost:8080/users').then( async (response) => {
 				////self added in from CodeGuru
-				
-				console.log("chosenUser: "+chosenUser);
 				//setUserDetails(chosenUser);
+				console.log(response.data);
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);

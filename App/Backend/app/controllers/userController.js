@@ -9,17 +9,41 @@ const locations = require('./locationController');
 const Op = db.Sequelize.Op;   //Op meaning operator. You can think of it as a conditional clause.
 const { off } = require("process");
 const { sequelize } = require("../models");
-
+const  argon2 = require('argon2');   //used for hashing and salting password
 // Most comment blocks were added in June 2023, but most of the code was written at least on year prior and possibly not all at the same time
 // There may be some inaccuracies with what exactly is happening because the I didn't write it originally
 
 // Create and Save a new user
+const hashingFunction = async (password)=> {
+  try{
+    const hashedPassword = await argon2.hash(password);
+    console.log(`Hashed password: ${hashedPassword}`)
+    return hashedPassword;
+  }
+  catch(err){
+    console.log(err);
+  }
+}
 exports.createUser = async (req, res) => {
   console.log('createUser');
-
   // Create a User
   const lastid = await User.max('uid');
+  // (async function(){
+  //   try{
+  //     hashedPassword = await argon2.hash(req.body.password);
+  //   }
+  //   catch(err){
+  //     console.log("Having issue with hashing: "+ err);
+  //   }
+  // })()
 
+  //testing hashing
+  // try{
+  //   console.log(await hashingFunction(req.body.password));
+  // }
+  // catch(err){
+  //   console.log(err);
+  // }
   const user = {
     uid: lastid !== 0 && lastid ? lastid + 1 : 1,
     fbid: req.body.fbid,
@@ -27,7 +51,8 @@ exports.createUser = async (req, res) => {
     lastName: req.body.lastName,
     email: req.body.email,
     emailVerified: false,
-    password: req.body.password,   //need to hash this.
+    //password: req.body.password,   //need to hash this.
+    password: await hashingFunction(req.body.password),   //not sure yet.
     account: req.body.isHealer ? 1 : 0,
     description: req.body.description ? req.body.description : null,
     address: req.body.address ? req.body.address : null,
