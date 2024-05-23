@@ -10,9 +10,11 @@ const Op = db.Sequelize.Op;   //Op meaning operator. You can think of it as a co
 const { off } = require("process");
 const { sequelize } = require("../models");
 const  argon2 = require('argon2');   //used for hashing and salting password
+const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
 // Most comment blocks were added in June 2023, but most of the code was written at least on year prior and possibly not all at the same time
 // There may be some inaccuracies with what exactly is happening because the I didn't write it originally
-
+// const stripe = require('stripe')(process.env.NEXT_STRIPE_SECRET_KEY);
+const stripe = require('stripe')(STRIPE_SECRET_KEY);
 // Create and Save a new user
 const hashingFunction = async (password)=> {
   try{
@@ -365,6 +367,104 @@ exports.findAllEnabled = async (req, res) => {
       });
     });
 };
+
+//accepting payment.
+// exports.acceptPayment = async (req, res)=> {
+//   console.log('payForSpecificHealer');
+  
+//   //confirm if the id is valid first.
+//   const id = req.params.uid;
+//   await User.find({
+//     where: {uid : id}
+//   }).then(async num => {   //confirm if the id is valid first.
+//         if(num == 1){   //if they found the right healer.
+//           // const payload = {
+//           //   "transaction_id": req.params.transactionID,
+//           //   "amount": req.params.amount,
+//           //   "currency"
+//           // }
+//           await axios.post('https://api.stripe.com/v1/payment_intents', {
+//             amount:req.params.amount,
+//             currency: req.params.currency,
+//             payment: req.params.paymentType,
+//             customer: req.params.customer
+            
+//           })
+//           res.send({message: "Payment completed"})
+//         }
+//         else{
+//           res.send({message: `Can not found user with id: ${id}`})
+//         }
+//   })
+//   .catch(err=>{
+//     console.log("Can not find the user. Here is the error: "+ err);
+//   })
+// }
+
+
+//create payment: Not sure yet.
+
+exports.payForSpecificHealer = async (req, res)=> {
+  console.log("payForSpecificHealer");
+  // const {amount, token} = req.body;
+
+  const {amount} = req.body;
+  // try{
+  //   const charge = await stripe.charges.create({
+  //     token: process.env.STRIPE_SECRET_KEY,
+  //     amount,
+  //     currency: 'cad',
+  //     description: 'payment for source',
+  //     customer: req.body.customer
+  //   })
+  //   res.send('Payment successful');
+
+  //   //res.status(201).send('payForSpecificHealers');
+  // }
+  // catch(err){
+  //   console.log(err);
+  //   let message = 'An error occurred with the payment process. Maybe there is an issue with the body of the request';
+
+  //   if(err.type === 'StripeCardError'){    //there is a problem with the card.
+  //     message = err.message;
+  //   }
+  //   res.status(500).send(message);
+  // }
+
+  //Method 2: Session payment:
+  try{
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment', 
+      line_items: req.body.items.map(item=> {
+        return {
+          price_data: {
+            currency: req.body.currency, 
+            product_data: {
+              name: item.name,
+              //service_name: item.service
+            },
+            unit_amount: item.price
+          },
+          quantity: item.quantity
+        }
+      }),
+      success_url: 'https://localhost:4200',
+      cancel_url: 'https://localhost:4200'
+    })
+    res.json({url: session.url})
+  }
+  catch(err){
+    res.status(500).json({error: err.message})
+  }
+
+}
+
+exports.testing = async(req, res)=> {
+  res.send("Testing");
+}
+
+
 
 
 

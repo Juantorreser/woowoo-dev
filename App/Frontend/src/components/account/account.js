@@ -184,7 +184,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					services: arr,
 					format: userDetails.format
 				}}
-				validationSchema={schema}
+				//validationSchema={schema}
 				
 				onSubmit={(values, actions) => {
 					//TODO: Double check if this needs to be updated 
@@ -195,8 +195,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 						services.forEach((service) => {
 							values.services.push(service.value)
 						})
+						console.log(values.services);
 						//Not sure yet.
-						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
 					})();
 				}}
 				

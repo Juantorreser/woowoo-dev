@@ -12,10 +12,11 @@ const uploads = require('../controllers/upload.js');
 const users = require('../controllers/userController.js');
 const appointments = require('../controllers/appointmentController.js');
 const authController = require('../controllers/login.js');
-
 const router = express.Router();
 
 module.exports = function(router){
+
+    
     //Retrieve all users and create a new user
     router.route('/users')
         .get((req, res) => {
@@ -61,6 +62,8 @@ module.exports = function(router){
         .delete((req, res) => {
             users.deleteUser(req, res);
         });
+
+   
 
 
     //login
@@ -199,4 +202,18 @@ module.exports = function(router){
         .delete((req, res) => {
             appointments.deleteAppointments(req, res);
         });
+
+        //using stripe payment:
+    
+    router.route('/payment')
+        .post((req, res)=> {
+        users.payForSpecificHealer(req, res);
+    })
+
+
+    router.route('testing')
+        .get((req, res)=> {
+            users.testing(req, res);
+        })
+
 };

@@ -6,6 +6,10 @@ const db = require("./app/models/index.js");
 const sql = require("mysql2");
 const config = require("./app/config/db.config");
 const router = express.Router();
+const stripeConfig = require("./app/config/stripe.config.js");
+const Stripe = require ('stripe');
+const stripeAPI = new Stripe(stripeConfig.STRIPE_API_KEY);
+const appSecret = stripeConfig.STRIPE_SECRET_KEY;
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -36,6 +40,7 @@ connection.connect(err =>  {
 //simple routing
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to WWN!" });
+
 });
 
 // set port, listen for requests
