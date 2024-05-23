@@ -441,7 +441,7 @@ exports.payForSpecificHealer = async (req, res)=> {
           price_data: {
             currency: req.body.currency, 
             product_data: {
-              name: item.name,
+              name: item.service_name,
               //service_name: item.service
             },
             unit_amount: item.price
