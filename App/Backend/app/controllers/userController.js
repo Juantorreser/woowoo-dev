@@ -77,6 +77,9 @@ exports.createUser = async (req, res) => {
     return;
   }
 
+  //if the user is a healer, add the healer to the stripe account. Not sure yet.
+  
+  
   // Create user and try to set a location based on address
   User.create(user)
     .then(data => {
@@ -88,6 +91,31 @@ exports.createUser = async (req, res) => {
             address: user.address
           }
         });
+      }
+
+      //if the user is a healer, then make a stripe user account for the healer to earn money.
+      if(user.account == 1){
+        // const customerSource = await stripe.customers.createSource({
+        //   source: {
+        //       account_number: req.body.accountNumber,
+        //       country: user.country,
+        //       currency: "cad",
+        //       object: "bank_account",
+        //       account_holder_name: user.firstName+ user.lastName
+        //   }
+        // })
+    
+        const newCustomer = stripe.customers.create({
+          email: user.email,
+          name: user.firstName + user.lastName, 
+          // address: user.address,
+          // country: user.country, 
+          // province: user.province, 
+          // postal_code: user.postalCode, 
+          // city: user.city, 
+          // region: user.region
+        })
+      
       }
     })
     .then(() => {
