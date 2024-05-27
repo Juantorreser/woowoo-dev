@@ -83,7 +83,7 @@ exports.createUser = async (req, res) => {
   
   // Create user and try to set a location based on address
   User.create(user)
-    .then(data => {
+    .then(async data => {
       if(user.address !== null){
         locations.createLocation({
           body: {
@@ -106,28 +106,37 @@ exports.createUser = async (req, res) => {
         //   }
         // })
         
+        const token = await stripe.tokens.create({
+          card: {
+            number: req.body.number,
+            exp_month: '5',
+            exp_year: '2024',
+            cvc: '314',
+          },
+        });
+
         //Create a new payment method for new user.
-        const paymentMethod = stripe.paymentMethods.create({
+        const paymentMethod = await  stripe.paymentMethods.create({
           type: 'card',
           card: {
-            number: req.body.accountNumber,
+            number: '4242424242424242',
             exp_month: 8,
             exp_year: 2026,
             cvc: '314',
           },
         });
         console.log(paymentMethod.id);
-        // const newCustomer = stripe.customers.create({
-        //   email: user.email,
-        //   name: user.firstName + user.lastName, 
-        //   payment_method: paymentMethod.id
-        //   // address: user.address,
-        //   // country: user.country, 
-        //   // province: user.province, 
-        //   // postal_code: user.postalCode, 
-        //   // city: user.city, 
-        //   // region: user.region
-        // })
+        const newCustomer = stripe.customers.create({
+          email: user.email,
+          name: user.firstName + user.lastName, 
+          payment_method: paymentMethod.id
+          // address: user.address,
+          // country: user.country, 
+          // province: user.province, 
+          // postal_code: user.postalCode, 
+          // city: user.city, 
+          // region: user.region
+        })
       
       }
     })
