@@ -46,6 +46,7 @@ exports.createUser = async (req, res) => {
   // catch(err){
   //   console.log(err);
   // }
+
   const user = {
     uid: lastid !== 0 && lastid ? lastid + 1 : 1,
     fbid: req.body.fbid,
@@ -54,7 +55,7 @@ exports.createUser = async (req, res) => {
     email: req.body.email,
     emailVerified: false,
     //password: req.body.password,   //need to hash this.
-    password: await hashingFunction(req.body.password),   //not sure yet.
+    password: await hashingFunction(req.body.password),  
     account: req.body.isHealer ? 1 : 0,
     description: req.body.description ? req.body.description : null,
     address: req.body.address ? req.body.address : null,
@@ -104,17 +105,30 @@ exports.createUser = async (req, res) => {
         //       account_holder_name: user.firstName+ user.lastName
         //   }
         // })
-    
-        const newCustomer = stripe.customers.create({
-          email: user.email,
-          name: user.firstName + user.lastName, 
-          // address: user.address,
-          // country: user.country, 
-          // province: user.province, 
-          // postal_code: user.postalCode, 
-          // city: user.city, 
-          // region: user.region
-        })
+        
+        //Create a new payment method for new user.
+        const paymentMethod = stripe.paymentMethods.create({
+          type: 'card',
+          card: {
+            number: req.body.accountNumber,
+            exp_month: 8,
+            exp_year: 2026,
+            cvc: '314',
+          },
+        });
+        console.log(paymentMethod.id);
+        // console.log(paymentMethod.id);
+        // const newCustomer = stripe.customers.create({
+        //   email: user.email,
+        //   name: user.firstName + user.lastName, 
+        //   payment_method: paymentMethod.id
+        //   // address: user.address,
+        //   // country: user.country, 
+        //   // province: user.province, 
+        //   // postal_code: user.postalCode, 
+        //   // city: user.city, 
+        //   // region: user.region
+        // })
       
       }
     })
@@ -477,6 +491,12 @@ exports.payForSpecificHealer = async (req, res)=> {
           quantity: item.quantity
         }
       }),
+      payment_intent_data: {
+        application_fee_amount: 123,
+        transfer_data: {
+          destination: 'cus_QAXN4Hdt6VBLsE'
+        }
+      },
       success_url: 'https://localhost:4200',
       cancel_url: 'https://localhost:4200'
     })
