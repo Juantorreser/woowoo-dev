@@ -117,7 +117,6 @@ exports.createUser = async (req, res) => {
           },
         });
         console.log(paymentMethod.id);
-        // console.log(paymentMethod.id);
         // const newCustomer = stripe.customers.create({
         //   email: user.email,
         //   name: user.firstName + user.lastName, 
