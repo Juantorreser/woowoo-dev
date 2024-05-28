@@ -107,29 +107,32 @@ exports.createUser = async (req, res) => {
         // })
         
         const token = await stripe.tokens.create({
-          card: {
-            number: req.body.number,
-            exp_month: '5',
-            exp_year: '2024',
-            cvc: '314',
+          bank_account: {
+            country: 'ca',
+            currency: 'cad',
+            account_holder_name: user.firstName + user.lastName,
+            account_holder_type: 'individual',
+            routing_number: '11000000',
+            account_number: req.body.accountNumber,
           },
         });
-
+        console.log(token);
         //Create a new payment method for new user.
         const paymentMethod = await  stripe.paymentMethods.create({
           type: 'card',
-          card: {
-            number: '4242424242424242',
-            exp_month: 8,
-            exp_year: 2026,
-            cvc: '314',
-          },
+          // card: {
+          //   number: token.number,
+          //   exp_month: token.exp_month,
+          //   exp_year: token.exp_year,
+          //   cvc: token.cvc,
+          // },
+          card: token
         });
         console.log(paymentMethod.id);
         const newCustomer = stripe.customers.create({
           email: user.email,
           name: user.firstName + user.lastName, 
-          payment_method: paymentMethod.id
+          payment_method: token
           // address: user.address,
           // country: user.country, 
           // province: user.province, 
@@ -458,7 +461,7 @@ exports.payForSpecificHealer = async (req, res)=> {
   console.log("payForSpecificHealer");
   // const {amount, token} = req.body;
 
-  const {amount} = req.body;
+  const {amount, email} = req.body;
   // try{
   //   const charge = await stripe.charges.create({
   //     token: process.env.STRIPE_SECRET_KEY,
@@ -483,6 +486,11 @@ exports.payForSpecificHealer = async (req, res)=> {
 
   //Method 2: Session payment:
   try{
+    const customers = await stripe.customers.list({
+      email: email,
+    });
+
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment', 
