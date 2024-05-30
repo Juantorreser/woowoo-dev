@@ -52,7 +52,7 @@ const Account = () => {
 			axios.get('http://localhost:8080/users').then( async (response) => {
 				////self added in from CodeGuru
 				//setUserDetails(chosenUser);
-				console.log(response.data);
+				// console.log(response.data);
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);
@@ -136,7 +136,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 	//from the API/database
 
 	const [ services, setServices] = useState([userDetails.services]);
-	console.log(services);
 
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
@@ -181,7 +180,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					locationChanges: userDetails.locationChanges,
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
-					services: arr,
+					services: [],
 					format: userDetails.format
 				}}
 				//validationSchema={schema}
@@ -192,6 +191,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
+						console.log(services);
+						//clear array
+						values.services.length = 0;
 						services.forEach((service) => {
 							values.services.push(service.value)
 						})
@@ -349,6 +351,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 											value={services}
 											onChange={setServices}
 											labelledBy="Services"
+											setServices={setServices}
 										/>
 
 									) : <p>Not a healer</p>
@@ -379,9 +382,9 @@ const HealerOptions = (props) => {
 		<Field
 			name="services"
 			options={props.options}
-			value={props.selectedServices}
+			value={props.selectedServices} 
 			as={MultiSelect}
-			onChange={props.setSelectedServices}
+			onChange={e => {props.setSelectedServices(e); props.setServices(e)}}
 		/>
 		<ErrorMessage name="services" render={renderError} />
 		
