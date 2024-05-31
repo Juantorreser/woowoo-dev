@@ -66,7 +66,8 @@ exports.createUser = async (req, res) => {
     services: req.body.services ? req.body.services.toString() : null,
     enabled: true,
     region: req.body.region,
-    format: req.body.format ? req.body.format : 0
+    format: req.body.format ? req.body.format : 0,
+    stripeAccount: ""
   };
 
   // Validate request
@@ -79,8 +80,103 @@ exports.createUser = async (req, res) => {
   }
 
   //if the user is a healer, add the healer to the stripe account. Not sure yet.
+  if(user.account == 1){
+    try{
+      const account = await stripe.accounts.create({
+        country: 'CA',
+        email: user.email,
+        controller: {
+          fees: {
+            payer: 'application',
+          },
+          losses: {
+            payments: 'application',
+          },
+          stripe_dashboard: {
+            type: 'express',
+          },
+        },
+        capabilities: {
+          card_payments: {
+            requested: true
+          }, 
+          transfers: {
+            requested: true
+          }
+        }, 
+        business_type: "individual"
+      });
+      user.stripeAccount = account.id;
+    }
+    catch(err){
+      console.log(err);
+    }
+
+    
+    
+    // const customerSource = await stripe.customers.createSource({
+    //   source: {
+    //       account_number: req.body.accountNumber,
+    //       country: user.country,
+    //       currency: "cad",
+    //       object: "bank_account",
+    //       account_holder_name: user.firstName+ user.lastName
+    //   }
+    // })
+    
+    // const token = await stripe.tokens.create({
+    //   card: {
+    //     number: req.body.accountNumber,
+    //     exp_month: '7',
+    //     exp_year: '2027',
+    //     cvc: '314',
+    //   },
+    // });
+    // console.log(token);
+    //Create a new payment method for new user.
+    // const paymentMethod = await  stripe.paymentMethods.create({
+    //   type: 'card',
+    //   // // card: {
+    //   // //   number: token.number,
+    //   // //   exp_month: token.exp_month,
+    //   // //   exp_year: token.exp_year,
+    //   // //   cvc: token.cvc,
+    //   // // },
+    //   // card: token.id
+    //   card: token.card
+    // });
+    //console.log(paymentMethod.id);
+    // const newCustomer = stripe.customers.create({
+    //   email: user.email,
+    //   name: user.firstName + user.lastName, 
+    //   stripeAccount: account.id
+    //   //payment_method: token.id
+    //   // address: user.address,
+    //   // country: user.country, 
+    //   // province: user.province, 
+    //   // postal_code: user.postalCode, 
+    //   // city: user.city, 
+    //   // region: user.region
+    // })
+
+    // const customer = await stripe.customers.create(
+    //   {email: 'person@example.edu'},
+    //   {stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}'}
+    // );
   
-  
+  }
+  try{
+    const accountLink = await stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: 'https://localhost:4200',
+      return_url: 'https://localhost:4200',
+      type: 'account_onboarding',
+    });
+    res.json({url: accountLink.url});
+  }
+  catch(err){
+    console.log(err);
+  }
   // Create user and try to set a location based on address
   User.create(user)
     .then(async data => {
@@ -95,59 +191,14 @@ exports.createUser = async (req, res) => {
       }
 
       //if the user is a healer, then make a stripe user account for the healer to earn money.
-      if(user.account == 1){
-        // const customerSource = await stripe.customers.createSource({
-        //   source: {
-        //       account_number: req.body.accountNumber,
-        //       country: user.country,
-        //       currency: "cad",
-        //       object: "bank_account",
-        //       account_holder_name: user.firstName+ user.lastName
-        //   }
-        // })
-        
-        const token = await stripe.tokens.create({
-          bank_account: {
-            country: 'ca',
-            currency: 'cad',
-            account_holder_name: user.firstName + user.lastName,
-            account_holder_type: 'individual',
-            routing_number: '11000000',
-            account_number: req.body.accountNumber,
-          },
-        });
-        console.log(token);
-        //Create a new payment method for new user.
-        const paymentMethod = await  stripe.paymentMethods.create({
-          type: 'card',
-          // card: {
-          //   number: token.number,
-          //   exp_month: token.exp_month,
-          //   exp_year: token.exp_year,
-          //   cvc: token.cvc,
-          // },
-          card: token
-        });
-        console.log(paymentMethod.id);
-        const newCustomer = stripe.customers.create({
-          email: user.email,
-          name: user.firstName + user.lastName, 
-          payment_method: token
-          // address: user.address,
-          // country: user.country, 
-          // province: user.province, 
-          // postal_code: user.postalCode, 
-          // city: user.city, 
-          // region: user.region
-        })
       
-      }
     })
     .then(() => {
       //success - 201 created
       res.status(201).send({
         user
       });
+      
     })
     .catch(err => {
       //500 server error
@@ -156,6 +207,8 @@ exports.createUser = async (req, res) => {
           err.message || 'Some error occurred while creating the User.'
       });
     });
+    //creating a stripe link that will enter in more information for the user.
+   
 };
 
 // Retrieve all Users from the database where region is  ? 
@@ -461,7 +514,11 @@ exports.payForSpecificHealer = async (req, res)=> {
   console.log("payForSpecificHealer");
   // const {amount, token} = req.body;
 
-  const {amount, email} = req.body;
+  const {amount, healer_email} = req.body;
+  console.log(healer_email);
+  // const emails = req.body.items.map(item=> {    //return a list of healer's email
+  //     item.healer_email
+  // })
   // try{
   //   const charge = await stripe.charges.create({
   //     token: process.env.STRIPE_SECRET_KEY,
@@ -486,11 +543,23 @@ exports.payForSpecificHealer = async (req, res)=> {
 
   //Method 2: Session payment:
   try{
-    const customers = await stripe.customers.list({
-      email: email,
+
+    // const customer_id = await stripe.customers.list({
+    //   email: healer_email
+    // })
+    var account_id = '';
+    await User.findAll({ where: { email: req.body.healer_email} })
+    .then(data => {
+      account_id = data[0].stripeAccount;
+      //res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving users."
+      });
     });
-
-
+ 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment', 
@@ -502,7 +571,7 @@ exports.payForSpecificHealer = async (req, res)=> {
               name: item.service_name,
               //service_name: item.service
             },
-            unit_amount: item.price
+            unit_amount: item.price 
           },
           quantity: item.quantity
         }
@@ -510,7 +579,9 @@ exports.payForSpecificHealer = async (req, res)=> {
       payment_intent_data: {
         application_fee_amount: 123,
         transfer_data: {
-          destination: 'cus_QAXN4Hdt6VBLsE'
+          //destination: await customer_id.data[0].id
+          //destination: 'acct_1Ja4OO7iSovqGMwf'
+          destination: account_id
         }
       },
       success_url: 'https://localhost:4200',

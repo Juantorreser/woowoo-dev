@@ -48,24 +48,15 @@ module.exports = (sequelize, Sequelize) => {    //is the same as normal export.
       },
       format: {
         type: Sequelize.INTEGER
+      }, 
+      stripeAccount: {
+        type: Sequelize.STRING
       }
     },
     { 
       tableName: 'users'
     });
-    //Not sure yet.
-    // user.pre('save', async function(){
-    //   //hash and salt password
-    //   try{
-    //     const hash = await argon2.hash(this.password, {
-    //       type: argon2.argon2id
-    //     });
-    //     this.password = hash;
-    //   }
-    //   catch(err){
-    //     console.log('Error in hashing password'+ err);
-    //   }
-    // })
+   
     
     return user;
   };
