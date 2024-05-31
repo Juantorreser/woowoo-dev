@@ -107,6 +107,14 @@ exports.createUser = async (req, res) => {
         business_type: "individual"
       });
       user.stripeAccount = account.id;
+      const accountLink = await stripe.accountLinks.create({
+        account: account.id,
+        refresh_url: 'https://localhost:4200',
+        return_url: 'https://localhost:4200',
+        type: 'account_onboarding',
+      });
+      res.status(200).json({url: accountLink.url});
+      
     }
     catch(err){
       console.log(err);
@@ -165,18 +173,7 @@ exports.createUser = async (req, res) => {
     // );
   
   }
-  try{
-    const accountLink = await stripe.accountLinks.create({
-      account: account.id,
-      refresh_url: 'https://localhost:4200',
-      return_url: 'https://localhost:4200',
-      type: 'account_onboarding',
-    });
-    res.json({url: accountLink.url});
-  }
-  catch(err){
-    console.log(err);
-  }
+ 
   // Create user and try to set a location based on address
   User.create(user)
     .then(async data => {
@@ -195,9 +192,10 @@ exports.createUser = async (req, res) => {
     })
     .then(() => {
       //success - 201 created
-      res.status(201).send({
-        user
-      });
+      // res.status(201).send({
+      //   user
+      // });
+      console.log(user);
       
     })
     .catch(err => {
@@ -208,7 +206,7 @@ exports.createUser = async (req, res) => {
       });
     });
     //creating a stripe link that will enter in more information for the user.
-   
+    
 };
 
 // Retrieve all Users from the database where region is  ? 
@@ -541,7 +539,7 @@ exports.payForSpecificHealer = async (req, res)=> {
   //   res.status(500).send(message);
   // }
 
-  //Method 2: Session payment:
+  //Method 2: Session payment: Correct if tested but not sure yet until tested in frontend.
   try{
 
     // const customer_id = await stripe.customers.list({
