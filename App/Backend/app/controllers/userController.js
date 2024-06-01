@@ -416,6 +416,18 @@ exports.deleteUser = async (req, res) => {
   console.log('deleteUser');
 
   const id = req.params.uid;
+  await User.findAll({   //find the account of the one being deleted.
+    where: {uid: id}
+  })
+  .then(async data=> {
+      const account = data[0].stripeAccount;
+      try{
+        const deletedAccount = await stripe.account.del(account);
+      }
+      catch(err){
+        console.log("Something wrong with deleting the user's stripe account");
+      }
+  })
   await User.destroy({
     where: { uid: id }
   })
