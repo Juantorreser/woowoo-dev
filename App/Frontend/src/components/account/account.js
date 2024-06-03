@@ -19,6 +19,7 @@ const Account = () => {
 	const [ userState, setUserState ] = useState(null);
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
+	const [ options, setOptions ] = useState();
 
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
 	// useEffect(() => {
@@ -71,9 +72,18 @@ const Account = () => {
 				}
 			});
 		});
+		getServices();
 	}, []); 
 	
-
+	const getServices = () => {
+		axios.get('http://localhost:8080/services')
+		.then((response) => {
+			const responseOptions = response.data.map((service) => {
+				return {label: service.service, value: service.sid};
+			});
+			setOptions(responseOptions);
+		});
+	};
 
 	return (
 		<>
@@ -87,7 +97,8 @@ const Account = () => {
 								<p>{userDetails.firstName} {userDetails.lastName}</p>
 							</div>
 							<div className="healerSelectedMiddle" id="services">
-								<p>{userDetails.services}</p>
+								{/* <p>{userDetails.services}</p> */}
+								<DisplayServices options={options} userDetails={userDetails} />
 							</div>
 							<hr/>
 							<div className="healerSelectedBottom">
@@ -124,6 +135,24 @@ const Account = () => {
 			</>
 		}
 		</>
+	)
+}
+
+const DisplayServices = (props) => {
+	console.log(props.options[1].label);
+	let services = [];
+	for (let service of JSON.parse("[" + props.userDetails.services + "]")) {
+		services.push(service);
+	}
+	let displayServices = "";
+	for (let element of services) {
+		if (displayServices !== "") {
+			displayServices += ", ";
+		}
+		displayServices += (props.options[element - 1].label);
+	}
+	return(
+		<p>{displayServices}</p>
 	)
 }
 
@@ -181,9 +210,10 @@ const AccountForm = ({userDetails, userLocation}) => {
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
-					format: userDetails.format
+					format: userDetails.format,
+					terms: ""
 				}}
-				//validationSchema={schema}
+				validationSchema={schema}
 				
 				onSubmit={(values, actions) => {
 					//TODO: Double check if this needs to be updated 
@@ -191,12 +221,14 @@ const AccountForm = ({userDetails, userLocation}) => {
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
-						console.log(services);
+						// console.log(services);
 						//clear array
 						values.services.length = 0;
-						services.forEach((service) => {
-							values.services.push(service.value)
-						})
+						if (values.isHealer) {
+							services.forEach((service) => {
+								values.services.push(service.value)
+							})
+						}
 						console.log(values.services);
 						//Not sure yet.
 						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
@@ -349,7 +381,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 											setSelectedServices={setSelectedServices}
 											options={options}
 											value={services}
-											onChange={setServices}
+											// onChange={setServices}
 											labelledBy="Services"
 											setServices={setServices}
 										/>
@@ -407,7 +439,17 @@ const HealerOptions = (props) => {
 			id="signUpDescription"
 		/>
 		<ErrorMessage name="description" render={renderError} />
-		
+
+		{/* field for terms checkbox */}
+		{/* <div className='selectBox'>
+			<p>Terms & Conditions</p>
+			<Field
+				name="terms"
+				as="checkbox"
+				if="terms"
+			/>
+			<ErrorMessage name="terms" render={renderError} />
+		</div> */}
 		<br/>
 	</>
 	)
