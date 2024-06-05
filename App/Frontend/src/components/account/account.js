@@ -181,8 +181,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 		});
 	};
 
-	var arr = userDetails.services.split(",");
-
 	//TODO: Null values in Formik's initial values displays an error, see about finding a way to have null values replaced with an empty string
 	return (
 		<div className="accountInfoEditorContainer">
@@ -201,9 +199,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 					confirmPassword: "",
 					address: userLocation.address,
 					city: userDetails.city,
-					province: userDetails.province,
-					country: userDetails.country,
-					postalCode: userDetails.postalCode,
+					province: userDetails.province || "",
+					country: userDetails.country || "",
+					postalCode: userDetails.postalCode || "",
 					isHealer: userDetails.isHealer,
 					nameChanges: userDetails.nameChanges,
 					locationChanges: userDetails.locationChanges,
@@ -211,7 +209,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					description: userDetails.description,
 					services: [],
 					format: userDetails.format,
-					terms: ""
+					terms: true
 				}}
 				validationSchema={schema}
 				
@@ -229,9 +227,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 								values.services.push(service.value)
 							})
 						}
-						console.log(values.services);
 						//Not sure yet.
-						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						console.log('http://localhost:8080/users/'+userDetails.uid);
 					})();
 				}}
 				
