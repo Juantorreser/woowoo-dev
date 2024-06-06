@@ -11,6 +11,7 @@
     "passport": "^0.6.0",
     "react-datetime": "^3.2.0",
     "request": "^2.88.2",
+    "sendgrid": "^5.2.3",
     "sequelize": "^6.31.1",
     "sib-api-v3-sdk": "^8.4.0",
     "sqlite3": "^5.1.6",

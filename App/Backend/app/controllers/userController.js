@@ -11,6 +11,10 @@ const { off } = require("process");
 const { sequelize } = require("../models");
 const  argon2 = require('argon2');   //used for hashing and salting password
 const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
+
+
+
+
 // Most comment blocks were added in June 2023, but most of the code was written at least on year prior and possibly not all at the same time
 // There may be some inaccuracies with what exactly is happening because the I didn't write it originally
 // const stripe = require('stripe')(process.env.NEXT_STRIPE_SECRET_KEY);
@@ -79,7 +83,7 @@ exports.createUser = async (req, res) => {
     return;
   }
 
-  //if the user is a healer, add the healer to the stripe account. Not sure yet.
+  //if the user is a healer, add the healer to the stripe account. 
   if(user.account == 1){
     try{
       const account = await stripe.accounts.create({

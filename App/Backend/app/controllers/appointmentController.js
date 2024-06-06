@@ -2,6 +2,29 @@ const fs = require("fs");
 const db = require("../models");
 const Appointment = db.appointment;
 const Op = db.Sequelize.Op;
+// const {GOOGLE_SECRET_KEY} = require('../config/google.config.js');
+// const initializeApp = require('firebase/app');
+// const {getMessaging, getToken} = require('firebase/messaging');
+// const {getTokenFromFirebase} = require('../firebase-messaging-sq.js');
+// const firebaseConfig = {
+//   apiKey: GOOGLE_SECRET_KEY
+// }
+
+// const app = initializeApp(firebaseConfig);
+// const messaging = initializeApp(app);
+// //Add the public key generated from the console:
+// getToken(messaging, {vapidKey: GOOGLE_SECRET_KEY})
+// .then((currentToken)=> {
+//   if(currentToken){
+//     //Add the token to the server.
+//   }
+//   else{
+//     console.log('No registration token available');
+//   }
+// })
+// .catch(err=> {
+//   console.log('An error occur when retrieving token');
+// });
 
 // This function is responsible for creating a new appointment and saving it to the database. 
 // It performs some basic input validation to ensure that required fields (healer, fbid, and uid) are provided in the request's body. 
@@ -40,7 +63,11 @@ exports.createAppointment = async (req, res) => {
       updatedAt: null,
       healerAccepted: 0
     };
+    //find the email of the user as well as the intended healer:
 
+    //get the token:
+    //getTokenFromFirebase();
+    
     // Save Location in the database
     await Appointment.create(location)
       .then(data => {
