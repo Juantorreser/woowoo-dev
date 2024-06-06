@@ -1,3 +1,4 @@
+
 const passport = require('passport');
 const express = require('express');
 const app = express();
@@ -11,13 +12,13 @@ const reviews = require('../controllers/reviewController.js');
 const uploads = require('../controllers/upload.js');
 const users = require('../controllers/userController.js');
 const appointments = require('../controllers/appointmentController.js');
+const availability = require('../controllers/availabilityController.js'); // Import availability controller
 const authController = require('../controllers/login.js');
 const router = express.Router();
 
 module.exports = function(router){
 
-    
-    //Retrieve all users and create a new user
+    // Retrieve all users and create a new user
     router.route('/users')
         .get((req, res) => {
             users.findAllUsers(req, res);
@@ -31,55 +32,49 @@ module.exports = function(router){
             users.deleteAllUsers(req, res);
         });
 
-
     // Retrieve all enabled users
     router.route('/users/enabled')
         .get((req, res) => {
             users.findAllEnabled(req, res);
         });
 
-    //finds all healers with parameters
+    // Finds all healers with parameters
     router.route('/users/healers')
         .get((req, res) => {
             users.findAllHealers(req, res);
         })
         .post((req, res) => {
-            //uses request parameters to return healers
+            // Uses request parameters to return healers
             users.findHealersWithParams(req, res);
         });
-
 
     // Retrieve a single user with id
     router.route('/users/:uid')
         .get((req, res) => {
             users.findOneUser(req, res);
         })
-    // Update a user with id
+        // Update a user with id
         .put((req, res) => {
             users.updateUser(req, res);
         })
-    // Delete a user with id
+        // Delete a user with id
         .delete((req, res) => {
             users.deleteUser(req, res);
         });
 
-   
-
-
-    //login
+    // Login
     router.route('/login')
         .post(authController.login);
-    // reset password request
+    // Reset password request
     router.route('/reset-password')
         .post(authController.sendResetPasswordLink)
         .put(authController.resetPassword);
 
     router.get('/verify', authController.verifyActionLink);
 
-
-    //images
+    // Images
     router.route('/images')
-        //Retrieve all images
+        // Retrieve all images
         .get((req, res) => {
             images.findAllImages(req, res);
         })
@@ -88,42 +83,38 @@ module.exports = function(router){
             images.deleteAllImages(req, res);
         });
 
-
     router.route('/images/:uid')
-        // Retrieve a single images with id
+        // Retrieve a single image with id
         .get((req, res) => {
             images.findOneImage(req, res);
         })
-        // Update a images with id
+        // Update an image with id
         .put((req, res) => {
             images.updateImage(req, res);
         })
-        // Delete a images with id
+        // Delete an image with id
         .delete((req, res) => {
             images.deleteImage(req, res);
         });
 
-
-    //image-specific vars to handle upload
+    // Image-specific vars to handle upload
     const uploadController = require("../controllers/upload");
     const upload = require("../middleware/imageHandler");
 
     router.route('/images/upload')
-    //upload image associated with user id
+        // Upload image associated with user id
         .post(
             upload.single("file"),
             (req, res) => {
-            images.uploadFiles(req, res);
+                images.uploadFiles(req, res);
             }
         );
 
-
-    //bookings: use healer id
+    // Bookings: use healer id
     router.route('/bookings')
-        .get()
+        .get();
 
-
-    //social
+    // Social
     router.route('/social')
         // Create a new social for a user
         .post((req, res) => {
@@ -138,14 +129,13 @@ module.exports = function(router){
             socials.deleteSocial(req, res);
         });
 
-
     // Update a social for a user
     router.route('/social/:uid')
         .put((req, res) => {
             socials.updateSocial(req, res);
         });
 
-    //Reviews
+    // Reviews
     router.route('/review/:uid')
         .get((req, res) => {
             reviews.getReviewWithId(req, res);
@@ -162,16 +152,11 @@ module.exports = function(router){
             reviews.deleteReview(req, res);
         });
 
-
-    //locations
+    // Locations
     router.route('/locations')
         .post((req, res) => {
             locations.findAllLocations(req, res);
         });
-        // Retrieve all locations in region
-        // .post((req, res) => {
-        //     locations.createLocation(req, res);
-        // });
 
     router.route('/locations/:uid')
         // Update a location with id
@@ -183,6 +168,7 @@ module.exports = function(router){
             locations.deleteLocation(req, res);
         });
 
+    // Services
     router.route('/services')
         .get((req, res) => {
             services.findAllServices(req, res);
@@ -191,8 +177,9 @@ module.exports = function(router){
             services.findServiceById(req, res);
         });
 
+    // Appointments
     router.route('/appointments')
-        //create an appointment
+        // Create an appointment
         .post((req, res) => {
             appointments.createAppointment(req, res);
         })
@@ -202,18 +189,32 @@ module.exports = function(router){
         .delete((req, res) => {
             appointments.deleteAppointments(req, res);
         });
-
-        //using stripe payment:
-    
-    router.route('/payment')
-        .post((req, res)=> {
-        users.payForSpecificHealer(req, res);
-    })
-
-
-    router.route('testing')
-        .get((req, res)=> {
-            users.testing(req, res);
+    // Availability
+    router.route('/availability')
+        .post((req, res) => {
+            availability.createAvailability(req, res);
         })
+    // Availability by id 
+    router.route('/availability/:uid')
+        .get((req, res) => {
+            availability.findAllAvailability(req, res);
+        })
+        .put((req, res) => {
+            availability.updateAvailability(req, res);
+        })
+        .delete((req, res) => {
+            availability.deleteAvailability(req, res);
+        });
+    
 
+    // Using Stripe payment
+    router.route('/payment')
+        .post((req, res) => {
+            users.payForSpecificHealer(req, res);
+        });
+
+    router.route('/testing')
+        .get((req, res) => {
+            users.testing(req, res);
+        });
 };
