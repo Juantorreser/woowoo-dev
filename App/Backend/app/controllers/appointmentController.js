@@ -150,3 +150,27 @@ exports.deleteAppointment = (req, res) => {
       });
     });
 };
+
+// This function retrieves an appointment based on its aid (appointment ID).
+// It expects the aid to be passed as a route parameter in the request.
+// It then queries the database using Appointment.findByPk() with the specified aid and sends the retrieved data back as the response.
+// If the appointment is not found, it sends a 404 Not Found response.
+exports.getAppointments = (req, res) => {
+  const id = req.params.aid;
+
+  Appointment.findByPk(id)
+    .then(appointment => {
+      if (appointment) {
+        res.send(appointment);
+      } else {
+        res.status(404).send({
+          message: `Cannot find appointment with id=${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: "Error retrieving appointment with id=" + id
+      });
+    });
+};
