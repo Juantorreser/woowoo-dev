@@ -15,7 +15,9 @@ module.exports = (sequelize, Sequelize) => {
           references: {
             model: 'users', // <<< Note, its table's name, not object name
             key: 'uid' // <<< Note, its a column name
-          }
+          }, 
+          onDelete: 'cascade', 
+          onUpdate: 'cascade'
         },
         fbid: {
           type: Sequelize.STRING
