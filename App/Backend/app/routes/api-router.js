@@ -184,11 +184,20 @@ module.exports = function(router){
             appointments.createAppointment(req, res);
         })
         .get((req, res) => {
-            appointments.getAppointments(req, res);
+            //appointments.getAppointments(req, res);
+            appointments.findAllAppointments(req, res);
         })
-        .delete((req, res) => {
-            appointments.deleteAppointments(req, res);
-        });
+        // .delete((req, res) => {
+        //     appointments.deleteAppointments(req, res);
+        // });
+    //find specific appointments with specific aid
+    router.route('/appointments/:aid').get((req, res)=> {
+        appointments.getAppointments(req, res);
+    }).put((req, res)=> appointments.updateAppointment(req, res))
+    //delete specific appointments with specific fbid
+    router.route('/appointments/:fbid').delete((req, res)=> {
+        appointments.deleteAppointments(req, res);
+    })
     // Availability
     router.route('/availability')
         .post((req, res) => {

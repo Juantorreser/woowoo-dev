@@ -2,6 +2,19 @@ const fs = require("fs");
 const db = require("../models");
 const Appointment = db.appointment;
 const Op = db.Sequelize.Op;
+const nodemailer = require('nodemailer');
+const {EMAIL_PASS} = require('../config/db.config.js');
+
+const transporter = nodemailer.createTransport({
+  // host: "woowoonetwork",
+  // port: 4200,
+  // secure: false, 
+  service: "gmail", 
+  auth: {
+    user: "woowoonetworkcanada@gmail.com", 
+    pass: EMAIL_PASS
+  }
+})
 // const {GOOGLE_SECRET_KEY} = require('../config/google.config.js');
 // const initializeApp = require('firebase/app');
 // const {getMessaging, getToken} = require('firebase/messaging');
@@ -42,8 +55,9 @@ exports.createAppointment = async (req, res) => {
       });
       return;
     }
-
-    if (!req.body.fbid || !req.body.uid) {
+    console.log(!req.body.uid);
+    // if (!req.body.fbid || !req.body.uid) {
+      if (!req.body.uid) {
       let message = "id can not be empty!";
       await res.status(400).send({
         message: message
@@ -55,7 +69,8 @@ exports.createAppointment = async (req, res) => {
     const appointment = {
       aid: lastid !== 0 && lastid ? lastid + 1 : 1,
       healer: req.body.healer,
-      client: req.body.ufbid,
+      //client: req.body.ufbid,
+      client: req.body.uid,
       timezone: req.body.timezone,
       date: req.body.date,
       time: req.body.time,
@@ -68,6 +83,13 @@ exports.createAppointment = async (req, res) => {
     //get the token:
     //getTokenFromFirebase();
     
+    const info = await transporter.sendMail({
+      from: "woowoonetworkcanada@gmail.com", 
+      to: "woowoonetworkcanada@gmail.com", 
+      subject: "Testing", 
+      text: "Hello world", 
+      html: "<p>Hello world?</p>"
+    })
     // Save Location in the database
     await Appointment.create(location)
       .then(data => {

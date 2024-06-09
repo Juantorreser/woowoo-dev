@@ -19,7 +19,7 @@ const Account = () => {
 	const [ userState, setUserState ] = useState(null);
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
-
+	
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
 	// useEffect(() => {
 	// 	//this method checks if the user is authenticated with firebase and essentially logged in.
@@ -45,17 +45,19 @@ const Account = () => {
 
 
 	useEffect(() => {
+		//let userD = "";
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged( (user) => {
 			console.log(user);
 			setUserState(user);
-			axios.get('http://localhost:8080/users').then( async (response) => {
+			axios.get('http://localhost:8080/users').then(  (response) => {
 				////self added in from CodeGuru
 				//setUserDetails(chosenUser);
 				console.log(response.data);
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);
+						//userD = i;
 					}
 				}
 				//setUserDetails(response.data[0]);
@@ -69,9 +71,41 @@ const Account = () => {
 				catch (err) {
 					console.log(err);
 				}
+
+				// try{   //fetching appointments
+				// 	const appointments = await axios.get('http://localhost:8080/appointments?uid='+ userDetails.uid);
+				// 	console.log(appointments);
+				// 	setHealerAppointment(appointments.data);
+				// }
+				// catch(err){
+				// 	console.log(err);
+				// }
+				//console.log(userD.uid);
+				
+				// axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid).then((response) => {
+				// 	console.log(response.data[0]);
+				// 	setHealerAppointment(response.data[0]);
+				// })
 			});
-		});
+		});	
+		
 	}, []); 
+	
+	// useEffect(()=> {
+	// 	// try{   //fetching appointments
+	// 	// 			const appointments = axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid);
+	// 	// 			console.log(appointments);
+	// 	// 			setHealerAppointment(appointments.data);
+	// 	// }
+	// 	// catch(err){
+	// 	// 	console.log(err);
+	// 	// }
+	// 	console.log("userDetail.uid: "+ userDetails);
+	// 	axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid).then( async (response) => {
+	// 		console.log(response.data);
+	// 		setHealerAppointment(response.data[0]);
+	// 	})
+	// }, [userDetails])
 	
 
 
@@ -85,6 +119,7 @@ const Account = () => {
 						<div className = "healerSelectedColumn2">
 							<div className="healerSelectedTop" id="user-name">
 								<p>{userDetails.firstName} {userDetails.lastName}</p>
+								
 							</div>
 							<div className="healerSelectedMiddle" id="services">
 								<p>{userDetails.services}</p>
@@ -100,7 +135,17 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
+
+						{/* confirm/deny appointments */}
+						<div className = "approveAppointment" id = "approveAppointment">
+							
+							{/* <Confirmbox client = {healerAppointment.client} time = {healerAppointment.time} date = {healerAppointment.date}></Confirmbox>
+							 */}
+							{/* <Confirmbox healer = {userDetails.uid} setHealerAppointment= {setHealerAppointment } healerAppointment= {healerAppointment }></Confirmbox> */}
+							<Confirmbox healer = {userDetails.uid}></Confirmbox>
+						</div>
 					</div>
+					{/* the edit account portion */}
 					<div className="reviewContainer">
 						<div className="accountEditorHeaderContainer">
 							<div className="reviewTop">
@@ -154,6 +199,8 @@ const AccountForm = ({userDetails, userLocation}) => {
 			setOptions(responseOptions);
 		});
 	};
+
+	
 
 	var arr = userDetails.services.split(",");
 
@@ -415,6 +462,135 @@ const HealerOptions = (props) => {
 	</>
 	)
 }
+
+
+const Confirmbox = ({healer})=> {  //not sure yet.
+	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
+	function updateAppointment(confirm){
+		// if(confirm == 1){
+		// 	console.log("Handle submit");
+		// 	axios.put('http://localhost:8080/appointments/'+healerAppointment.aid, {
+		// 		healerAccepted: 1, 
+		// 		client: healerAppointment.client, 
+		// 		aid: healerAppointment.aid,
+		// 		healer: healer, 
+		// 		timezone: healerAppointment.timezone,
+		// 		date: healerAppointment.date, 
+		// 		time: healerAppointment.time, 
+		// 		createdAt: Date.now(), 
+		// 		updatedAt: Date.now()
+		// 	})
+		// }
+		// else{
+		// 	console.log("Deny");
+		// 	console.log("Handle submit");
+			
+		// }
+		console.log(healerAppointment.aid);
+		axios.put('http://localhost:8080/appointments/'+healerAppointment.aid, {
+			healerAccepted: confirm, 
+			client: healerAppointment.client, 
+			aid: healerAppointment.aid,
+			healer: healer, 
+			timezone: healerAppointment.timezone,
+			date: healerAppointment.date, 
+			time: healerAppointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})
+	}
+	useEffect(()=> {
+		axios.get("http://localhost:8080/appointments?healer="+healer)
+		.then((response)=> {
+			console.log(response.data);
+			// response.data.map(resp=> {
+			// 	// if(resp.healerAccepted == 0){    //show only if the healer has not accept yet.
+					
+			// 	// }
+				
+			// })
+			setHealerAppointment(response.data);
+		})
+	}, []);
+
+	return (
+		<div>
+			{healerAppointment.map(appointment=> {
+				return (
+					<div id = {appointment.aid}>
+						<p>{appointment.client}</p>
+						<p>{appointment.time}</p>
+						<p>{appointment.date}</p>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 1, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})}}  >Confirm</button>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 0, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})}} >Deny</button>
+						<br></br>
+					</div>
+				)
+			})}
+			
+			{/* <Formik onSubmit = {(values, actions)=> {
+				actions.setSubmit(true);
+
+			}}>
+				{props=> {
+					<form onSubmit = {props.handleSubmit}>
+						<button type="submit" onSubmit = {handleSubmit} id="confirmButton">Confirm</button>
+						<button type = "submit" onSubmit = {handleSubmit} id = "denyButton">Deny</button>
+					</form>
+				}}
+			
+			</Formik> */}
+			
+			
+		</div>
+		// <Notification healerAppointment = {healerAppointment}></Notification>
+		
+	)
+}
+
+// const DetailBox = (appointment)=> {
+// 	return (
+// 		<div>
+// 			<p>{appointment.client}</p>
+// 			<p>{appointment.time}</p>
+// 			<p>{appointment.date}</p>
+// 			<button type="submit" onSubmit = {handleSubmit(1)} id="confirmButton">Confirm</button>
+// 			<button type = "submit" onSubmit = {handleSubmit(0)} id = "denyButton">Deny</button>
+// 			<br></br>
+			
+// 		</div>
+// 	)
+// }
+
 
 export default Account;
 
