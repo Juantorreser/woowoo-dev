@@ -1,16 +1,24 @@
 const fs = require("fs");
 const db = require("../models");
 const Appointment = db.appointment;
+const User = db.user;
 const Op = db.Sequelize.Op;
 const nodemailer = require('nodemailer');
 const {EMAIL_PASS} = require('../config/db.config.js');
 
 const transporter = nodemailer.createTransport({
-  // host: "woowoonetwork",
-  // port: 4200,
-  // secure: false, 
-  service: "gmail", 
+  host: "woo-woo-network.firebaseapp.com",
+  port: 4200,
+  secure: false, 
+  service: "gmail",
   auth: {
+    type: 'OAuth2', 
+    //clientId: process.env.OAUTH_CLIENT_ID, 
+    clientId: "257418938856-8pck88n3cvhgf0ibi65iiuukv6aeo715.apps.googleusercontent.com",
+    //clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    clientSecret: "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",
+    //refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+    refreshToken: "1//04gSd7p_7b3MhCgYIARAAGAQSNwF-L9Iryu7d520tG2gwzF_4_9rMmwXW7Pw_aqEzMVv40ccCaB5rSUoRSRhgGEZguhnKiquiSBQ",
     user: "woowoonetworkcanada@gmail.com", 
     pass: EMAIL_PASS
   }
@@ -82,18 +90,35 @@ exports.createAppointment = async (req, res) => {
 
     //get the token:
     //getTokenFromFirebase();
-    
-    const info = await transporter.sendMail({
+    const mailOptions = {
       from: "woowoonetworkcanada@gmail.com", 
       to: "woowoonetworkcanada@gmail.com", 
       subject: "Testing", 
       text: "Hello world", 
-      html: "<p>Hello world?</p>"
+      html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
+    };
+
+    const info = await transporter.sendMail(mailOptions, function(err, data){
+      if(err){
+        console.log("Error with sending mail: " + err)
+      }
+      else{
+        console.log("Email sent successfully");
+      }
     })
-    // Save Location in the database
-    await Appointment.create(location)
+    // Save Location in the database. location is not defined yet.
+    // await Appointment.create(location)
+    //   .then(data => {
+    //     console.log('received: ' + data);
+    //   })
+    //   .catch(err => {
+    //     console.log("Some error occurred while creating the User.");
+    //   });
+
+    await Appointment.create(appointment)
       .then(data => {
         console.log('received: ' + data);
+        res.send(data);
       })
       .catch(err => {
         console.log("Some error occurred while creating the User.");
@@ -120,6 +145,8 @@ exports.findAllAppointments = async (req, res) => {
       });
     });
 };
+
+
 
 // This function is used to update an existing appointment based on its aid (appointment ID). 
 // It takes the aid from the request parameters and uses Appointment.update() to update the appointment with the new data provided in the request body. 

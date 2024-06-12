@@ -466,6 +466,7 @@ const HealerOptions = (props) => {
 
 const Confirmbox = ({healer})=> {  //not sure yet.
 	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
+	const [newAppointment, setNewAppointment] = useState([{}]);
 	function updateAppointment(confirm){
 		// if(confirm == 1){
 		// 	console.log("Handle submit");
@@ -512,18 +513,27 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 			// 	// }
 				
 			// })
-			setHealerAppointment(response.data);
+			const a = [];
+			response.data.map(x => {
+				if(x.healerAccepted == null){
+					a.push(x);
+				}
+			})
+			//setHealerAppointment(response.data);
+			setHealerAppointment(a);
 		})
-	}, []);
+	});
 
+
+	
 	return (
 		<div>
 			{healerAppointment.map(appointment=> {
 				return (
 					<div id = {appointment.aid}>
-						<p>{appointment.client}</p>
-						<p>{appointment.time}</p>
-						<p>{appointment.date}</p>
+						<p>Client: {appointment.client}</p>
+						<p>Time: {appointment.time}</p>
+						<p>Date: {appointment.date}</p>
 						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
 			healerAccepted: 1, 
 			client: appointment.client, 
