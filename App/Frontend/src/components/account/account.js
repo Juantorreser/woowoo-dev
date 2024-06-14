@@ -135,16 +135,10 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
-
-						{/* confirm/deny appointments */}
-						<div className = "approveAppointment" id = "approveAppointment">
-							
-							{/* <Confirmbox client = {healerAppointment.client} time = {healerAppointment.time} date = {healerAppointment.date}></Confirmbox>
-							 */}
-							{/* <Confirmbox healer = {userDetails.uid} setHealerAppointment= {setHealerAppointment } healerAppointment= {healerAppointment }></Confirmbox> */}
-							<Confirmbox healer = {userDetails.uid}></Confirmbox>
-						</div>
 					</div>
+
+					
+
 					{/* the edit account portion */}
 					<div className="reviewContainer">
 						<div className="accountEditorHeaderContainer">
@@ -159,7 +153,12 @@ const Account = () => {
 						</div>
 						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
 					</div>
+
+					
 				</div> 
+
+				
+
 			</>
 			: 
 			<>
@@ -466,44 +465,10 @@ const HealerOptions = (props) => {
 
 const Confirmbox = ({healer})=> {  //not sure yet.
 	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
-	const [newAppointment, setNewAppointment] = useState([{}]);
-	function updateAppointment(confirm){
-		// if(confirm == 1){
-		// 	console.log("Handle submit");
-		// 	axios.put('http://localhost:8080/appointments/'+healerAppointment.aid, {
-		// 		healerAccepted: 1, 
-		// 		client: healerAppointment.client, 
-		// 		aid: healerAppointment.aid,
-		// 		healer: healer, 
-		// 		timezone: healerAppointment.timezone,
-		// 		date: healerAppointment.date, 
-		// 		time: healerAppointment.time, 
-		// 		createdAt: Date.now(), 
-		// 		updatedAt: Date.now()
-		// 	})
-		// }
-		// else{
-		// 	console.log("Deny");
-		// 	console.log("Handle submit");
-			
-		// }
-		console.log(healerAppointment.aid);
-		axios.put('http://localhost:8080/appointments/'+healerAppointment.aid, {
-			healerAccepted: confirm, 
-			client: healerAppointment.client, 
-			aid: healerAppointment.aid,
-			healer: healer, 
-			timezone: healerAppointment.timezone,
-			date: healerAppointment.date, 
-			time: healerAppointment.time, 
-			createdAt: Date.now(), 
-			updatedAt: Date.now()
-		})
-		.then((response)=> {
-			console.log(response.data);
-		})
-	}
-	useEffect(()=> {
+	const [confirm, setConfirm] = useState(null);   //detects whether to reload or not.
+	var arrayConfirm = [];
+	//Get all the appointments related to the healer.
+	useEffect(()=> {   
 		axios.get("http://localhost:8080/appointments?healer="+healer)
 		.then((response)=> {
 			console.log(response.data);
@@ -522,12 +487,14 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 			//setHealerAppointment(response.data);
 			setHealerAppointment(a);
 		})
-	});
+	}, [confirm]);
 
 
 	
 	return (
-		<div>
+		<div className = "reviewContainer">
+			<br></br>
+			<h3>Upcoming appointments</h3>
 			{healerAppointment.map(appointment=> {
 				return (
 					<div id = {appointment.aid}>
@@ -547,7 +514,11 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 		})
 		.then((response)=> {
 			console.log(response.data);
-		})}}  >Confirm</button>
+		})
+		arrayConfirm.push(true);
+		setConfirm(arrayConfirm);
+		}
+		}  >Confirm</button>
 						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
 			healerAccepted: 0, 
 			client: appointment.client, 
@@ -561,45 +532,19 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 		})
 		.then((response)=> {
 			console.log(response.data);
-		})}} >Deny</button>
+		})
+		arrayConfirm.push(false);
+		setConfirm(arrayConfirm)}} >Deny</button>
 						<br></br>
 					</div>
 				)
 			})}
-			
-			{/* <Formik onSubmit = {(values, actions)=> {
-				actions.setSubmit(true);
-
-			}}>
-				{props=> {
-					<form onSubmit = {props.handleSubmit}>
-						<button type="submit" onSubmit = {handleSubmit} id="confirmButton">Confirm</button>
-						<button type = "submit" onSubmit = {handleSubmit} id = "denyButton">Deny</button>
-					</form>
-				}}
-			
-			</Formik> */}
-			
-			
 		</div>
-		// <Notification healerAppointment = {healerAppointment}></Notification>
+		
 		
 	)
 }
 
-// const DetailBox = (appointment)=> {
-// 	return (
-// 		<div>
-// 			<p>{appointment.client}</p>
-// 			<p>{appointment.time}</p>
-// 			<p>{appointment.date}</p>
-// 			<button type="submit" onSubmit = {handleSubmit(1)} id="confirmButton">Confirm</button>
-// 			<button type = "submit" onSubmit = {handleSubmit(0)} id = "denyButton">Deny</button>
-// 			<br></br>
-			
-// 		</div>
-// 	)
-// }
 
 
 export default Account;

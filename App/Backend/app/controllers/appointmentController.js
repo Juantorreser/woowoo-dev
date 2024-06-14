@@ -5,7 +5,9 @@ const User = db.user;
 const Op = db.Sequelize.Op;
 const nodemailer = require('nodemailer');
 const {EMAIL_PASS} = require('../config/db.config.js');
-
+const { emitWarning } = require("process");
+const axios = require('axios');
+// const userFunction = require('./userController.js');
 const transporter = nodemailer.createTransport({
   host: "woo-woo-network.firebaseapp.com",
   port: 4200,
@@ -55,7 +57,7 @@ const transporter = nodemailer.createTransport({
 exports.createAppointment = async (req, res) => {
     // Validate request
     console.log(req.body);
-
+    var healerEmail = "";
     if (!req.body.healer) {
       let message = "healer id can not be empty!";
       await res.status(400).send({
@@ -72,7 +74,20 @@ exports.createAppointment = async (req, res) => {
       });
       return;
     }
-
+    //find the email of the healer.
+    await User.findAll({   //find the account of the one being deleted.
+      where: {uid: req.body.healer}   //find the email fo the healer.
+    })
+    .then(async data=> {
+        
+        try{
+          healerEmail = data[0].email;
+        }
+        catch(err){
+          console.log(err);
+        }
+    })
+    console.log("Healer email is: "+ healerEmail);
     const lastid = await Appointment.max('aid');
     const appointment = {
       aid: lastid !== 0 && lastid ? lastid + 1 : 1,
@@ -92,7 +107,8 @@ exports.createAppointment = async (req, res) => {
     //getTokenFromFirebase();
     const mailOptions = {
       from: "woowoonetworkcanada@gmail.com", 
-      to: "woowoonetworkcanada@gmail.com", 
+      to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+      //to: healerEmail,   //this is the real one.
       subject: "Testing", 
       text: "Hello world", 
       html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
@@ -151,8 +167,33 @@ exports.findAllAppointments = async (req, res) => {
 // This function is used to update an existing appointment based on its aid (appointment ID). 
 // It takes the aid from the request parameters and uses Appointment.update() to update the appointment with the new data provided in the request body. 
 // If the update is successful (indicated by num == 1), it sends a success message; otherwise, it sends an error message.
-exports.updateAppointment = (req, res) => {
+//Also, send a message back to the user to inform them of the update in the appointment.
+exports.updateAppointment = async (req, res) => {
   const id = req.params.aid;
+  const userId = req.body.client;
+  var userEmail = "";
+  //find the email of the user ID
+  await axios.get("http://localhost:8080/users/"+ userId).then((result)=> {
+    console.log(result.data.email);
+    userEmail = result.data.email;
+  })
+  const mailOptions = {
+    from: "woowoonetworkcanada@gmail.com", 
+    to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+    //to: userEmail,   //this is the real one. (Not tested yet)
+    subject: "Testing", 
+    text: "Hello world", 
+    html: `<div><h3>Update on your appointment: </h3> <p>Client:${req.body.client}</p> <p>Time: ${req.body.time}</p> <p>Date: ${req.body.date}</p> <p>Healer Accepted: ${req.body.healerAccepted}</p></div>`
+  };
+
+  const info = await transporter.sendMail(mailOptions, function(err, data){
+    if(err){
+      console.log("Error with sending mail: " + err)
+    }
+    else{
+      console.log("Email sent successfully");
+    }
+  })
   Appointment.update(req.body, {
     where: { aid: id }
   })
