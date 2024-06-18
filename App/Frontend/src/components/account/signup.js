@@ -71,7 +71,8 @@ const SignUp = () => {
 								services: [],
 								format: 0,
 								description: "",
-								terms: false
+								terms: false, 
+								servicePrices: []
 							}}
 							validationSchema={schema}
 							
@@ -284,6 +285,7 @@ const SignUp = () => {
 //similarly to the Account edit page, Healer options defines the fields related only to 
 //those users who wish to be healers and listed in the healer search. 
 const HealerOptions = (props) => {
+	var priceOrder = 0;
 	//on render, fetches the services from the service API, limiting network calls until needed. 
 	useEffect(() => {
 		props.getServices()
@@ -298,9 +300,34 @@ const HealerOptions = (props) => {
 			options={props.options}
 			value={props.selectedServices}
 			onChange={props.setSelectedServices}
-		/>
+		>
+			
+		</Field>
 		<ErrorMessage name="services" render={renderError} />
-
+		<p>Price of services in range of time: </p>  {/* create texts depending on the amount of services the healer choose */}
+		{props.selectedServices.map(service=> {
+			
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={'servicePrices['+ priceOrder + ']'}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {props.setServicePrices}
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+				
+			)
+			priceOrder ++;
+		
+		})}
+		
 		{/* <TextInput
 			name="servicePrices"
            onChangeText={props.setServicePrices}

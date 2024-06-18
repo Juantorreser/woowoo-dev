@@ -107,8 +107,8 @@ exports.createAppointment = async (req, res) => {
     //getTokenFromFirebase();
     const mailOptions = {
       from: "woowoonetworkcanada@gmail.com", 
-      to: "woowoonetworkcanada@gmail.com",  //this is just testing.
-      //to: healerEmail,   //this is the real one.
+      //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+      to: healerEmail,   //this is the real one.
       subject: "Testing", 
       text: "Hello world", 
       html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
@@ -177,10 +177,12 @@ exports.updateAppointment = async (req, res) => {
     console.log(result.data.email);
     userEmail = result.data.email;
   })
+
+  console.log(userEmail);
   const mailOptions = {
     from: "woowoonetworkcanada@gmail.com", 
-    to: "woowoonetworkcanada@gmail.com",  //this is just testing.
-    //to: userEmail,   //this is the real one. (Not tested yet)
+    //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+    to: userEmail,   //this is the real one. (Not tested yet)
     subject: "Testing", 
     text: "Hello world", 
     html: `<div><h3>Update on your appointment: </h3> <p>Client:${req.body.client}</p> <p>Time: ${req.body.time}</p> <p>Date: ${req.body.date}</p> <p>Healer Accepted: ${req.body.healerAccepted}</p></div>`

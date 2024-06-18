@@ -71,9 +71,10 @@ exports.createUser = async (req, res) => {
     enabled: true,
     region: req.body.region,
     format: req.body.format ? req.body.format : 0,
-    stripeAccount: ""
+    stripeAccount: "",
+    prices: req.body.servicePrices ? req.body.servicePrices.toString() : null
   };
-
+  console.log(user.prices);
   // Validate request
   if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password) {
     console.log('no name email or password');
@@ -179,6 +180,7 @@ exports.createUser = async (req, res) => {
   }
  
   // Create user and try to set a location based on address
+  console.log(user);
   User.create(user)
     .then(async data => {
       if(user.address !== null){

@@ -51,6 +51,9 @@ module.exports = (sequelize, Sequelize) => {    //is the same as normal export.
       }, 
       stripeAccount: {
         type: Sequelize.STRING
+      },
+      prices: {
+        type: Sequelize.STRING   //self-added. Not sure yet.
       }
     },
     { 

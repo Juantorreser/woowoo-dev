@@ -123,6 +123,7 @@ const Account = () => {
 							</div>
 							<div className="healerSelectedMiddle" id="services">
 								<p>{userDetails.services}</p>
+								<p>{userDetails.prices}</p>
 							</div>
 							<hr/>
 							<div className="healerSelectedBottom">
@@ -135,6 +136,7 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
+						
 					</div>
 
 					
@@ -230,6 +232,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
+					servicePrices: [],
 					//services: services.map(s => s.value),
 					format: userDetails.format
 				}}
@@ -420,6 +423,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 //Healer-specific account settings. Should only be visible if the user selects the checkbox to indicate
 //they want their account to be set as a healer. 
 const HealerOptions = (props) => {
+	var priceOrder = 0;
 	//on render, makes the call to the services API. Prevents too many calls on page load.
 	useEffect(() => {
 		props.getServices()
@@ -436,7 +440,28 @@ const HealerOptions = (props) => {
 			onChange={props.setSelectedServices}
 		/>
 		<ErrorMessage name="services" render={renderError} />
+		{props.selectedServices.map(service=> {
+			
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={'servicePrices['+ priceOrder + ']'}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {props.setServicePrices}
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+				
+			)
+			priceOrder ++;
 		
+		})}
 		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
