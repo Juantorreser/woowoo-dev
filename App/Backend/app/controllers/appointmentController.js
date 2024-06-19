@@ -185,7 +185,7 @@ exports.updateAppointment = async (req, res) => {
     to: userEmail,   //this is the real one. (Not tested yet)
     subject: "Testing", 
     text: "Hello world", 
-    html: `<div><h3>Update on your appointment: </h3> <p>Client:${req.body.client}</p> <p>Time: ${req.body.time}</p> <p>Date: ${req.body.date}</p> <p>Healer Accepted: ${req.body.healerAccepted}</p></div>`
+    html: `<div><h3>Update on your appointment: </h3> <p>Client:${req.body.client}</p> <p>Time: ${req.body.time}</p> <p>Date: ${req.body.date}</p> <p>Healer Accepted: ${req.body.healerAccepted == 1 ? "Confirm" : "Deny"}</p></div>`
   };
 
   const info = await transporter.sendMail(mailOptions, function(err, data){

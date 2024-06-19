@@ -304,7 +304,7 @@ const HealerOptions = (props) => {
 			
 		</Field>
 		<ErrorMessage name="services" render={renderError} />
-		<p>Price of services in range of time: </p>  {/* create texts depending on the amount of services the healer choose */}
+		<p>Price of services in 1 hour: </p>  {/* create texts depending on the amount of services the healer choose */}
 		{props.selectedServices.map(service=> {
 			
 			return(

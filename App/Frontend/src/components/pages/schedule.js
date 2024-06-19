@@ -87,6 +87,7 @@ const ConfirmBox = ({healer})=> {
     console.log(healer);
     const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
 	const [confirm, setConfirm] = useState([]);   //detects whether to reload or not.
+	const [clientInfo, setClientInfo] = useState({});
     var arrayConfirm = [];
     useEffect(()=> {  //think of someway so that the useEffect run for the first time and then, run for every time the button is pressed.   
 		axios.get("http://localhost:8080/appointments?healer="+healer.uid)
@@ -121,46 +122,13 @@ const ConfirmBox = ({healer})=> {
 			{healerAppointment.map(appointment=> {
 				return (
 					<div key = {appointment.aid}>
-						<p>Client: {appointment.client}</p>
+						{/* <p>Client: {appointment.client}</p>
 						<p>Time: {appointment.time}</p>
-						<p>Date: {appointment.date}</p>
+						<p>Date: {appointment.date}</p> */}
+						<ClientBox appointment = {appointment}></ClientBox>
 						{healer.account == 1? <>     {/* check to see if they are the healer. If not, then no confirm/deny button for them */}
 							<ConfirmButton appointment = {appointment} confirm = {1} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
 							<ConfirmButton appointment = {appointment} confirm = {0} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> </>: <p></p> }
-						{/* <button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
-			healerAccepted: 1, 
-			client: appointment.client, 
-			aid: appointment.aid,
-			healer: healer, 
-			timezone: appointment.timezone,
-			date: appointment.date, 
-			time: appointment.time, 
-			createdAt: Date.now(), 
-			updatedAt: Date.now()
-		})
-		.then((response)=> {
-			console.log(response.data);
-		})
-		arrayConfirm.push(true);
-		setConfirm(arrayConfirm);
-		}
-		}  >Confirm</button> */}
-						{/* <button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
-			healerAccepted: 0, 
-			client: appointment.client, 
-			aid: appointment.aid,
-			healer: healer, 
-			timezone: appointment.timezone,
-			date: appointment.date, 
-			time: appointment.time, 
-			createdAt: Date.now(), 
-			updatedAt: Date.now()
-		})
-		.then((response)=> {
-			console.log(response.data);
-		})
-		arrayConfirm.push(false);
-		setConfirm(arrayConfirm)}} >Deny</button> */}
 						<br></br>
 					</div>
 				)
@@ -171,18 +139,40 @@ const ConfirmBox = ({healer})=> {
 	)
 }
 
+const ClientBox = ({appointment})=> {
+	const [clientInfo, setClientInfo] = useState({});
+	useEffect(()=> {
+		axios.get("http://localhost:8080/users/"+ appointment.client)
+		.then(result=> {
+			console.log(result.data);
+			setClientInfo(result.data)
+		})
+		.catch(err=> {
+			console.log("There is an issue with catching the client info: "+ err);
+		})
+	}, [])
+
+	return(
+		<div key = {appointment.aid}>
+						<p>Client: {clientInfo.firstName + " "+ clientInfo.lastName}</p>
+						<p>Time: {appointment.time}</p>
+						<p>Date: {appointment.date}</p>
+		</div>
+	)
+}
 const Loading = ()=> {
 	return(
 		<p>Still loading</p>
 	)
 }
 
+//the confirm/deny button
 const ConfirmButton = ({appointment, confirm, healerID, arrayConfirm, setConfirm})=> {
 	var confirmText = "";
 	if(confirm == 1){
 		confirmText = "Confirm";
 	}
-	else{
+	else if(confirm == 0){
 		confirmText = "Deny";
 	}
 	return(
@@ -199,9 +189,10 @@ const ConfirmButton = ({appointment, confirm, healerID, arrayConfirm, setConfirm
 		})
 		.then((response)=> {
 			console.log(response.data);
+			arrayConfirm.push(true);
+			setConfirm(arrayConfirm);
 		})
-		arrayConfirm.push(true);
-		setConfirm(arrayConfirm);
+		
 		}
 		}  >{confirmText}</button>
 	)
