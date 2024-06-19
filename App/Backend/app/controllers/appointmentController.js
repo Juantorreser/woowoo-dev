@@ -221,7 +221,8 @@ exports.updateAppointment = async (req, res) => {
 // It utilizes Appointment.destroy() to remove the appointment from the database. 
 // If the deletion is successful (indicated by num == 1), it sends a success message; otherwise, it sends an error message.
 exports.deleteAppointment = (req, res) => {
-  const id = req.params.fbid;
+  //const id = req.params.fbid;
+  const id = req.params.aid;
   Appointment.destroy({
     where: { fbid: id }
   })

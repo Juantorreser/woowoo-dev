@@ -79,8 +79,18 @@ const Schedule = ()=> {
 		});	
 		
 	}, []); 
-	return <ConfirmBox healer = {healerDetails}></ConfirmBox>
-   
+	return(
+	<>
+		<ConfirmBox healer = {healerDetails}></ConfirmBox>
+		<HistoryBox></HistoryBox>
+	</>
+	)
+}
+
+const HistoryBox = ()=> {
+	return(
+		<p>Appointment history</p>
+	)
 }
 
 const ConfirmBox = ({healer})=> {
@@ -122,13 +132,15 @@ const ConfirmBox = ({healer})=> {
 			{healerAppointment.map(appointment=> {
 				return (
 					<div key = {appointment.aid}>
-						{/* <p>Client: {appointment.client}</p>
-						<p>Time: {appointment.time}</p>
-						<p>Date: {appointment.date}</p> */}
 						<ClientBox appointment = {appointment}></ClientBox>
-						{healer.account == 1? <>     {/* check to see if they are the healer. If not, then no confirm/deny button for them */}
-							<ConfirmButton appointment = {appointment} confirm = {1} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
-							<ConfirmButton appointment = {appointment} confirm = {0} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> </>: <p></p> }
+						{healer.account == 1 ? 
+						<>
+									<ConfirmButton appointment = {appointment} confirm = {1} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+									<ConfirmButton appointment = {appointment} confirm = {0} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+						</>
+								:
+								<CancelButton appointment = {appointment}></CancelButton> 
+						}
 						<br></br>
 					</div>
 				)
@@ -197,6 +209,24 @@ const ConfirmButton = ({appointment, confirm, healerID, arrayConfirm, setConfirm
 		}  >{confirmText}</button>
 	)
 	
+}
+
+const CancelButton = ({appointment})=> {
+	return(
+		<>
+			<button  onClick = {()=> {axios.delete("http://localhost:8080/appointments/"+ appointment.aid)
+		.then(result=> {
+			console.log(result.data);
+
+		})
+		.catch(err=> {
+			console.log("Something wrong when deleting appoitnments"+ err);
+		})
+		
+		}
+		}>Deny</button>
+		</>
+	)
 }
 
 export default Schedule;
