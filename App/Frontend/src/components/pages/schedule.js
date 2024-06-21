@@ -23,7 +23,7 @@ const auth = getAuth(app);
 //     )
 // }
 const Schedule = ()=> {
-    const [healerDetails, setHealerDetails]=  useState({});
+    const [userDetails, setUserDetails]=  useState({});
 	//Get all the appointments related to the healer.
 
     useEffect(() => {
@@ -40,67 +40,129 @@ const Schedule = ()=> {
 					for(const i of response.data){
 						if (i.email == user.email){
 							console.log(i);
-							setHealerDetails(i);
+							setUserDetails(i);
 							//userD = i;
 						}
 					}
-					// //setUserDetails(response.data[0]);
-					// try{
-					// 	axios.post('http://localhost:8080/locations', 
-					// 		response.data.map((user) => user.uid)
-					// 	).then((response) => {
-					// 		setUserLocation(response.data[0]);
-					// 	});
-					// }
-					// catch (err) {
-					// 	console.log(err);
-					// }
-	
-					// try{   //fetching appointments
-					// 	const appointments = await axios.get('http://localhost:8080/appointments?uid='+ userDetails.uid);
-					// 	console.log(appointments);
-					// 	setHealerAppointment(appointments.data);
-					// }
-					// catch(err){
-					// 	console.log(err);
-					// }
-					//console.log(userD.uid);
-					
-					// axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid).then((response) => {
-					// 	console.log(response.data[0]);
-					// 	setHealerAppointment(response.data[0]);
-					// })
 				});
-				return (
-					<ConfirmBox healer = {healerDetails.uid}></ConfirmBox>
-				)
+				// return (
+				// 	<ConfirmBox healer = {userDetails.uid}></ConfirmBox>
+				// )
 			}
-			
 		});	
-		
 	}, []); 
 	return(
 	<>
-		<ConfirmBox healer = {healerDetails}></ConfirmBox>
-		<HistoryBox></HistoryBox>
+		<ConfirmBox userDetails = {userDetails}></ConfirmBox>
+		<HistoryBox userDetails={userDetails}></HistoryBox>
 	</>
 	)
 }
 
-const HistoryBox = ()=> {
+const HistoryBox = ({userDetails})=> {
+	var appointmentsArray = [];
+	console.log(userDetails);
+	const [history, setHistory] = useState([{client: 1}]);
+	const [render, setRender] = useState([]);
+	var endpoint = "appointments";
+	if(userDetails.account == 1){   //if the user who log in is the healer
+		endpoint = "appointments?healer="+ userDetails.uid;   //get the information of all the appointments the healer has set up/
+	}
+	else{
+		endpoint = "appointments/clients/"+userDetails.uid;   //get all the information of all the appointments the client has entered.
+	}
+	useEffect(()=>{
+		axios.get("http://localhost:8080/"+ endpoint)
+		.then(result=> {
+			console.log(result.data);
+			setHistory(result.data);
+		})
+		.catch(err=> {
+			console.log("Error with viewing history appointments: "+ err);
+		})
+	}, [userDetails])
+
+	// useEffect(()=>{
+	// 	console.log(history)
+	// }, [history])
+
 	return(
-		<p>Appointment history</p>
+		<>
+			<h3>Appointment history</h3>
+			{
+				// useEffect(()=> {
+				// 	history.map(appointment=> {
+				// 		console.log(appointment);
+				// 		return(
+				// 			<>
+				// 				<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+				// 			</>
+				// 		)
+				// 	})
+				// })
+				history.map(appointment=> {
+					console.log(appointment);
+					return(
+						<>
+							<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+						</>
+					)
+				})
+			}
+		</>
+		
 	)
 }
 
-const ConfirmBox = ({healer})=> {
-    console.log(healer);
+// const HistoryComponents = ({history, userDetails})=> {
+// 	return(
+// 		<>
+// 			{/* {
+// 			history.length > 0?
+// 			history.map(appointment=> {
+// 				console.log(appointment);
+// 				return(
+// 					<>
+// 						<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+// 					</>
+// 				)
+// 			})
+// 			:
+// 			<p>Still loading</p>
+// 		} */}
+// {
+// 			// useEffect(()=> {
+// 			// 	console.log(history);
+// 			// 	// 	history.map(appointment=> {
+// 			// 	// 	console.log(appointment);
+// 			// 	// 	return(
+// 			// 	// 		<>
+// 			// 	// 			<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+// 			// 	// 		</>
+// 			// 	// 	)
+// 			// 	// })
+// 			// }, [history])
+// 			history.map(appointment=> {
+// 				console.log(appointment);
+// 				return(
+// 					<>
+// 						<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+// 					</>
+// 				)
+// 			})
+// }
+// </>
+// 	)
+// }
+
+const ConfirmBox = ({userDetails})=> {
+    console.log(userDetails);
     const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
 	const [confirm, setConfirm] = useState([]);   //detects whether to reload or not.
 	const [clientInfo, setClientInfo] = useState({});
     var arrayConfirm = [];
     useEffect(()=> {  //think of someway so that the useEffect run for the first time and then, run for every time the button is pressed.   
-		axios.get("http://localhost:8080/appointments?healer="+healer.uid)
+		axios.get("http://localhost:8080/appointments?healer="+userDetails.uid)
 		.then((response)=> {
 			console.log(response.data);
 			// response.data.map(resp=> {
@@ -121,7 +183,7 @@ const ConfirmBox = ({healer})=> {
 		.catch(err=> {
 			console.log("Error at schedule: "+ err);
 		})
-	}, [healer, confirm]);
+	}, [userDetails, confirm]);
 
 
 	
@@ -129,32 +191,50 @@ const ConfirmBox = ({healer})=> {
 		<div className = "reviewContainer">
 			<br></br>
 			<h3>Upcoming appointments</h3>
-			{healerAppointment.map(appointment=> {
-				return (
-					<div key = {appointment.aid}>
-						<ClientBox appointment = {appointment}></ClientBox>
-						{healer.account == 1 ? 
-						<>
-									<ConfirmButton appointment = {appointment} confirm = {1} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
-									<ConfirmButton appointment = {appointment} confirm = {0} healerID = {healer.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
-						</>
-								:
-								<CancelButton appointment = {appointment}></CancelButton> 
-						}
-						<br></br>
-					</div>
-				)
-			})}
+			
+			{
+				useEffect(()=> {
+					healerAppointment.map(appointment=> {
+						return (
+							<div key = {appointment.aid}>
+								<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+								{userDetails.account == 1 ? 
+								<>
+											<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+											<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+								</>
+										:
+										<CancelButton appointment = {appointment}></CancelButton> 
+								}
+								<br></br>
+							</div>
+						)
+					})
+				})
+			}
 		</div>
-		
-		
 	)
 }
 
-const ClientBox = ({appointment})=> {
+const ClientBox = ({appointment, user})=> {  //appointment can contain both the healer and the client's information.
+	console.log(user);
+	console.log(appointment);
 	const [clientInfo, setClientInfo] = useState({});
+	var receiver = "Client:"
+	var endpoint = "1";
+	if(appointment != null){
+		console.log(appointment);
+		if(user.account == 1){
+			endpoint = appointment.healer;
+		}
+		else{
+			endpoint = appointment.client;
+			receiver = "Healer: "
+		}
+	}
+	
 	useEffect(()=> {
-		axios.get("http://localhost:8080/users/"+ appointment.client)
+		axios.get("http://localhost:8080/users/"+ endpoint)
 		.then(result=> {
 			console.log(result.data);
 			setClientInfo(result.data)
@@ -162,13 +242,12 @@ const ClientBox = ({appointment})=> {
 		.catch(err=> {
 			console.log("There is an issue with catching the client info: "+ err);
 		})
-	}, [])
-
+	}, [])  //re-render whenever there is a new appointment
 	return(
-		<div key = {appointment.aid}>
-						<p>Client: {clientInfo.firstName + " "+ clientInfo.lastName}</p>
-						<p>Time: {appointment.time}</p>
-						<p>Date: {appointment.date}</p>
+		<div>
+			<p> {receiver} {clientInfo.firstName + " "+ clientInfo.lastName}</p>
+			<p>Time: {appointment.time}</p>
+			<p>Date: {appointment.date}</p>
 		</div>
 	)
 }

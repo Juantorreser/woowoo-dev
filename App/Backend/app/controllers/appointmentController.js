@@ -162,7 +162,22 @@ exports.findAllAppointments = async (req, res) => {
     });
 };
 
-
+//fidn the history of appointments from a specific client:
+exports.getClientAppointments = async (req, res)=> {
+  const id = req.params.uid;
+  await Appointment.findAll({
+    where: {
+      client: id
+    }
+  })
+  .then(data=> {
+    console.log(data);
+    res.send(data);
+  })
+  .catch(err=> {
+    res.status(500).send(err);
+  })
+}
 
 // This function is used to update an existing appointment based on its aid (appointment ID). 
 // It takes the aid from the request parameters and uses Appointment.update() to update the appointment with the new data provided in the request body. 

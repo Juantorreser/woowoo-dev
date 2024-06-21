@@ -190,6 +190,7 @@ module.exports = function(router){
         // .delete((req, res) => {
         //     appointments.deleteAppointments(req, res);
         // });
+
     //find specific appointments with specific aid
     router.route('/appointments/:aid').get((req, res)=> {
         appointments.getAppointments(req, res);
@@ -197,6 +198,11 @@ module.exports = function(router){
     //delete specific appointments with specific fbid
     router.route('/appointments/:fbid').delete((req, res)=> {
         appointments.deleteAppointments(req, res);
+    })
+
+    //find specific appointments from a user:
+    router.route('/appointments/clients/:uid').get((req, res)=> {
+        appointments.getClientAppointments(req, res);
     })
     // Availability
     router.route('/availability')
