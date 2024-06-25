@@ -114,47 +114,6 @@ const HistoryBox = ({userDetails})=> {
 	)
 }
 
-// const HistoryComponents = ({history, userDetails})=> {
-// 	return(
-// 		<>
-// 			{/* {
-// 			history.length > 0?
-// 			history.map(appointment=> {
-// 				console.log(appointment);
-// 				return(
-// 					<>
-// 						<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
-// 					</>
-// 				)
-// 			})
-// 			:
-// 			<p>Still loading</p>
-// 		} */}
-// {
-// 			// useEffect(()=> {
-// 			// 	console.log(history);
-// 			// 	// 	history.map(appointment=> {
-// 			// 	// 	console.log(appointment);
-// 			// 	// 	return(
-// 			// 	// 		<>
-// 			// 	// 			<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
-// 			// 	// 		</>
-// 			// 	// 	)
-// 			// 	// })
-// 			// }, [history])
-// 			history.map(appointment=> {
-// 				console.log(appointment);
-// 				return(
-// 					<>
-// 						<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
-// 					</>
-// 				)
-// 			})
-// }
-// </>
-// 	)
-// }
-
 const ConfirmBox = ({userDetails})=> {
     console.log(userDetails);
     const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
@@ -185,31 +144,45 @@ const ConfirmBox = ({userDetails})=> {
 		})
 	}, [userDetails, confirm]);
 
-
-	
 	return (
 		<div className = "reviewContainer">
 			<br></br>
 			<h3>Upcoming appointments</h3>
-			
 			{
-				useEffect(()=> {
-					healerAppointment.map(appointment=> {
-						return (
-							<div key = {appointment.aid}>
-								<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
-								{userDetails.account == 1 ? 
-								<>
-											<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
-											<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
-								</>
-										:
-										<CancelButton appointment = {appointment}></CancelButton> 
-								}
-								<br></br>
-							</div>
-						)
-					})
+				// useEffect(()=> {
+				// 	console.log(healerAppointment);
+				// 	healerAppointment.map(appointment=> {
+				// 		return (
+				// 			<div key = {appointment.aid}>
+				// 				<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+				// 				{userDetails.account == 1 ? 
+				// 				<>
+				// 						<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+				// 						<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+				// 				</>
+				// 						:
+				// 						<CancelButton appointment = {appointment}></CancelButton> 
+				// 				}
+				// 				<br></br>
+				// 			</div>
+				// 		)
+				// 	})
+				// })
+				healerAppointment.map(appointment=> {
+					return (
+						<div key = {appointment.aid}>
+							<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+							{userDetails.account == 1 ? 
+							<>
+									<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+									<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+							</>
+									:
+									<CancelButton appointment = {appointment}></CancelButton> 
+							}
+							<br></br>
+						</div>
+					)
 				})
 			}
 		</div>

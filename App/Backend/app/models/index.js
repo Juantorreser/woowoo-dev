@@ -31,7 +31,7 @@ db.service = require("./service.model.js")(sequelize, Sequelize);
 db.review = require("./review.model.js")(sequelize, Sequelize);
 db.appointment = require("./appointment.model.js")(sequelize, Sequelize);
 db.availability = require("./availability.model.js")(sequelize, Sequelize);
-
+db.message = require("./message.model.js")(sequelize, Sequelize);
 //many images to one user
 
 module.exports = db;

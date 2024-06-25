@@ -22,4 +22,10 @@ export const MenuItems=[
         url:'./schedule',
         cName: 'nav-links'
     }
+    ,
+    {
+        title: 'Message',
+        url: './message',
+        cName: 'nav-links'
+    }
 ];

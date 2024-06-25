@@ -12,6 +12,7 @@ const reviews = require('../controllers/reviewController.js');
 const uploads = require('../controllers/upload.js');
 const users = require('../controllers/userController.js');
 const appointments = require('../controllers/appointmentController.js');
+const message = require('../controllers/messageController.js');
 const availability = require('../controllers/availabilityController.js'); // Import availability controller
 const authController = require('../controllers/login.js');
 const router = express.Router();
@@ -232,4 +233,10 @@ module.exports = function(router){
         .get((req, res) => {
             users.testing(req, res);
         });
+    
+    //Route for message
+    router.route('/message/:uid')
+    .get((req, res)=> {
+        message.findAllMessage(req, res);
+    })
 };
