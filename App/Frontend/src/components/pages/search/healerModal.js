@@ -9,13 +9,13 @@ import FormRatings, { Stars } from 'form-ratings';
 import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase/firebase-config';
 
-//firebase authentication instance
+// Firebase authentication instance
 const auth = getAuth(app);
 
 const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingModal, reviewModal, setReviewModal, availability }) => {
-    const [reviews, setReviews] = useState(null);
-    const [avgReview, setAvgReview] = useState(null);
-    const [currentUser, setCurrentUser] = useState();
+    const [reviews, setReviews] = useState([]);
+    const [avgReview, setAvgReview] = useState(0);
+    const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
 
     const toFormattedDateString = (dateString) => {
         const date = new Date(dateString);
@@ -32,11 +32,31 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
     };
 
     useEffect(() => {
-        auth.onAuthStateChanged((user) => {
-            setCurrentUser(user);
-        });
+        const fetchCurrentUser = async () => {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    console.log(user);
+                    try {
+                        const response = await axios.get('http://localhost:8080/users');
+                        const users = response.data;
+                        console.log(user.email);
+                        const currentUser = users.find(u => u.email === user.email);
+                        console.log(currentUser);
+                        if (currentUser) {
+                            setCurrentUserNumericId(currentUser.uid); 
+                        } else {
+                            console.error("User not found in the user list");
+                        }
+                    } catch (error) {
+                        console.error("Error fetching users:", error);
+                    }
+                } else {
+                    setCurrentUserNumericId(null);
+                }
+            });
+        };
 
-        const getReviews = async () => {
+        const fetchReviews = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/review/${healerState.uid}`);
                 const reviewsData = response.data;
@@ -50,8 +70,32 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
             }
         };
 
-        getReviews();
+        fetchCurrentUser();
+        fetchReviews();
     }, [healerState.uid]);
+
+    const handleReviewSubmit = async (values, actions) => {
+        try {
+            if (currentUserNumericId) {
+                values.reviewee = healerState.uid;
+                values.reviewer = currentUserNumericId; // Use the current user's numeric ID for the reviewer field
+                await axios.post('http://localhost:8080/review', values);
+                // Refresh reviews after submission
+                const response = await axios.get(`http://localhost:8080/review/${healerState.uid}`);
+                const reviewsData = response.data;
+                const reviewTotal = reviewsData.reduce((acc, review) => acc + review.rating, 0);
+                const avgReviews = reviewsData.length > 0 ? reviewTotal / reviewsData.length : 0;
+
+                setAvgReview(avgReviews);
+                setReviews(reviewsData);
+                actions.resetForm();
+            } else {
+                console.error("User not authenticated");
+            }
+        } catch (error) {
+            console.error("Error submitting review:", error);
+        }
+    };
 
     if (bookingModal) {
         return (
@@ -59,9 +103,8 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
                 <div className="closeModal" onClick={() => {
                     setExpandedTicket(false);
                     setBookingModal(false);
-                }}>
-                </div>
-                <div className="singleHealer"> {healerState.name}
+                }}></div>
+                <div className="singleHealer">{healerState.name}
                     <div className="bookerSelected">
                         <div className="healerSelectedTop">
                             <p>{healerState.firstName} {healerState.lastName}</p>
@@ -70,7 +113,7 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
                             <p>{healerState.services}</p>
                         </div>
                         <hr />
-                        <Booking healer={healerState} /> {/*Booking.js*/}
+                        <Booking healer={healerState} uid={currentUserNumericId} /> {/* Pass the numeric user ID to Booking component */}
                     </div>
                 </div>
             </div>
@@ -81,9 +124,8 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
                 <div className="closeModal" onClick={() => {
                     setExpandedTicket(false);
                     setReviewModal(false);
-                }}>
-                </div>
-                <div className="singleHealer"> {healerState.name}
+                }}></div>
+                <div className="singleHealer">{healerState.name}
                     <div className="reviewSelected">
                         <div className="healerSelectedTop">
                             <p>{healerState.firstName} {healerState.lastName}</p>
@@ -94,44 +136,22 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
                         <hr />
                         <Formik
                             initialValues={{
-                                "rating": 0,
-                                "comment": ''
+                                rating: 0,
+                                comment: ''
                             }}
-                            onSubmit={(values, actions) => {
-                                try {
-                                    (async () => {
-                                        values.reviewee = healerState.uid;
-                                        values.reviewer = currentUser.uid;
-                                        await axios.post('http://localhost:8080/review', values);
-                                    })();
-                                } catch (err) {
-                                    console.log(err);
-                                }
-                            }}
+                            onSubmit={handleReviewSubmit}
                         >
-                            {({ handleSubmit, values }) => (
+                            {({ handleSubmit }) => (
                                 <div className="reviewFormContainer">
-                                    <Form
-                                        className="reviewForm"
-                                        onSubmit={handleSubmit}
-                                    >
+                                    <Form className="reviewForm" onSubmit={handleSubmit}>
                                         <div className="reviewPageContainer">
                                             <div className="reviewRatingContainer">
                                                 <p>Rating:</p>
-                                                <Field
-                                                    name="rating"
-                                                    as={FormRatings}
-                                                    id="reviewRating"
-                                                    className="star-rating"
-                                                />
+                                                <Field name="rating" as={FormRatings} id="reviewRating" className="star-rating" />
                                             </div>
                                             <div className="reviewDescriptionContainer">
                                                 <p>Review:</p>
-                                                <Field
-                                                    name="comment"
-                                                    as="textarea"
-                                                    id="reviewDescription"
-                                                />
+                                                <Field name="comment" as="textarea" id="reviewDescription" />
                                             </div>
                                             <div className="reviewSubmitButton">
                                                 <button type="submit" className="btn">Submit</button>
@@ -148,11 +168,8 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
     } else {
         return (
             <div className="healerClicked">
-                <div className="closeModal" onClick={() => {
-                    setExpandedTicket(false);
-                }}>
-                </div>
-                <div className="singleHealer"> {healerState.name}
+                <div className="closeModal" onClick={() => setExpandedTicket(false)}></div>
+                <div className="singleHealer">{healerState.name}
                     <div className="healerSelected">
                         <div className="healerSelectedColumn2">
                             <div className="healerSelectedTop">
@@ -187,43 +204,32 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
                             </div>
                             <div className="reviewMiddle">
                                 <div className="reviewStars">
-                                    {
-                                        avgReview == null ? <p>No Reviews Yet</p> : <Stars value={avgReview} />
-                                    }
+                                    {avgReview == null ? <p>No Reviews Yet</p> : <Stars value={avgReview} />}
                                 </div>
                             </div>
                             <hr />
                         </div>
                         
                         <div className="reviewsContainer">
-                            {
-                                reviews ? reviews.map((review) => {
-                                    return (
-                                        <div className="singleReview" key={review.rid}>
-                                            <div>
-                                                <p>{
-                                                    toFormattedDateString(review.createdAt)
-                                                    }</p>
-                                            </div>
-                                            <div className="reviewStars">
-                                                <Stars
-                                                    value={review.rating}
-                                                    color="grey"
-                                                />
-                                            </div>
-                                            <div className="reviewText">
-                                                <pre>{review.comment}</pre>
-                                            </div>
-                                        </div>
-                                    )
-                                }) : <p id="noReviewText">No Reviews Yet!</p>
-                            }
+                            {reviews.length > 0 ? reviews.map((review) => (
+                                <div className="singleReview" key={review.rid}>
+                                    <div>
+                                        <p>{toFormattedDateString(review.createdAt)}</p>
+                                    </div>
+                                    <div className="reviewStars">
+                                        <Stars value={review.rating} color="grey" />
+                                    </div>
+                                    <div className="reviewText">
+                                        <pre>{review.comment}</pre>
+                                    </div>
+                                </div>
+                            )) : <p id="noReviewText">No Reviews Yet!</p>}
                         </div>
                     </div>
                 </div>
             </div>
         );
     }
-}
+};
 
 export default HealerModal;
