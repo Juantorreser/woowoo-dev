@@ -30,53 +30,73 @@ const DefaultDayPicker = ({ onDateSelected }) => {
     );
 };
 
-const BookingForm = ({ healer, selectedDate }) => {
+const BookingForm = ({ healer, selectedDate, uid }) => {
     const serviceOptions = healer.services.split(',');
     const [timeSlots, setTimeSlots] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if (selectedDate) {
-            console.log(`Fetching availability for healer ID: ${healer.uid} on date: ${selectedDate.toISOString().split('T')[0]}`);
-            axios.get(`http://localhost:8080/availability/:uid?healer=${healer.uid}`)
+            const formattedDate = selectedDate.toISOString().split('T')[0];
+            console.log(`Fetching availability for healer ID: ${healer.uid} on date: ${formattedDate}`);
+            axios.get(`http://localhost:8080/availability/:uid?healer=${healer.uid}&date=${formattedDate}`)
                 .then(response => {
                     console.log('API Response:', response.data);
                     const availabilities = response.data;
-                    if (availabilities.length > 0 && availabilities[0].timeslots) {
-                        setTimeSlots(availabilities[0].timeslots); // Assuming `timeslots` is an array
-                    } else {
-                        setTimeSlots([]);
-                    }
+    
+                    // Assuming the API returns an array of availability objects, each containing a `timeslots` array
+                    const allTimeSlots = availabilities.reduce((acc, availability) => {
+                        if (availability.timeslots) {
+                            return acc.concat(availability.timeslots);
+                        }
+                        return acc;
+                    }, []);
+    
+                    setTimeSlots(allTimeSlots.length > 0 ? allTimeSlots : []);
                 })
                 .catch(error => {
                     console.error("There was an error fetching the time slots!", error);
                 });
         }
     }, [selectedDate, healer.uid]);
-
+    
     return (
         <Formik
             initialValues={{
                 service: "",
                 time: ""
             }}
+            validate={(values) => {
+                const errors = {};
+                if (!values.service) {
+                    errors.service = "Service is required";
+                }
+                if (!values.time) {
+                    errors.time = "Time is required";
+                }
+                return errors;
+            }}
             onSubmit={(values, actions) => {
                 const appointmentData = {
                     ...values,
-                    healer: healer.id,
-                    date: selectedDate,
+                    uid,
+                    healer: healer.uid,
+                    date: selectedDate.toISOString(),
                 };
                 axios.post('http://localhost:8080/appointments', appointmentData)
                     .then(response => {
                         console.log('Appointment Response:', response.data);
                         actions.setSubmitting(false);
+                        setErrorMessage(''); // Clear any previous error messages
                     })
                     .catch(error => {
                         console.error("There was an error making the appointment!", error);
                         actions.setSubmitting(false);
+                        setErrorMessage('There was an error making the appointment.');
                     });
             }}
         >
-            {({ handleSubmit, values }) => (
+            {({ handleSubmit, values, errors, touched }) => (
                 <div className="bookingFormContainer">
                     <Form className="bookingForm" onSubmit={handleSubmit}>
                         <div className="bookingPageContainer">
@@ -88,6 +108,9 @@ const BookingForm = ({ healer, selectedDate }) => {
                                         <option key={index} value={service}>{service}</option>
                                     ))}
                                 </Field>
+                                {errors.service && touched.service && (
+                                    <div className="error">{errors.service}</div>
+                                )}
                             </div>
                             <div className="bookingTimeContainer">
                                 <p>Time:</p>
@@ -101,10 +124,16 @@ const BookingForm = ({ healer, selectedDate }) => {
                                         <option value="" disabled>No available time slots</option>
                                     )}
                                 </Field>
+                                {errors.time && touched.time && (
+                                    <div className="error">{errors.time}</div>
+                                )}
                             </div>
                             <div className="bookingSubmitButton">
                                 <button type="submit" className="btn">Submit</button>
                             </div>
+                            {errorMessage && (
+                                <div className="error">{errorMessage}</div>
+                            )}
                         </div>
                     </Form>
                 </div>
@@ -114,7 +143,9 @@ const BookingForm = ({ healer, selectedDate }) => {
 };
 
 const BookingPage = (props) => {
+    console.log(props);
     const [selectedDate, setSelectedDate] = useState(null);
+    const { healer, uid } = props; 
 
     return (
         <div className="bookingPage">
@@ -123,10 +154,9 @@ const BookingPage = (props) => {
                 <h2>Booking</h2>
                 <DefaultDayPicker onDateSelected={setSelectedDate} />
             </div>
-            <BookingForm healer={props.healer} selectedDate={selectedDate} />
+            <BookingForm healer={healer} selectedDate={selectedDate} uid={uid} />
         </div>
     );
 }
 
 export default BookingPage;
-

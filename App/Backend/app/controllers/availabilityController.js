@@ -13,6 +13,12 @@ exports.createAvailability = async (req, res) => {
         });
     }
 
+    if (!req.body.date) {
+        return res.status(400).send({
+            message: "Date cannot be empty!"
+        });
+    }
+
     try {
         const lastId = await Availability.max('id');
         const availability = {
@@ -21,6 +27,7 @@ exports.createAvailability = async (req, res) => {
             timeslots: req.body.timeslots, // Expecting an array here
             duration: req.body.duration,
             timezone: req.body.timezone || null,
+            date: req.body.date,
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -36,13 +43,23 @@ exports.createAvailability = async (req, res) => {
     }
 };
 
-// Retrieve all availabilities for a specific healer
+
+
+
+// Retrieve all availabilities for a specific healer and date
 exports.findAllAvailability = async (req, res) => {
-    console.log('Healer ID:', req.query.healer);
+    const healerId = req.query.healer;
+    const date = req.query.date;
+
+    console.log('Healer ID:', healerId);
+    console.log('Date:', date);
 
     try {
         const data = await Availability.findAll({
-            where: { healer: req.query.healer }
+            where: {
+                healer: healerId,
+                date: date
+            }
         });
         res.send(data);
     } catch (err) {
@@ -53,11 +70,15 @@ exports.findAllAvailability = async (req, res) => {
     }
 };
 
-
-
 // Update an existing availability entry based on its ID
 exports.updateAvailability = async (req, res) => {
     const id = req.params.uid;
+
+    if (req.body.date && new Date(req.body.date) === "Invalid Date") {
+        return res.status(400).send({
+            message: "Invalid date format!"
+        });
+    }
 
     try {
         const [num] = await Availability.update(req.body, { where: { id } });

@@ -20,7 +20,7 @@ exports.createAppointment = async (req, res) => {
       return;
     }
 
-    if (!req.body.fbid || !req.body.uid) {
+    if (!req.body.uid) {
       let message = "id can not be empty!";
       await res.status(400).send({
         message: message
@@ -32,7 +32,8 @@ exports.createAppointment = async (req, res) => {
     const appointment = {
       aid: lastid !== 0 && lastid ? lastid + 1 : 1,
       healer: req.body.healer,
-      client: req.body.ufbid,
+      //client: req.body.ufbid,
+      client: req.body.uid,
       timezone: req.body.timezone,
       date: req.body.date,
       time: req.body.time,
@@ -41,10 +42,19 @@ exports.createAppointment = async (req, res) => {
       healerAccepted: 0
     };
 
-    // Save Location in the database
-    await Appointment.create(location)
+    // // Save Location in the database
+    // await Appointment.create(location)
+    //   .then(data => {
+    //     console.log('received: ' + data);
+    //   })
+    //   .catch(err => {
+    //     console.log("Some error occurred while creating the User.");
+    //   });
+    // Save apponiment in the database
+    await Appointment.create(appointment)
       .then(data => {
         console.log('received: ' + data);
+        res.send(data);
       })
       .catch(err => {
         console.log("Some error occurred while creating the User.");
