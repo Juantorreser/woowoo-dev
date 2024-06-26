@@ -47,6 +47,7 @@ const MessageBox = ()=>{
 
 const UserBox = ({userDetails})=> {
 	const [userMessage, setUserMessage] = useState([{}])
+	const [newMes, setNewMes] = useState({});
 	console.log(userDetails);
 	useEffect(()=> {
 		axios.get('http://localhost:8080/message/'+ userDetails.uid)
@@ -79,12 +80,13 @@ const UserBox = ({userDetails})=> {
 				userMessage.length > 0?
 				userMessage.map(message=> {
 					console.log(message);
+					
 					return(
 						// <div key= {message.mid}>
 						//<p>From: {getUserName(message.from_user)}</p>
-						<p>Context: {message.context}</p>
+						//<p>Context: {message.context}</p>
 						// </div>
-						//<UserInfo message = {message}></UserInfo>
+						<UserInfo message = {message} newMes = {newMes} setNewMes = {setNewMes}></UserInfo>
 					)
 				})
 				: 
@@ -94,16 +96,23 @@ const UserBox = ({userDetails})=> {
 		
 	)
 }
-const UserInfo = ({message})=> {
+
+
+const UserInfo = ({message, newMes, setNewMes})=> {
 	const [userInformation, setUserInformation] = useState({});
 	console.log(message);
+	setNewMes(message);
+	
 	useEffect(()=> {
-		axios.get('http://localhost:8080/users/'+ message.from_user)
-	.then(result=> {
-		console.log(result.data);
-		setUserInformation(result.data);
-	})
-	}, []);
+		if(message.from_user != null){
+			axios.get('http://localhost:8080/users/'+ message.from_user)
+			.then(result=> {
+				console.log(result.data);
+				setUserInformation(result.data);
+			})
+		}
+	
+	}, [newMes]);
 	
 	return(
 		<div key= {message.mid}>
