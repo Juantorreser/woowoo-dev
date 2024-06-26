@@ -197,7 +197,8 @@ const AccountForm = ({userDetails, userLocation}) => {
 						services.forEach((service) => {
 							values.services.push(service.value)
 						})
-						console.log(values.services);
+						// console.log(values.services);
+						// need to post to DB
 						//Not sure yet.
 						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
 					})();
