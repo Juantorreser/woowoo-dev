@@ -12,6 +12,7 @@ const reviews = require('../controllers/reviewController.js');
 const uploads = require('../controllers/upload.js');
 const users = require('../controllers/userController.js');
 const appointments = require('../controllers/appointmentController.js');
+const message = require('../controllers/messageController.js');
 const availability = require('../controllers/availabilityController.js'); // Import availability controller
 const authController = require('../controllers/login.js');
 const router = express.Router();
@@ -184,11 +185,26 @@ module.exports = function(router){
             appointments.createAppointment(req, res);
         })
         .get((req, res) => {
-            appointments.getAppointments(req, res);
+            //appointments.getAppointments(req, res);
+            appointments.findAllAppointments(req, res);
         })
-        .delete((req, res) => {
-            appointments.deleteAppointments(req, res);
-        });
+        // .delete((req, res) => {
+        //     appointments.deleteAppointments(req, res);
+        // });
+
+    //find specific appointments with specific aid
+    router.route('/appointments/:aid').get((req, res)=> {
+        appointments.getAppointments(req, res);
+    }).put((req, res)=> appointments.updateAppointment(req, res))
+    //delete specific appointments with specific fbid
+    router.route('/appointments/:fbid').delete((req, res)=> {
+        appointments.deleteAppointments(req, res);
+    })
+
+    //find specific appointments from a user:
+    router.route('/appointments/clients/:uid').get((req, res)=> {
+        appointments.getClientAppointments(req, res);
+    })
     // Availability
     router.route('/availability')
         .post((req, res) => {
@@ -217,4 +233,10 @@ module.exports = function(router){
         .get((req, res) => {
             users.testing(req, res);
         });
+    
+    //Route for message
+    router.route('/message/:uid')
+    .get((req, res)=> {
+        message.findAllMessage(req, res);
+    })
 };

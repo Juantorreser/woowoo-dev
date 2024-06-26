@@ -42,7 +42,7 @@
 .accountInfoEditorContainer {
 	display: flex;
 	flex-direction: column;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 /*The inner container that holds the actual form on the account page's right side*/
@@ -77,4 +77,20 @@
 }
 .accountInfoEditorForm::-webkit-scrollbar-thumb {
 	border-radius: 5px;
+}
+
+/* Styling the appointment box: */
+#appointmentBox{
+	
+	position: relative;
+	background-color: orange;
+	display: flex;
+	flex-direction: row;
+	overflow: scroll;
+}
+
+.overall{
+	position: relative;
+	display:flex;
+	flex-direction: column;
 }

@@ -19,7 +19,7 @@ const Account = () => {
 	const [ userState, setUserState ] = useState(null);
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
-
+	
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
 	// useEffect(() => {
 	// 	//this method checks if the user is authenticated with firebase and essentially logged in.
@@ -45,17 +45,19 @@ const Account = () => {
 
 
 	useEffect(() => {
+		//let userD = "";
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged( (user) => {
 			console.log(user);
 			setUserState(user);
-			axios.get('http://localhost:8080/users').then( async (response) => {
+			axios.get('http://localhost:8080/users').then(  (response) => {
 				////self added in from CodeGuru
 				//setUserDetails(chosenUser);
 				console.log(response.data);
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);
+						//userD = i;
 					}
 				}
 				//setUserDetails(response.data[0]);
@@ -69,9 +71,41 @@ const Account = () => {
 				catch (err) {
 					console.log(err);
 				}
+
+				// try{   //fetching appointments
+				// 	const appointments = await axios.get('http://localhost:8080/appointments?uid='+ userDetails.uid);
+				// 	console.log(appointments);
+				// 	setHealerAppointment(appointments.data);
+				// }
+				// catch(err){
+				// 	console.log(err);
+				// }
+				//console.log(userD.uid);
+				
+				// axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid).then((response) => {
+				// 	console.log(response.data[0]);
+				// 	setHealerAppointment(response.data[0]);
+				// })
 			});
-		});
+		});	
+		
 	}, []); 
+	
+	// useEffect(()=> {
+	// 	// try{   //fetching appointments
+	// 	// 			const appointments = axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid);
+	// 	// 			console.log(appointments);
+	// 	// 			setHealerAppointment(appointments.data);
+	// 	// }
+	// 	// catch(err){
+	// 	// 	console.log(err);
+	// 	// }
+	// 	console.log("userDetail.uid: "+ userDetails);
+	// 	axios.get('http://localhost:8080/appointments?healer='+ userDetails.uid).then( async (response) => {
+	// 		console.log(response.data);
+	// 		setHealerAppointment(response.data[0]);
+	// 	})
+	// }, [userDetails])
 	
 
 
@@ -85,9 +119,11 @@ const Account = () => {
 						<div className = "healerSelectedColumn2">
 							<div className="healerSelectedTop" id="user-name">
 								<p>{userDetails.firstName} {userDetails.lastName}</p>
+								
 							</div>
 							<div className="healerSelectedMiddle" id="services">
 								<p>{userDetails.services}</p>
+								<p>{userDetails.prices}</p>
 							</div>
 							<hr/>
 							<div className="healerSelectedBottom">
@@ -100,7 +136,12 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
+						
 					</div>
+
+					
+
+					{/* the edit account portion */}
 					<div className="reviewContainer">
 						<div className="accountEditorHeaderContainer">
 							<div className="reviewTop">
@@ -114,7 +155,12 @@ const Account = () => {
 						</div>
 						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
 					</div>
+
+					
 				</div> 
+
+				
+
 			</>
 			: 
 			<>
@@ -155,6 +201,8 @@ const AccountForm = ({userDetails, userLocation}) => {
 		});
 	};
 
+	
+
 	var arr = userDetails.services.split(",");
 
 	//TODO: Null values in Formik's initial values displays an error, see about finding a way to have null values replaced with an empty string
@@ -184,6 +232,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
+					servicePrices: [],
 					//services: services.map(s => s.value),
 					format: userDetails.format
 				}}
@@ -374,6 +423,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 //Healer-specific account settings. Should only be visible if the user selects the checkbox to indicate
 //they want their account to be set as a healer. 
 const HealerOptions = (props) => {
+	var priceOrder = 0;
 	//on render, makes the call to the services API. Prevents too many calls on page load.
 	useEffect(() => {
 		props.getServices()
@@ -390,7 +440,28 @@ const HealerOptions = (props) => {
 			onChange={props.setSelectedServices}
 		/>
 		<ErrorMessage name="services" render={renderError} />
+		{props.selectedServices.map(service=> {
+			
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={'servicePrices['+ priceOrder + ']'}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {props.setServicePrices}
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+				
+			)
+			priceOrder ++;
 		
+		})}
 		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
@@ -415,6 +486,91 @@ const HealerOptions = (props) => {
 	</>
 	)
 }
+
+
+const Confirmbox = ({healer})=> {  //not sure yet.
+	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
+	const [confirm, setConfirm] = useState(null);   //detects whether to reload or not.
+	var arrayConfirm = [];
+	//Get all the appointments related to the healer.
+	useEffect(()=> {   
+		axios.get("http://localhost:8080/appointments?healer="+healer)
+		.then((response)=> {
+			console.log(response.data);
+			// response.data.map(resp=> {
+			// 	// if(resp.healerAccepted == 0){    //show only if the healer has not accept yet.
+					
+			// 	// }
+				
+			// })
+			const a = [];
+			response.data.map(x => {
+				if(x.healerAccepted == null){
+					a.push(x);
+				}
+			})
+			//setHealerAppointment(response.data);
+			setHealerAppointment(a);
+		})
+	}, [confirm]);
+
+
+	
+	return (
+		<div className = "reviewContainer">
+			<br></br>
+			<h3>Upcoming appointments</h3>
+			{healerAppointment.map(appointment=> {
+				return (
+					<div id = {appointment.aid}>
+						<p>Client: {appointment.client}</p>
+						<p>Time: {appointment.time}</p>
+						<p>Date: {appointment.date}</p>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 1, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})
+		arrayConfirm.push(true);
+		setConfirm(arrayConfirm);
+		}
+		}  >Confirm</button>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 0, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})
+		arrayConfirm.push(false);
+		setConfirm(arrayConfirm)}} >Deny</button>
+						<br></br>
+					</div>
+				)
+			})}
+		</div>
+		
+		
+	)
+}
+
+
 
 export default Account;
 

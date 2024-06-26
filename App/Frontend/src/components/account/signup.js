@@ -9,7 +9,7 @@ import axios from 'axios';
 import { app } from '../firebase/firebase-config';
 import { MultiSelect } from 'react-multi-select-component'; 
 import { userSchema as schema } from './schema.js';
-
+// import {TextInput} from 'react-native';
 const auth = getAuth(app);
 
 const renderError = (message) => <p className="warning">{message}</p>;
@@ -19,7 +19,8 @@ const SignUp = () => {
 	const [ selectedServices, setSelectedServices] = useState([]);
 	const [ format, setFormat ] = useState(0);
 	const [ options, setOptions ] = useState([]);
-	
+	//testing.
+	const [servicePrices, setServicePrices] = useState([]);
 	//a reusable call to get the services listing from the API. 
 	const getServices = () => {
 		axios.get('http://localhost:8080/services')
@@ -31,6 +32,12 @@ const SignUp = () => {
 		});
 	};
 
+	//a function to set up an an array to assign to the servicePrices useState
+	const setNewServicePrice = (newService, servicePrices)=> {
+		var temp = servicePrices;
+		temp.push(newService);
+		setServicePrices(temp);
+	}
     const history = useNavigate(); // let's us get sent to another page or something
 	
 	auth.onAuthStateChanged((user) => {
@@ -64,7 +71,8 @@ const SignUp = () => {
 								services: [],
 								format: 0,
 								description: "",
-								terms: false
+								terms: false, 
+								servicePrices: []
 							}}
 							validationSchema={schema}
 							
@@ -242,6 +250,8 @@ const SignUp = () => {
 															selectedServices={selectedServices} 
 															setSelectedServices={setSelectedServices}
 															options={options}
+															servicePrices = {servicePrices}
+															setServicePrices = {setServicePrices}
 														/>
 													) : null
 												}
@@ -275,6 +285,7 @@ const SignUp = () => {
 //similarly to the Account edit page, Healer options defines the fields related only to 
 //those users who wish to be healers and listed in the healer search. 
 const HealerOptions = (props) => {
+	var priceOrder = 0;
 	//on render, fetches the services from the service API, limiting network calls until needed. 
 	useEffect(() => {
 		props.getServices()
@@ -289,9 +300,52 @@ const HealerOptions = (props) => {
 			options={props.options}
 			value={props.selectedServices}
 			onChange={props.setSelectedServices}
-		/>
+		>
+			
+		</Field>
 		<ErrorMessage name="services" render={renderError} />
+		<p>Price of services in 1 hour: </p>  {/* create texts depending on the amount of services the healer choose */}
+		{props.selectedServices.map(service=> {
+			
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={'servicePrices['+ priceOrder + ']'}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {props.setServicePrices}
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+				
+			)
+			priceOrder ++;
 		
+		})}
+		
+		{/* <TextInput
+			name="servicePrices"
+           onChangeText={props.setServicePrices}
+           //onBlur={handleBlur('email')}
+           value={props.setSelectedPrices}
+        /> */}
+		{ /* the input for entering in the prices of the services. */
+			/*props.selectedServices.map(service=> {
+				<Field type="text"
+			name="servicePrices"
+           onChangeText={props.setServicePrices}
+           //onBlur={handleBlur('email')}
+           value={props.servicePrices}
+        />
+			})
+		*/}
+		<ErrorMessage name="services" render={renderError} />
+
 		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
