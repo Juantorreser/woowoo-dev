@@ -182,9 +182,10 @@ const AccountForm = ({userDetails, userLocation}) => {
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
-					format: userDetails.format
+					format: userDetails.format,
+					terms: true
 				}}
-				//validationSchema={schema}
+				validationSchema={schema}
 				
 				onSubmit={(values, actions) => {
 					//TODO: Double check if this needs to be updated 
