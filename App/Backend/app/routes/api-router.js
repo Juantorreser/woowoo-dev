@@ -239,4 +239,12 @@ module.exports = function(router){
     .get((req, res)=> {
         message.findAllMessage(req, res);
     })
+    .put((req,res)=> {
+        message.replyToMessage(req,res);
+    })
+
+    router.route('/message')
+    .post((req,res)=> {
+        message.sendMessage(req, res);
+    })
 };

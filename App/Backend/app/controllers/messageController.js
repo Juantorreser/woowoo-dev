@@ -2,6 +2,7 @@ const db = require('../models');
 const Message = db.message;
 const axios = require('axios');
 
+//find all message belong to a specific user.
 exports.findAllMessage = async (req, res)=> {
 
     console.log("findAllMessage started");
@@ -34,5 +35,57 @@ exports.findAllMessage = async (req, res)=> {
     .catch(err=> {
         console.log(err);
         res.status(500).send(err);
+    })
+}
+
+
+//sending a new message with no reply.
+exports.sendMessage = (req,res)=> {   
+    const id = req.body.to_user;
+
+
+    const message = {
+        from_user: req.body.from_user,
+        to_user: req.body.to_user,
+        context: req.body.context, 
+        reply: "",
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    }
+    Message.create(message)
+    .then(data=> {
+        res.status(201).send(data);
+    })
+    .catch(err=> {
+        console.log("Something wrong happen when creating the new message")
+        res.send("Something wrong happen when creating new message" + err);
+    })
+}
+
+//reply to a specify message
+exports.replyToMessage = (req,res)=> {
+    const id = req.params.mid;
+    const message = {
+        from_user: req.body.from_user,
+        to_user: req.body.to_user,
+        context: req.body.context, 
+        reply: req.body.reply,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+    }
+    Message.update(message, {
+        where: {mid: id}
+    })
+    .then(num=> {
+        if(num == 1){
+            res.send("Reply successfully sent");
+        }
+        else{
+            res.send("Something wrong with replying to this message")
+        }
+    })
+    .catch(err=> {
+        console.log("Something wrong happen when creating the new message")
+        res.send("Something wrong happen when creating new message" + err);
     })
 }
