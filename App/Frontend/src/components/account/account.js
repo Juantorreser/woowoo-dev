@@ -155,8 +155,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 		});
 	};
 
-	var arr = userDetails.services.split(",");
-
 	//TODO: Null values in Formik's initial values displays an error, see about finding a way to have null values replaced with an empty string
 	return (
 		<div className="accountInfoEditorContainer">
@@ -184,7 +182,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
-					//services: services.map(s => s.value),
 					format: userDetails.format
 				}}
 				//validationSchema={schema}
@@ -195,6 +192,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
+						values.services.length = 0;
 						services.forEach((service) => {
 							values.services.push(service.value)
 						})
