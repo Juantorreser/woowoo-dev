@@ -7,7 +7,6 @@ import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import axios from 'axios';
 import { app } from '../firebase/firebase-config';
 import { MultiSelect } from 'react-multi-select-component'; 
-
 const auth = getAuth(app);
 
 const MessageBox = ()=>{
@@ -113,13 +112,66 @@ const UserInfo = ({message, newMes, setNewMes})=> {
 		}
 	
 	}, [newMes]);
-	
+	console.log(message.reply);
 	return(
 		<div key= {message.mid}>
 			<p>From: {userInformation.firstName } {userInformation.lastName}</p>
 			<p>Context: {message.context}</p>
+			<p>Reply: {
+				message.reply == "" || message.reply == null?
+				<>
+					<p>Enter here</p>
+					<ReplyBox message = {message}></ReplyBox>
+				</>
+				
+				:
+				<p>{message.reply}</p>
+			}
+			</p>
 		</div>
 	)
+	
+}
+
+const ReplyBox = ({message})=> {
+	return(
+		<Formik
+       initialValues={
+		{
+			from_user: message.from_user,
+			to_user: message.to_user,
+			reply: ''
+			}
+		}
+       onSubmit={(values, actions) => {
+        //  setTimeout(() => {
+        //    alert(JSON.stringify(values, null, 2));
+        //    actions.setSubmitting(false);
+        //  }, 1000);
+			axios.put('http://localhost:8080/message/'+ message.mid, {values})
+			.then(result=> {
+				console.log("Successfully sent")
+			})
+			.catch(err=> {
+				console.log(err);
+			})
+       }}
+     >
+       {props => (
+         <form onSubmit={props.handleSubmit}>
+           <input
+             type="text"
+             onChange={props.handleChange}
+             onBlur={props.handleBlur}
+             value={props.values.reply}
+             name="reply"
+           />
+           {props.errors.name && <div id="feedback">{props.errors.name}</div>}
+           <button type="submit">Submit</button>
+         </form>
+       )}
+     </Formik>
+ );
 	
 }
 // function getUserName(user){

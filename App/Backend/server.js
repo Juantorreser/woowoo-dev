@@ -34,7 +34,7 @@ let connection = sql.createConnection({
 
 connection.connect(err =>  {
   if(err) 
-    console.log('DataBase Connection Error');
+    console.log('DataBase Connection Error'+ err);
 });
 
 //simple routing

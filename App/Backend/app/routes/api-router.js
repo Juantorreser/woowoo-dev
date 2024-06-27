@@ -239,6 +239,8 @@ module.exports = function(router){
     .get((req, res)=> {
         message.findAllMessage(req, res);
     })
+    //reply to a message in the database
+    router.route('/message/:mid')
     .put((req,res)=> {
         message.replyToMessage(req,res);
     })

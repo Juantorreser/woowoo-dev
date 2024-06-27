@@ -64,28 +64,51 @@ exports.sendMessage = (req,res)=> {
 
 //reply to a specify message
 exports.replyToMessage = (req,res)=> {
+    console.log("replyToMessage");
+    var idExist = false;
     const id = req.params.mid;
-    const message = {
-        from_user: req.body.from_user,
-        to_user: req.body.to_user,
-        context: req.body.context, 
-        reply: req.body.reply,
-        createdAt: Date.now(),
-        updatedAt: Date.now()
+    if(id == null){
+        res.send("Sorry but message ID can not be null");
     }
-    Message.update(message, {
+    
+    Message.findAll({
         where: {mid: id}
     })
-    .then(num=> {
-        if(num == 1){
-            res.send("Reply successfully sent");
-        }
-        else{
-            res.send("Something wrong with replying to this message")
-        }
+    .then(data=> {
+        idExist = true;
     })
     .catch(err=> {
-        console.log("Something wrong happen when creating the new message")
-        res.send("Something wrong happen when creating new message" + err);
+        idExist = false;
+        console.log(err);
     })
+
+    if(idExist == false){
+        res.send("Can not find this message ID")
+    }
+    else{
+        const message = {
+            from_user: req.body.from_user,
+            to_user: req.body.to_user,
+            context: req.body.context, 
+            reply: req.body.reply,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        }
+        Message.update(message, {
+            where: {mid: id}
+        })
+        .then(num=> {
+            if(num == 1){
+                res.send("Reply successfully sent");
+            }
+            else{
+                res.send("Something wrong with replying to this message")
+            }
+        })
+        .catch(err=> {
+            console.log("Something wrong happen when creating the new message")
+            res.send("Something wrong happen when creating new message" + err);
+        })
+    }
+    
 }
