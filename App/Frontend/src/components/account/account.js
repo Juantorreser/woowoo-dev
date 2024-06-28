@@ -20,7 +20,6 @@ const Account = () => {
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
 	const [ options, setOptions ] = useState();
-
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
 	// useEffect(() => {
 	// 	//this method checks if the user is authenticated with firebase and essentially logged in.
@@ -50,12 +49,11 @@ const Account = () => {
 		auth.onAuthStateChanged( (user) => {
 			console.log(user);
 			setUserState(user);
-			axios.get('http://localhost:8080/users').then( async (response) => {
-				////self added in from CodeGuru
-				//setUserDetails(chosenUser);
-				console.log(response.data);
+			axios.get('http://localhost:8080/users').then(  (response) => {
+				// setUserDetails(chosenUser);
+				// console.log(response.data);
 				for(const i of response.data){
-					if (i.email == user.email){
+					if (i.email === user.email){
 						setUserDetails(i);
 					}
 				}
@@ -112,6 +110,8 @@ const Account = () => {
 							<p>{userDetails.description}</p>
 						</div>
 					</div>
+
+					{/* the edit account portion */}
 					<div className="reviewContainer">
 						<div className="accountEditorHeaderContainer">
 							<div className="reviewTop">
@@ -124,8 +124,8 @@ const Account = () => {
 							</div>
 						</div>
 						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
-					</div>
-				</div> 
+					</div>	
+				</div>
 			</>
 			: 
 			<>
@@ -164,11 +164,11 @@ const AccountForm = ({userDetails, userLocation}) => {
 	//services is for storing the selected service options -- options is for the service listing response
 	//from the API/database
 
-	//const [ services, setServices] = useState([userDetails.services]);
-	const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
+	// const [ services, setServices] = useState([userDetails.services]);
+	// const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
+	// console.log(services);
 
-	console.log(services);
-
+	const [ services, setServices] = useState([userDetails.services]);
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
 	const [ options, setOptions ] = useState([]);
@@ -202,15 +202,16 @@ const AccountForm = ({userDetails, userLocation}) => {
 					confirmPassword: "",
 					address: userLocation.address,
 					city: userDetails.city,
-					province: userDetails.province,
-					country: userDetails.country,
-					postalCode: userDetails.postalCode,
+					province: userDetails.province || "",
+					country: userDetails.country || "",
+					postalCode: userDetails.postalCode || "",
 					isHealer: userDetails.isHealer,
 					nameChanges: userDetails.nameChanges,
 					locationChanges: userDetails.locationChanges,
 					passwordChanges: userDetails.passwordChanges,
 					description: userDetails.description,
 					services: [],
+					servicePrices: [],
 					format: userDetails.format,
 					terms: true
 				}}
@@ -222,14 +223,17 @@ const AccountForm = ({userDetails, userLocation}) => {
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
+						// console.log(services);
+						// clear array
 						values.services.length = 0;
-						services.forEach((service) => {
-							values.services.push(service.value)
-						})
-						// console.log(values.services);
-						// need to post to DB
+						if (values.isHealer) {
+							services.forEach((service) => {
+								values.services.push(service.value)
+							})
+						}
 						//Not sure yet.
-						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						console.log('http://localhost:8080/users/'+userDetails.uid);
 					})();
 				}}
 				
@@ -404,6 +408,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 //Healer-specific account settings. Should only be visible if the user selects the checkbox to indicate
 //they want their account to be set as a healer. 
 const HealerOptions = (props) => {
+	var priceOrder = 0;
 	//on render, makes the call to the services API. Prevents too many calls on page load.
 	useEffect(() => {
 		props.getServices()
@@ -415,12 +420,30 @@ const HealerOptions = (props) => {
 		<Field
 			name="services"
 			options={props.options}
-			value={props.selectedServices}
+			value={props.selectedServices} 
 			as={MultiSelect}
 			onChange={e => {props.setSelectedServices(e); props.setServices(e)}}
 		/>
 		<ErrorMessage name="services" render={renderError} />
-		
+		{props.selectedServices.map(service=> {
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={'servicePrices['+ priceOrder + ']'}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {props.setServicePrices}
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+			)
+			priceOrder++; //Does not run due to return
+		})}
 		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
@@ -440,9 +463,97 @@ const HealerOptions = (props) => {
 			id="signUpDescription"
 		/>
 		<ErrorMessage name="description" render={renderError} />
-		
+
+		{/* field for terms checkbox */}
+		{/* <div className='selectBox'>
+			<p>Terms & Conditions</p>
+			<Field
+				name="terms"
+				as="checkbox"
+				if="terms"
+			/>
+			<ErrorMessage name="terms" render={renderError} />
+		</div> */}
 		<br/>
 	</>
+	)
+}
+
+const Confirmbox = ({healer})=> {  //not sure yet.
+	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
+	const [confirm, setConfirm] = useState(null);   //detects whether to reload or not.
+	var arrayConfirm = [];
+	//Get all the appointments related to the healer.
+	useEffect(()=> {   
+		axios.get("http://localhost:8080/appointments?healer="+healer)
+		.then((response)=> {
+			console.log(response.data);
+			// response.data.map(resp=> {
+				// if(resp.healerAccepted == 0){    //show only if the healer has not accept yet.
+				// }
+			// })
+			const a = [];
+			response.data.map(x => {
+				if(x.healerAccepted == null){
+					a.push(x);
+				}
+			})
+			//setHealerAppointment(response.data);
+			setHealerAppointment(a);
+		})
+	}, [confirm]);
+	
+	return (
+		<div className = "reviewContainer">
+			<br></br>
+			<h3>Upcoming appointments</h3>
+			{healerAppointment.map(appointment=> {
+				return (
+					<div id = {appointment.aid}>
+						<p>Client: {appointment.client}</p>
+						<p>Time: {appointment.time}</p>
+						<p>Date: {appointment.date}</p>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 1, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})
+		arrayConfirm.push(true);
+		setConfirm(arrayConfirm);
+		}
+		}  >Confirm</button>
+						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
+			healerAccepted: 0, 
+			client: appointment.client, 
+			aid: appointment.aid,
+			healer: healer, 
+			timezone: appointment.timezone,
+			date: appointment.date, 
+			time: appointment.time, 
+			createdAt: Date.now(), 
+			updatedAt: Date.now()
+		})
+		.then((response)=> {
+			console.log(response.data);
+		})
+		arrayConfirm.push(false);
+		setConfirm(arrayConfirm)}} >Deny</button>
+						<br></br>
+					</div>
+				)
+			})}
+		</div>
+		
+		
 	)
 }
 
