@@ -42,18 +42,18 @@ export const userSchema = yup.object({
 	province: yup.string().notRequired(),
     country: yup.string().notRequired(),
     postalCode: yup.string().notRequired(),
-	isHealer: yup.bool().required(),
+	isHealer: yup.bool().notRequired(),
 	services: yup //not sure if this works yet
 		.array()
 		.when('isHealer', {
-			is: (val) => val == true,
+			is: (val) => val === true,
 			then: yup.array().defined("You must select at least one service").required("test")
 		}),
 	//format: yup.
 	description: yup
 		.string()
 		.when('isHealer', {
-			is: (val) => val == true,
+			is: (val) => val === true,
 			then: yup.string().required('You must write a personal description')
 		})
 		.matches(

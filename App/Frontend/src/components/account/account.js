@@ -19,7 +19,7 @@ const Account = () => {
 	const [ userState, setUserState ] = useState(null);
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
-	
+	const [ options, setOptions ] = useState();
 	//with the empty array parameter, useEffect should run this code block once on render (possibly when state variables are changed)
 	// useEffect(() => {
 	// 	//this method checks if the user is authenticated with firebase and essentially logged in.
@@ -53,7 +53,7 @@ const Account = () => {
 			axios.get('http://localhost:8080/users').then(  (response) => {
 				////self added in from CodeGuru
 				//setUserDetails(chosenUser);
-				console.log(response.data);
+				// console.log(response.data);
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);
@@ -87,9 +87,6 @@ const Account = () => {
 				// 	setHealerAppointment(response.data[0]);
 				// })
 			});
-		});	
-		
-	}, []); 
 	
 	// useEffect(()=> {
 	// 	// try{   //fetching appointments
@@ -107,7 +104,19 @@ const Account = () => {
 	// 	})
 	// }, [userDetails])
 	
-
+		});
+		getServices();
+	}, []); 
+	
+	const getServices = () => {
+		axios.get('http://localhost:8080/services')
+		.then((response) => {
+			const responseOptions = response.data.map((service) => {
+				return {label: service.service, value: service.sid};
+			});
+			setOptions(responseOptions);
+		});
+	};
 
 	return (
 		<>
@@ -122,8 +131,8 @@ const Account = () => {
 								
 							</div>
 							<div className="healerSelectedMiddle" id="services">
-								<p>{userDetails.services}</p>
-								<p>{userDetails.prices}</p>
+								{/* <p>{userDetails.services}</p> */}
+								<DisplayServices options={options} userDetails={userDetails} />
 							</div>
 							<hr/>
 							<div className="healerSelectedBottom">
@@ -173,6 +182,24 @@ const Account = () => {
 	)
 }
 
+const DisplayServices = (props) => {
+	console.log(props.options[1].label);
+	let services = [];
+	for (let service of JSON.parse("[" + props.userDetails.services + "]")) {
+		services.push(service);
+	}
+	let displayServices = "";
+	for (let element of services) {
+		if (displayServices !== "") {
+			displayServices += ", ";
+		}
+		displayServices += (props.options[element - 1].label);
+	}
+	return(
+		<p>{displayServices}</p>
+	)
+}
+
 //AccountForm component holds only the form-related components for user to make edits
 //NOTE: ideally, we could have multiple components as children of AccountForm that make 
 //update API calls only for those details that the user wants to be edited: 
@@ -182,9 +209,10 @@ const AccountForm = ({userDetails, userLocation}) => {
 	//from the API/database
 
 	//const [ services, setServices] = useState([userDetails.services]);
-	const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
+	// const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
+	// console.log(services);
 
-	console.log(services);
+	const [ services, setServices] = useState([userDetails.services]);
 
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
@@ -200,10 +228,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 			setOptions(responseOptions);
 		});
 	};
-
-	
-
-	var arr = userDetails.services.split(",");
 
 	//TODO: Null values in Formik's initial values displays an error, see about finding a way to have null values replaced with an empty string
 	return (
@@ -223,9 +247,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 					confirmPassword: "",
 					address: userLocation.address,
 					city: userDetails.city,
-					province: userDetails.province,
-					country: userDetails.country,
-					postalCode: userDetails.postalCode,
+					province: userDetails.province || "",
+					country: userDetails.country || "",
+					postalCode: userDetails.postalCode || "",
 					isHealer: userDetails.isHealer,
 					nameChanges: userDetails.nameChanges,
 					locationChanges: userDetails.locationChanges,
@@ -234,9 +258,10 @@ const AccountForm = ({userDetails, userLocation}) => {
 					services: [],
 					servicePrices: [],
 					//services: services.map(s => s.value),
-					format: userDetails.format
+					format: userDetails.format,
+					terms: true
 				}}
-				//validationSchema={schema}
+				validationSchema={schema}
 				
 				onSubmit={(values, actions) => {
 					//TODO: Double check if this needs to be updated 
@@ -244,12 +269,17 @@ const AccountForm = ({userDetails, userLocation}) => {
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
-						services.forEach((service) => {
-							values.services.push(service.value)
-						})
-						console.log(values.services);
+						// console.log(services);
+						//clear array
+						values.services.length = 0;
+						if (values.isHealer) {
+							services.forEach((service) => {
+								values.services.push(service.value)
+							})
+						}
 						//Not sure yet.
-						//axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
+						console.log('http://localhost:8080/users/'+userDetails.uid);
 					})();
 				}}
 				
@@ -402,8 +432,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 											setSelectedServices={setSelectedServices}
 											options={options}
 											value={services}
-											onChange={setServices}
+											// onChange={setServices}
 											labelledBy="Services"
+											setServices={setServices}
 										/>
 
 									) : <p>Not a healer</p>
@@ -435,13 +466,12 @@ const HealerOptions = (props) => {
 		<Field
 			name="services"
 			options={props.options}
-			value={props.selectedServices}
+			value={props.selectedServices} 
 			as={MultiSelect}
-			onChange={props.setSelectedServices}
+			onChange={e => {props.setSelectedServices(e); props.setServices(e)}}
 		/>
 		<ErrorMessage name="services" render={renderError} />
 		{props.selectedServices.map(service=> {
-			
 			return(
 				<>
 					<Field
@@ -457,10 +487,8 @@ const HealerOptions = (props) => {
 					/>
 					<ErrorMessage name="servicePrices" render={renderError} />
 				</>
-				
 			)
-			priceOrder ++;
-		
+			priceOrder++; //Does not run due to return
 		})}
 		<p>Delivery Format: </p>
 		<Field 
@@ -481,7 +509,17 @@ const HealerOptions = (props) => {
 			id="signUpDescription"
 		/>
 		<ErrorMessage name="description" render={renderError} />
-		
+
+		{/* field for terms checkbox */}
+		{/* <div className='selectBox'>
+			<p>Terms & Conditions</p>
+			<Field
+				name="terms"
+				as="checkbox"
+				if="terms"
+			/>
+			<ErrorMessage name="terms" render={renderError} />
+		</div> */}
 		<br/>
 	</>
 	)
@@ -498,10 +536,8 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 		.then((response)=> {
 			console.log(response.data);
 			// response.data.map(resp=> {
-			// 	// if(resp.healerAccepted == 0){    //show only if the healer has not accept yet.
-					
-			// 	// }
-				
+				// if(resp.healerAccepted == 0){    //show only if the healer has not accept yet.
+				// }
 			// })
 			const a = [];
 			response.data.map(x => {
@@ -570,243 +606,4 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 	)
 }
 
-
-
 export default Account;
-
-// import { app } from '../firebase/firebase-config';
-// import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import { getAuth } from 'firebase/auth';
-// import { Formik, Form, Field, ErrorMessage } from 'formik';
-// import { MultiSelect } from 'react-multi-select-component';
-// import './account.css';
-
-// const auth = getAuth(app);
-
-// const renderError = (message) => <p className="warning">{message}</p>;
-
-// const Account = () => {
-// 	const [userState, setUserState] = useState(null);
-// 	const [userDetails, setUserDetails] = useState(null);
-// 	const [userLocation, setUserLocation] = useState(null);
-
-// 	useEffect(() => {
-// 		auth.onAuthStateChanged((user) => {
-// 			setUserState(user);
-// 			axios.get('http://localhost:8080/users').then((response) => {
-// 				const userDetails = response.data.find(u => u.email === user.email);
-// 				setUserDetails(userDetails);
-
-// 				if (userDetails) {
-// 					axios.post('http://localhost:8080/locations', { userId: userDetails.uid })
-// 						.then((response) => {
-// 							setUserLocation(response.data[0]);
-// 						});
-// 				}
-// 			});
-// 		});
-// 	}, []);
-
-// 	return (
-// 		<>
-// 			{userLocation ? (
-// 				<div className="userProfile">
-// 					<div className="userContainer">
-// 						<div className="healerSelectedColumn2">
-// 							<div className="healerSelectedTop" id="user-name">
-// 								<p>{userDetails.firstName} {userDetails.lastName}</p>
-// 							</div>
-// 							<div className="healerSelectedMiddle" id="services">
-// 								<p>{userDetails.services}</p>
-// 							</div>
-// 							<hr />
-// 							<div className="healerSelectedBottom">
-// 								<div className='icons'></div>
-// 							</div>
-// 						</div>
-// 						<div className="description" id="accountDescription">
-// 							<p>{userDetails.description}</p>
-// 						</div>
-// 					</div>
-// 					<div className="reviewContainer">
-// 						<div className="accountEditorHeaderContainer">
-// 							<div className="reviewTop">
-// 								<h1 className="reviewHeader">Edit Account Info</h1>
-// 							</div>
-// 							<div className="reviewMiddle">
-// 								<div className="accountEditUnderText">
-// 									<p>Save when finished making changes.</p>
-// 								</div>
-// 							</div>
-// 						</div>
-// 						<AccountForm userDetails={userDetails} userLocation={userLocation} />
-// 					</div>
-// 				</div>
-// 			) : (
-// 				<div className="loaderContainer">
-// 					<div className="loader"></div>
-// 				</div>
-// 			)}
-// 		</>
-// 	);
-// };
-
-// const AccountForm = ({ userDetails, userLocation }) => {
-// 	const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
-// 	const [submitting, setSubmitting] = useState(false);
-// 	const [options, setOptions] = useState([]);
-
-// 	useEffect(() => {
-// 		axios.get('http://localhost:8080/services').then((response) => {
-// 			const responseOptions = response.data.map((service) => ({
-// 				label: service.service,
-// 				value: service.service,
-// 			}));
-// 			setOptions(responseOptions);
-// 		});
-// 	}, []);
-
-// 	return (
-// 		<div className="accountInfoEditorContainer">
-// 			{submitting ? (
-// 				<div>
-// 					<p>Making Changes</p>
-// 				</div>
-// 			) : (
-// 				<Formik
-// 					initialValues={{
-// 						firstName: userDetails.firstName,
-// 						lastName: userDetails.lastName,
-// 						email: userDetails.email,
-// 						password: '',
-// 						confirmPassword: '',
-// 						address: userLocation.address,
-// 						city: userDetails.city,
-// 						province: userDetails.province,
-// 						country: userDetails.country,
-// 						postalCode: userDetails.postalCode,
-// 						isHealer: userDetails.isHealer,
-// 						nameChanges: userDetails.nameChanges,
-// 						locationChanges: userDetails.locationChanges,
-// 						passwordChanges: userDetails.passwordChanges,
-// 						description: userDetails.description,
-// 						services: services.map(s => s.value),
-// 						format: userDetails.format,
-// 					}}
-// 					onSubmit={(values, actions) => {
-// 						actions.setSubmitting(true);
-// 						const selectedServices = services.map(service => service.value);
-// 						values.services = selectedServices;
-// 						axios.put(`http://localhost:8080/users/${userDetails.uid}`, values)
-// 							.then(() => {
-// 								setSubmitting(false);
-// 								actions.setSubmitting(false);
-// 							});
-// 					}}
-// 				>
-// 					{({ handleSubmit, values }) => (
-// 						<Form className="accountInfoEditorForm" onSubmit={handleSubmit}>
-// 							<div className="accountInfoEditorContainerContainer">
-// 								<p>First Name:</p>
-// 								<Field type="text" id="firstName" name="firstName" required />
-// 								<ErrorMessage name="firstName" render={renderError} />
-
-// 								<p>Last Name:</p>
-// 								<Field type="text" id="lastName" name="lastName" required />
-// 								<ErrorMessage name="lastName" render={renderError} />
-
-// 								<p>Email:</p>
-// 								<Field type="email" id="email" name="email" required />
-// 								<ErrorMessage name="email" render={renderError} />
-
-// 								<p>Password:</p>
-// 								<Field type="password" id="password" name="password" required />
-// 								<ErrorMessage name="password" render={renderError} />
-
-// 								<p>Confirm Password:</p>
-// 								<Field type="password" id="confirmPassword" name="confirmPassword" required />
-// 								<ErrorMessage name="confirmPassword" render={renderError} />
-
-// 								<div className="selectBox">
-// 									<p>Change location?</p>
-// 									<Field name="locationChanges" type="checkbox" id="locationChanges" />
-// 								</div>
-// 								{values.locationChanges && (
-// 									<>
-// 										<p>Address:</p>
-// 										<Field type="text" id="address" name="address" />
-// 										<ErrorMessage name="address" render={renderError} />
-
-// 										<p>City:</p>
-// 										<Field type="text" id="city" name="city" />
-// 										<ErrorMessage name="city" render={renderError} />
-
-// 										<p>Province:</p>
-// 										<Field type="text" id="province" name="province" />
-// 										<ErrorMessage name="province" render={renderError} />
-
-// 										<p>Country:</p>
-// 										<Field type="text" id="country" name="country" />
-// 										<ErrorMessage name="country" render={renderError} />
-
-// 										<p>Postal Code:</p>
-// 										<Field type="text" id="postalCode" name="postalCode" />
-// 										<ErrorMessage name="postalCode" render={renderError} />
-// 									</>
-// 								)}
-
-// 								<div className="nonTextSignupForm">
-// 									<div className="selectBox">
-// 										<p>Are you a healer?</p>
-// 										<Field name="isHealer" type="checkbox" id="isHealer" />
-// 										<ErrorMessage name="isHealer" render={renderError} />
-// 									</div>
-// 									{values.isHealer && (
-// 										<HealerOptions
-// 											options={options}
-// 											selectedServices={services}
-// 											setSelectedServices={setServices}
-// 										/>
-// 									)}
-// 									<button type="submit" className="btn--login">Save</button>
-// 								</div>
-// 							</div>
-// 						</Form>
-// 					)}
-// 				</Formik>
-// 			)}
-// 		</div>
-// 	);
-// };
-
-// const HealerOptions = ({ options, selectedServices, setSelectedServices }) => {
-// 	return (
-// 		<>
-// 			<p>Services Offered:</p>
-// 			<MultiSelect
-// 				options={options}
-// 				value={selectedServices}
-// 				onChange={setSelectedServices}
-// 				labelledBy="Select Services"
-// 			/>
-// 			<ErrorMessage name="services" render={renderError} />
-
-// 			<p>Delivery Format: </p>
-// 			<Field name="format" as="select" id="format">
-// 				<option value={0} label="Both Online and In-Person"></option>
-// 				<option value={1} label="In-Person Only"></option>
-// 				<option value={2} label="Online Only"></option>
-// 			</Field>
-// 			<ErrorMessage name="format" render={renderError} />
-
-// 			<p>Personal Description:</p>
-// 			<Field name="description" as="textarea" id="signUpDescription" />
-// 			<ErrorMessage name="description" render={renderError} />
-
-// 			<br />
-// 		</>
-// 	);
-// };
-
-// export default Account;
