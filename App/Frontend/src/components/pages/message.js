@@ -10,6 +10,7 @@ import { MultiSelect } from 'react-multi-select-component';
 const auth = getAuth(app);
 
 const MessageBox = ()=>{
+	const [createNewMessage, setCreateNewMessage] = useState(false);
     //TODO: contain the container for all the messages. 
     //Also, have a space for the sending messages depending on the user (healer or not).
     const [userDetails, setUserDetails] = useState({});
@@ -39,10 +40,14 @@ const MessageBox = ()=>{
         <>
             {/* need to design the layout, and add in. Preferably a message board. Also, need to hash message when created*/}
 			{/* fetch all the message back from the specified url */}
+
 			<UserBox userDetails = {userDetails}></UserBox>
+			<NewMessage userDetails = {userDetails}></NewMessage>
         </>
     )
 }
+
+
 
 const UserBox = ({userDetails})=> {
 	const [userMessage, setUserMessage] = useState([{}])
@@ -148,6 +153,7 @@ const ReplyBox = ({message})=> {
         //    alert(JSON.stringify(values, null, 2));
         //    actions.setSubmitting(false);
         //  }, 1000);
+		console.log(values);
 			axios.put('http://localhost:8080/message/'+ message.mid, {values})
 			.then(result=> {
 				console.log("Successfully sent")
@@ -174,12 +180,61 @@ const ReplyBox = ({message})=> {
  );
 	
 }
-// function getUserName(user){
-// 	console.log(user);
-// 	axios.get('http://localhost:8080/users/'+ user)
-// 	.then(result=> {
-// 		console.log(result.data);
-// 		return result.firstName + " " + result.lastName;
-// 	})
-// }
+
+//send according to names.
+const NewMessage = ({userDetails})=> {
+	return(
+		<>
+		<h3>Send new message</h3>
+			<Formik
+       initialValues={
+		{
+			from_user: userDetails.uid,
+			to_user: '',
+			message: ''
+			}
+		}
+       onSubmit={(values, actions) => {
+        //  setTimeout(() => {
+        //    alert(JSON.stringify(values, null, 2));
+        //    actions.setSubmitting(false);
+        //  }, 1000);
+		console.log(values);
+			axios.post('http://localhost:8080/message/',{values})
+			.then(result=> {
+				console.log("Successfully sent")
+			})
+			.catch(err=> {
+				console.log(err);
+			})
+       }}
+     >
+       {props => (
+         <form onSubmit={props.handleSubmit}>
+			
+			<b>To User:</b>
+		<input
+             type="text"
+             onChange={props.handleChange}
+             onBlur={props.handleBlur}
+             value={props.values.to_user}
+             name="to_user"
+           />
+		<b>Context</b>
+		<input
+             type="text"
+             onChange={props.handleChange}
+             onBlur={props.handleBlur}
+             value={props.values.message}
+             name="message"
+           />
+           {props.errors.name && <div id="feedback">{props.errors.name}</div>}
+           <button type="submit">Submit</button>
+         </form>
+       )}
+     </Formik>
+		</>
+		
+	)
+}
 export default MessageBox;

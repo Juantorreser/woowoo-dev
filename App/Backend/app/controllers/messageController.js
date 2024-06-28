@@ -1,7 +1,7 @@
 const db = require('../models');
 const Message = db.message;
 const axios = require('axios');
-
+const User = db.user;
 //find all message belong to a specific user.
 exports.findAllMessage = async (req, res)=> {
 
@@ -40,13 +40,22 @@ exports.findAllMessage = async (req, res)=> {
 
 
 //sending a new message with no reply.
-exports.sendMessage = (req,res)=> {   
-    const id = req.body.to_user;
-
+exports.sendMessage = async (req,res)=> {   
+    //const id = req.body.to_user;
+    var id = '';
+    const names = req.body.to_user.split(" ");   //split into array containing first and last name
+    console.log(names);
+    await User.findAll({
+        where: {firstName: names[0], lastName: names[1]}
+    })
+    .then(data=> {
+        console.log(data);
+        id = data[0].uid;
+    })
 
     const message = {
         from_user: req.body.from_user,
-        to_user: req.body.to_user,
+        to_user: id,
         context: req.body.context, 
         reply: "",
         createdAt: Date.now(),
@@ -63,7 +72,7 @@ exports.sendMessage = (req,res)=> {
 }
 
 //reply to a specify message
-exports.replyToMessage = (req,res)=> {
+exports.replyToMessage = async (req,res)=> {
     console.log("replyToMessage");
     var idExist = false;
     const id = req.params.mid;
@@ -71,7 +80,7 @@ exports.replyToMessage = (req,res)=> {
         res.send("Sorry but message ID can not be null");
     }
     
-    Message.findAll({
+    await Message.findAll({
         where: {mid: id}
     })
     .then(data=> {
@@ -86,6 +95,8 @@ exports.replyToMessage = (req,res)=> {
         res.send("Can not find this message ID")
     }
     else{
+        console.log("message's ID existed");
+
         const message = {
             from_user: req.body.from_user,
             to_user: req.body.to_user,
