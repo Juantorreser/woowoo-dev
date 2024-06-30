@@ -234,12 +234,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 						//Not sure yet.
 						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
 						console.log('http://localhost:8080/users/'+userDetails.uid);
+						actions.setSubmitting(false);
 					})();
 				}}
-				
-				
-				
-				
 			>
 			{({handleSubmit, values}) => (
 				<Form 
