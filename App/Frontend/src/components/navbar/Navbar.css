@@ -60,6 +60,7 @@
 /*Styling applied to the buttons on the right of the navbar*/
 .sign-up-buttons button {
 	margin-left: 0;
+    width: max-content;
 }
 
 /*Styling applied to the sign-in button on the navbar*/

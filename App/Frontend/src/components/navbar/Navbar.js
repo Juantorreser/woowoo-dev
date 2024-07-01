@@ -22,6 +22,7 @@ const Navbar = () => {
 		if(loggedIn){
 			return (
 				<div className="sign-up-buttons">
+					<a href="/addService"><Button>Add Service</Button></a>
 					<a href="/account"><Button>Account</Button></a>
 					<a href="/signout"><Button className="btn--outline">Sign Out</Button></a>
 				</div>

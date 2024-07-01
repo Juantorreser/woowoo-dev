@@ -51,11 +51,10 @@ const Account = () => {
 			console.log(user);
 			setUserState(user);
 			axios.get('http://localhost:8080/users').then(  (response) => {
-				////self added in from CodeGuru
-				//setUserDetails(chosenUser);
+				// setUserDetails(chosenUser);
 				// console.log(response.data);
 				for(const i of response.data){
-					if (i.email == user.email){
+					if (i.email === user.email){
 						setUserDetails(i);
 						//userD = i;
 					}
@@ -148,8 +147,6 @@ const Account = () => {
 						
 					</div>
 
-					
-
 					{/* the edit account portion */}
 					<div className="reviewContainer">
 						<div className="accountEditorHeaderContainer">
@@ -163,13 +160,8 @@ const Account = () => {
 							</div>
 						</div>
 						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
-					</div>
-
-					
-				</div> 
-
-				
-
+					</div>	
+				</div>
 			</>
 			: 
 			<>
@@ -208,12 +200,11 @@ const AccountForm = ({userDetails, userLocation}) => {
 	//services is for storing the selected service options -- options is for the service listing response
 	//from the API/database
 
-	//const [ services, setServices] = useState([userDetails.services]);
+	// const [ services, setServices] = useState([userDetails.services]);
 	// const [services, setServices] = useState(userDetails.services.split(',').map(s => ({ label: s, value: s })));
 	// console.log(services);
 
 	const [ services, setServices] = useState([userDetails.services]);
-
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
 	const [ options, setOptions ] = useState([]);
@@ -257,7 +248,6 @@ const AccountForm = ({userDetails, userLocation}) => {
 					description: userDetails.description,
 					services: [],
 					servicePrices: [],
-					//services: services.map(s => s.value),
 					format: userDetails.format,
 					terms: true
 				}}
@@ -270,7 +260,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 					actions.setSubmitting(true);
 					(async () => {
 						// console.log(services);
-						//clear array
+						// clear array
 						values.services.length = 0;
 						if (values.isHealer) {
 							services.forEach((service) => {
@@ -280,12 +270,9 @@ const AccountForm = ({userDetails, userLocation}) => {
 						//Not sure yet.
 						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
 						console.log('http://localhost:8080/users/'+userDetails.uid);
+						actions.setSubmitting(false);
 					})();
 				}}
-				
-				
-				
-				
 			>
 			{({handleSubmit, values}) => (
 				<Form 
@@ -525,7 +512,6 @@ const HealerOptions = (props) => {
 	)
 }
 
-
 const Confirmbox = ({healer})=> {  //not sure yet.
 	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
 	const [confirm, setConfirm] = useState(null);   //detects whether to reload or not.
@@ -549,8 +535,6 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 			setHealerAppointment(a);
 		})
 	}, [confirm]);
-
-
 	
 	return (
 		<div className = "reviewContainer">
@@ -601,8 +585,6 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 				)
 			})}
 		</div>
-		
-		
 	)
 }
 
