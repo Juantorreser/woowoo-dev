@@ -24,16 +24,9 @@ const AddService = () => {
                         // console.log(values);
                         (async () => {
                             // submit to DB
-                            axios.post('http://localhost:8080/services', values)
-                            .then((response)=>{
-                                if(response.data){
-                                    console.log(response.data);
-                                }
-                                actions.setSubmitting(false);
-                            })
-                            .then(() => {
-                                // window.location.assign('/');
-                            });
+                            axios.post('http://localhost:8080/services', values);
+                            window.location.assign('/');
+                            actions.setSubmitting(false);
                         })();
                     }}
                     >
