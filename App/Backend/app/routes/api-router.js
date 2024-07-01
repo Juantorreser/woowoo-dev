@@ -174,7 +174,7 @@ module.exports = function(router){
             services.findAllServices(req, res);
         })
         .post((req, res) => {
-            services.findServiceById(req, res);
+            services.createService(req, res);
         });
 
     // Appointments

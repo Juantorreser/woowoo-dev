@@ -11,12 +11,12 @@ const AddService = () => {
         <>
             <Formik
             initialValues={{
-                name: "",
+                service: "",
                 description: ""
             }}
             onSubmit={(values, actions) => {
                 actions.setSubmitting(true);
-                console.log(values);
+                // console.log(values);
                 (async () => {
                     // submit to DB
                     axios.post('http://localhost:8080/services', values)
@@ -29,7 +29,6 @@ const AddService = () => {
                     .then(() => {
                         // window.location.assign('/');
                     });
-                    actions.setSubmitting(false);
                 })();
             }}
             >
@@ -42,13 +41,13 @@ const AddService = () => {
                         <p>Service Name:</p>
                         <Field
                             type="text"
-                            id="name"
-                            name="name"
+                            id="service"
+                            name="service"
                             label="Service Name"
                             autoComplete="sName"
                             required
                         />
-                        <ErrorMessage name="name" render={renderError} />
+                        <ErrorMessage name="service" render={renderError} />
 
                         <p>Service Description:</p>
                         <Field
