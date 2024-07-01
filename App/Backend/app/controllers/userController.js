@@ -395,17 +395,17 @@ exports.findOneUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   console.log('updateUser');
 
-  const id = req.params.uid;
-  await User.update(req.body, {
+  const id = parseInt(req.body.uid);
+  await User.update(id, {
     where: { uid: id }
   })
     .then(num => {
       if (num == 1) {
-        res.send({
+        res.status(200).send({
           message: "User was updated successfully."
         });
       } else {
-        res.send({
+        res.status(400).send({
           message: `Cannot update User with id=${id}. Maybe user was not found or req.body is empty!`
         });
       }

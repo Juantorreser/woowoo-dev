@@ -255,7 +255,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 				
 				onSubmit={(values, actions) => {
 					//TODO: Double check if this needs to be updated 
-					console.log(values);
+					// console.log(values);
 					//setSubmitting keeps track of whether you are in the midst of submitting data
 					actions.setSubmitting(true);
 					(async () => {
@@ -268,8 +268,13 @@ const AccountForm = ({userDetails, userLocation}) => {
 							})
 						}
 						//Not sure yet.
-						axios.put('http://localhost:8080/users/'+userDetails.uid, {values});
-						console.log('http://localhost:8080/users/'+userDetails.uid);
+						// Backend issues
+						// values.uid = userDetails.uid;
+						// console.log(await axios.get('http://localhost:8080/users/'+userDetails.uid));
+						// axios.put('http://localhost:8080/users/', values)
+						// .catch(err => {
+						// 	console.log(err);
+						// });
 						actions.setSubmitting(false);
 					})();
 				}}

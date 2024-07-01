@@ -31,6 +31,10 @@ module.exports = function(router){
         // Delete all user
         .delete((req, res) => {
             users.deleteAllUsers(req, res);
+        })
+        // Update a user with id
+        .put((req, res) => {
+            users.updateUser(req, res);
         });
 
     // Retrieve all enabled users
@@ -53,10 +57,6 @@ module.exports = function(router){
     router.route('/users/:uid')
         .get((req, res) => {
             users.findOneUser(req, res);
-        })
-        // Update a user with id
-        .put((req, res) => {
-            users.updateUser(req, res);
         })
         // Delete a user with id
         .delete((req, res) => {
