@@ -14,6 +14,12 @@ const AddService = () => {
         <>
             <div className="userProfile">
                 <div className="userContainer">
+                    <div className="healerSelectedColumn2">
+                        <div className="healerSelectedTop" id="user-name">
+                            <p>Add a Service</p>
+                        </div>
+                    </div>
+                    <hr/>
                     <Formik
                     initialValues={{
                         service: "",
@@ -35,7 +41,7 @@ const AddService = () => {
                             className="accountInfoEditorForm"
                             onSubmit={handleSubmit}
                         >
-                            <div className="accountInfoEditorContainerContainer">
+                            <div className="accountInfoEditorContainerContainer" id="formContainer">
                                 <p>Service Name:</p>
                                 <Field
                                     type="text"
@@ -56,11 +62,15 @@ const AddService = () => {
                                     />
                                     <ErrorMessage name="description" render={renderError} />
                                 </div>
-                                <button type='submit' className="btn--login">Save</button>
+                                <button type='submit' className="btn--login">Submit</button>
                             </div>
                         </Form>
                     )}
                     </Formik>
+                </div>
+
+                {/* Perhaps replace this with an image */}
+                <div className="reviewContainer">
                 </div>
             </div>
         </>

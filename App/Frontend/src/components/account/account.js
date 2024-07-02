@@ -127,7 +127,6 @@ const Account = () => {
 						<div className = "healerSelectedColumn2">
 							<div className="healerSelectedTop" id="user-name">
 								<p>{userDetails.firstName} {userDetails.lastName}</p>
-								
 							</div>
 							<div className="healerSelectedMiddle" id="services">
 								{/* <p>{userDetails.services}</p> */}
