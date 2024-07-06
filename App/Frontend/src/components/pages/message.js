@@ -29,6 +29,7 @@ const MessageBox = ()=>{
 						if (i.email == user.email){
 							console.log(i);
 							setUserDetails(i);
+							break;  //not sure yet
 							//userD = i;
 						}
 					}
@@ -105,7 +106,7 @@ const UserBox = ({userDetails})=> {
 const UserInfo = ({message, newMes, setNewMes})=> {
 	const [userInformation, setUserInformation] = useState({});
 	console.log(message);
-	setNewMes(message);
+	//setNewMes(message);
 	
 	useEffect(()=> {
 		if(message.from_user != null){
@@ -116,7 +117,7 @@ const UserInfo = ({message, newMes, setNewMes})=> {
 			})
 		}
 	
-	}, [newMes]);
+	}, []);
 	console.log(message.reply);
 	return(
 		<div key= {message.mid}>
@@ -133,6 +134,7 @@ const UserInfo = ({message, newMes, setNewMes})=> {
 				<p>{message.reply}</p>
 			}
 			</p>
+			<br></br>
 		</div>
 	)
 	
@@ -145,6 +147,7 @@ const ReplyBox = ({message})=> {
 		{
 			from_user: message.from_user,
 			to_user: message.to_user,
+			context: message.context,
 			reply: ''
 			}
 		}
@@ -183,31 +186,41 @@ const ReplyBox = ({message})=> {
 
 //send according to names.
 const NewMessage = ({userDetails})=> {
+	console.log(userDetails);
+	//const [userID, setUserID] = useState("");
+	useEffect(()=> {
+		console.log(userDetails);
+	}, [userDetails])
 	return(
 		<>
-		<h3>Send new message</h3>
-			<Formik
-       initialValues={
 		{
-			from_user: userDetails.uid,
-			to_user: '',
-			message: ''
+			userDetails.uid == null?
+			<p>Something is wrong</p>
+			:
+			<>
+			<h3>Send new message</h3>
+		<Formik
+			initialValues={
+				{
+					from_user: userDetails.uid,
+					to_user: '',
+					message: ''
+				}
 			}
-		}
-       onSubmit={(values, actions) => {
-        //  setTimeout(() => {
-        //    alert(JSON.stringify(values, null, 2));
-        //    actions.setSubmitting(false);
-        //  }, 1000);
-		console.log(values);
-			axios.post('http://localhost:8080/message/',{values})
-			.then(result=> {
-				console.log("Successfully sent")
-			})
-			.catch(err=> {
-				console.log(err);
-			})
-       }}
+			onSubmit={(values, actions) => {
+				//  setTimeout(() => {
+				//    alert(JSON.stringify(values, null, 2));
+				//    actions.setSubmitting(false);
+				//  }, 1000);
+					console.log(values);
+					axios.post('http://localhost:8080/message/',{values})
+					.then(result=> {
+						console.log("Successfully sent")
+					})
+					.catch(err=> {
+						console.log(err);
+					})
+			}}
      >
        {props => (
          <form onSubmit={props.handleSubmit}>
@@ -222,17 +235,20 @@ const NewMessage = ({userDetails})=> {
            />
 		<b>Context</b>
 		<input
-             type="text"
-             onChange={props.handleChange}
-             onBlur={props.handleBlur}
-             value={props.values.message}
-             name="message"
-           />
-           {props.errors.name && <div id="feedback">{props.errors.name}</div>}
-           <button type="submit">Submit</button>
+		type="text"
+		onChange={props.handleChange}
+		onBlur={props.handleBlur}
+		value={props.values.message}
+		name="message"
+        />
+        {props.errors.name && <div id="feedback">{props.errors.name}</div>}
+        <button type="submit">Submit</button>
          </form>
        )}
      </Formik>
+	 </>
+		}
+		
 		</>
 		
 	)

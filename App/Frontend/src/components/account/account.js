@@ -57,6 +57,7 @@ const Account = () => {
 				for(const i of response.data){
 					if (i.email == user.email){
 						setUserDetails(i);
+						break;
 						//userD = i;
 					}
 				}

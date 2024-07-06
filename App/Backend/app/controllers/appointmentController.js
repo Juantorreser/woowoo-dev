@@ -100,7 +100,7 @@ exports.createAppointment = async (req, res) => {
       time: req.body.time,
       createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
       updatedAt: null,
-      healerAccepted: 0
+      healerAccepted: null   //will be decided at the healer's schedule side.
     };
     //find the email of the user as well as the intended healer:
 

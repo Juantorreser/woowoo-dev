@@ -31,7 +31,17 @@ const DefaultDayPicker = ({ onDateSelected }) => {
 };
 
 const BookingForm = ({ healer, selectedDate, uid }) => {
+    console.log(healer);
     const serviceOptions = healer.services.split(',');
+    var priceOptions = '';
+    console.log(healer);
+    if(healer.servicePrices.length > 1){
+        priceOptions = healer.servicePrices.split(',');     //turn this string (format: '45,50') into array ([45,50])
+    }
+    else{
+        priceOptions = healer.servicePrices
+    }
+    
     const [timeSlots, setTimeSlots] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -76,14 +86,36 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                 }
                 return errors;
             }}
-            onSubmit={(values, actions) => {
+            onSubmit={async (values, actions) => {
+                var counter = 0;
+                //find the price of the service:
+                for(const serviceItem of serviceOptions){
+                    counter ++;
+                    if(serviceItem == values.service){
+                        break;
+                    }
+                }
+
+                const paymentData = {
+                   healer_name: healer.firstName + healer.lastName,
+                   healer_email: healer.email,
+                   amount:  priceOptions[counter],   //not sure yet.
+                   currency: "cad",
+                   items: [
+                    {
+                        service_name: values.service,
+                        quantity: 1, 
+                        price: priceOptions[counter]
+                    }
+                   ]
+                }
                 const appointmentData = {
                     ...values,
                     uid,
                     healer: healer.uid,
                     date: selectedDate.toISOString(),
                 };
-                axios.post('http://localhost:8080/appointments', appointmentData)
+                await axios.post('http://localhost:8080/appointments', appointmentData)
                     .then(response => {
                         console.log('Appointment Response:', response.data);
                         actions.setSubmitting(false);
@@ -91,8 +123,27 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                     })
                     .catch(error => {
                         console.error("There was an error making the appointment!", error);
+                        alert("The error is: "+ error);
                         actions.setSubmitting(false);
                         setErrorMessage('There was an error making the appointment.');
+                    });
+                console.log(paymentData);
+                //payment through Stripe. Not sure yet.
+                await axios.post('http://localhost:8080/payment', paymentData)
+                    .then(response => {
+                        alert('Appointment Response:', response.data);
+                        actions.setSubmitting(false);
+                        setErrorMessage(''); // Clear any previous error messages
+                        console.log(response.data);
+
+                        //re-directing the url returned.
+                        window.location.assign(response.data.url);
+                    })
+                    .catch(error => {
+                        alert("Error is: "+ error)
+                        console.error("There was an error making the appointment payment!", error);
+                        actions.setSubmitting(false);
+                        setErrorMessage('There was an error making the appointment payment.');
                     });
             }}
         >

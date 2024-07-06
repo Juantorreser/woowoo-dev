@@ -41,6 +41,7 @@ const Schedule = ()=> {
 						if (i.email == user.email){
 							console.log(i);
 							setUserDetails(i);
+							break;
 							//userD = i;
 						}
 					}
@@ -169,6 +170,7 @@ const ConfirmBox = ({userDetails})=> {
 				// 	})
 				// })
 				healerAppointment.map(appointment=> {
+					console.log(appointment);
 					return (
 						<div key = {appointment.aid}>
 							<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>

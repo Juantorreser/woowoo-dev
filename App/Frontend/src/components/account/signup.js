@@ -77,6 +77,8 @@ const SignUp = () => {
 							validationSchema={schema}
 							
 							onSubmit={(values, actions) => {
+								alert(servicePrices);
+								alert("The length of the servicePrices: "+ values.servicePrices.length);
 								//TODO: If registration fails due to it failing against the schema, alert the user
 								//setSubmitting keeps track of whether you are in the midst of submitting data
 								actions.setSubmitting(true);
@@ -85,6 +87,13 @@ const SignUp = () => {
 										values.services.push(service.value)
 									})
 
+									// servicePrices.length > 0 ? servicePrices.forEach((price) => {
+									// 	values.servicePrices.push(price.value)
+									// }) :
+									// values.servicePrices = null
+									// servicePrices.map((price)=> {
+									// 	values.servicePrices.push(price.value);
+									// })
 									//the client-side method from firebase which handles user creation. 
 									//there should be a fallback for this if the user db entry is created and the firebase
 									//user is unable to be created, or vice-versa
@@ -98,6 +107,7 @@ const SignUp = () => {
 												})
 										})
 										.then(() => {
+											console.log(values);
 										//the database entry should only happen after a successful firebase insert
 										axios.post('http://localhost:8080/users', values)
 											.then((response)=>{
@@ -106,10 +116,18 @@ const SignUp = () => {
 												}
 												setLoading(false);
 												actions.setSubmitting(false);
+												if(response.data.url == null){
+													window.location.assign('/');
+												}
+												else{
+													window.location.assign(response.data.url)   //not sure yet.
+												}
+												
 											})
-											.then(() => {
-												window.location.assign('/');
-											})
+											// .then(() => {
+											// 	//window.location.assign('/');
+												
+											// })
 										})
 										
 									.catch((error) => {
@@ -285,7 +303,7 @@ const SignUp = () => {
 //similarly to the Account edit page, Healer options defines the fields related only to 
 //those users who wish to be healers and listed in the healer search. 
 const HealerOptions = (props) => {
-	var priceOrder = 0;
+	var priceOrder = -1;
 	//on render, fetches the services from the service API, limiting network calls until needed. 
 	useEffect(() => {
 		props.getServices()
@@ -306,7 +324,7 @@ const HealerOptions = (props) => {
 		<ErrorMessage name="services" render={renderError} />
 		<p>Price of services in 1 hour: </p>  {/* create texts depending on the amount of services the healer choose */}
 		{props.selectedServices.map(service=> {
-			
+			priceOrder ++;
 			return(
 				<>
 					<Field
@@ -318,32 +336,12 @@ const HealerOptions = (props) => {
 						autoComplete="sprices"
 						autoFocus
 						required
-						onChange = {props.setServicePrices}
+						//onChange = {props.setServicePrices}
 					/>
 					<ErrorMessage name="servicePrices" render={renderError} />
-				</>
-				
+				</>	
 			)
-			priceOrder ++;
-		
 		})}
-		
-		{/* <TextInput
-			name="servicePrices"
-           onChangeText={props.setServicePrices}
-           //onBlur={handleBlur('email')}
-           value={props.setSelectedPrices}
-        /> */}
-		{ /* the input for entering in the prices of the services. */
-			/*props.selectedServices.map(service=> {
-				<Field type="text"
-			name="servicePrices"
-           onChangeText={props.setServicePrices}
-           //onBlur={handleBlur('email')}
-           value={props.servicePrices}
-        />
-			})
-		*/}
 		<ErrorMessage name="services" render={renderError} />
 
 		<p>Delivery Format: </p>
