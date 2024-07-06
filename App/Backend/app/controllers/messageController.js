@@ -53,14 +53,16 @@ exports.findAllMessage = async (req, res)=> {
 
     //finding the query of the healer in firebase
     const q = query(collection(firebaseDb, "messages"), where("to_user", "==", req.params.uid))
-    const firebaseDocs = await getDocs(collection(firebaseDb, "messages"));
+    const firebaseDocs = await getDocs(q);
     firebaseDocs.forEach((doc)=> {
         console.log(doc.id+ ": "+doc.data());
         messageArray.push(doc.data());
     })
     
     try{
-        
+        messageArray.forEach(message=> {
+            console.log(message);
+        })
         res.send(messageArray);
     }
     catch(err){
@@ -130,8 +132,8 @@ exports.sendMessage = async (req,res)=> {
         
         await setDoc(doc(firebaseDb, "messages", "message_"+ messageCounter),{
             context: message.context,
-            from_user: message.from_user,
-            to_user: message.to_user,
+            from_user: message.from_user.toString(),
+            to_user: message.to_user.toString(),
             createdAt: message.createdAt,
             updatedAt: message.updatedAt,
             reply: message. reply, 
@@ -176,8 +178,8 @@ exports.replyToMessage = async (req,res)=> {
     // }
         const message = {
             mid: req.body.values.mid,
-            from_user: req.body.values.from_user,
-            to_user: req.body.values.to_user,
+            from_user: req.body.values.from_user.toString(),
+            to_user: req.body.values.to_user.toString(),
             context: req.body.values.context, 
             reply: req.body.values.reply,
             createdAt: Date.now(),
