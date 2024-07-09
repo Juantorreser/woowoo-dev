@@ -131,10 +131,10 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                 //payment through Stripe. Not sure yet.
                 await axios.post('http://localhost:8080/payment', paymentData)
                     .then(response => {
-                        alert('Appointment Response:', response.data);
+                        //alert('Appointment Response:', response.data);
                         actions.setSubmitting(false);
                         setErrorMessage(''); // Clear any previous error messages
-                        console.log(response.data);
+                        //console.log(response.data);
 
                         //re-directing the url returned.
                         window.location.assign(response.data.url);
