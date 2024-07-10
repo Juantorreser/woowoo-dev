@@ -599,7 +599,7 @@ exports.payForSpecificHealer = async (req, res)=> {
         }
       }),
       payment_intent_data: {
-        application_fee_amount: 123,
+        application_fee_amount: 0,  //fee for the woowoonetwork
         transfer_data: {
           //destination: await customer_id.data[0].id
           //destination: 'acct_1Ja4OO7iSovqGMwf'

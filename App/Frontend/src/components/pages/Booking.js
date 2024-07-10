@@ -32,15 +32,21 @@ const DefaultDayPicker = ({ onDateSelected }) => {
 
 const BookingForm = ({ healer, selectedDate, uid }) => {
     console.log(healer);
+    
     const serviceOptions = healer.services.split(',');
-    var priceOptions = '';
+    var priceOptions = [];
     console.log(healer);
-    if(healer.servicePrices.length > 1){
-        priceOptions = healer.servicePrices.split(',');     //turn this string (format: '45,50') into array ([45,50])
+    if(healer.servicePrices.indexOf(",") > -1){   //servicePrices is in string form. find if the service prices has more than one price
+        const priceOptionsArray = healer.servicePrices.split(',');     //turn this string (format: '45,50') into array ([45,50])
+        priceOptionsArray.map(price=> {
+            priceOptions.push((Number(price)* 100).toString());
+        })
     }
-    else{
-        priceOptions = healer.servicePrices
+    else{  //just add in that sigular price.
+        priceOptions.push((Number(healer.servicePrices)*100).toString());
     }
+
+    
     
     const [timeSlots, setTimeSlots] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -87,7 +93,9 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                 return errors;
             }}
             onSubmit={async (values, actions) => {
-                var counter = 0;
+                alert(priceOptions[0]);
+                alert("Seleted service is: "+ values.service);
+                var counter = -1;
                 //find the price of the service:
                 for(const serviceItem of serviceOptions){
                     counter ++;
@@ -95,7 +103,7 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                         break;
                     }
                 }
-
+                alert("Counter is: "+ counter);
                 const paymentData = {
                    healer_name: healer.firstName + healer.lastName,
                    healer_email: healer.email,
@@ -105,10 +113,11 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                     {
                         service_name: values.service,
                         quantity: 1, 
-                        price: priceOptions[counter]
+                        price: priceOptions[counter],   //not sure yet.
                     }
                    ]
                 }
+                alert(paymentData.items[0].price);
                 const appointmentData = {
                     ...values,
                     uid,
@@ -140,10 +149,11 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                         window.location.assign(response.data.url);
                     })
                     .catch(error => {
-                        alert("Error is: "+ error)
+                        alert("price is: "+ paymentData.items.price);
                         console.error("There was an error making the appointment payment!", error);
                         actions.setSubmitting(false);
                         setErrorMessage('There was an error making the appointment payment.');
+                        window.location.assign('/search');
                     });
             }}
         >
