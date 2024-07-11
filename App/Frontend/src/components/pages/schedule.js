@@ -422,18 +422,32 @@ const Schedule = () => {
     const [userDetails, setUserDetails] = useState({});
 
     useEffect(() => {
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                await axios.get('http://localhost:8080/users').then((response) => {
-                    for (const i of response.data) {
-                        if (i.email === user.email) {
-                            setUserDetails(i);
-                        }
-                    }
-                });
-            }
-        });
-    }, []);
+
+		//let userD = "";
+		//this method checks if the user is authenticated with firebase and essentially logged in.
+		auth.onAuthStateChanged( async (user) => {
+			console.log(user);
+			//setUserState(user);
+			if(user){
+				await axios.get('http://localhost:8080/users').then(  (response) => {
+					////self added in from CodeGuru
+					//setUserDetails(chosenUser);
+					console.log(response.data);
+					for(const i of response.data){
+						if (i.email == user.email){
+							console.log(i);
+							setUserDetails(i);
+							break;
+							//userD = i;
+						}
+					}
+				});
+				// return (
+				// 	<ConfirmBox healer = {userDetails.uid}></ConfirmBox>
+				// )
+			}
+		});	
+	}, []); 
 
     return (
         <Container>
@@ -465,16 +479,75 @@ const HistoryBox = ({ userDetails }) => {
     }
 
     return (
-        <Box my={4}>
-            <Typography variant="h5">Appointment History</Typography>
-            {history.map((appointment, index) => (
-                <Paper key={index} style={{ padding: '16px', marginBottom: '16px' }}>
-                    <ClientBox appointment={appointment} user={userDetails} />
-                </Paper>
-            ))}
-        </Box>
-    );
-};
+                <Box my={4}>
+                    <Typography variant="h5">Appointment History</Typography>
+                    {history.map((appointment, index) => (
+                        <Paper key={index} style={{ padding: '16px', marginBottom: '16px' }}>
+                            <ClientBox appointment={appointment} user={userDetails} />
+                        </Paper>
+                    ))}
+                </Box>
+            );
+}
+// <<<<<<< HEAD
+//     return (
+//         <Box my={4}>
+//             <Typography variant="h5">Appointment History</Typography>
+//             {history.map((appointment, index) => (
+//                 <Paper key={index} style={{ padding: '16px', marginBottom: '16px' }}>
+//                     <ClientBox appointment={appointment} user={userDetails} />
+//                 </Paper>
+//             ))}
+//         </Box>
+//     );
+// };
+// =======
+// 	return (
+// 		<div className = "reviewContainer">
+// 			<br></br>
+// 			<h3>Upcoming appointments</h3>
+// 			{
+// 				// useEffect(()=> {
+// 				// 	console.log(healerAppointment);
+// 				// 	healerAppointment.map(appointment=> {
+// 				// 		return (
+// 				// 			<div key = {appointment.aid}>
+// 				// 				<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+// 				// 				{userDetails.account == 1 ? 
+// 				// 				<>
+// 				// 						<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+// 				// 						<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+// 				// 				</>
+// 				// 						:
+// 				// 						<CancelButton appointment = {appointment}></CancelButton> 
+// 				// 				}
+// 				// 				<br></br>
+// 				// 			</div>
+// 				// 		)
+// 				// 	})
+// 				// })
+// 				healerAppointment.map(appointment=> {
+// 					console.log(appointment);
+// 					return (
+// 						<div key = {appointment.aid}>
+// 							<ClientBox appointment = {appointment} user = {userDetails}></ClientBox>
+// 							{userDetails.account == 1 ? 
+// 							<>
+// 									<ConfirmButton appointment = {appointment} confirm = {1} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton>
+// 									<ConfirmButton appointment = {appointment} confirm = {0} healerID = {userDetails.uid} arrayConfirm = {arrayConfirm} setConfirm = {setConfirm}></ConfirmButton> 
+// 							</>
+// 									:
+// 									<CancelButton appointment = {appointment}></CancelButton> 
+// 							}
+// 							<br></br>
+// 						</div>
+// 					)
+// 				})
+// 			}
+// 		</div>
+// 	)
+// }
+// >>>>>>> 793abc4e4b5b2a9cd95f857be617365eee8908e5
 
 const ConfirmBox = ({ userDetails }) => {
     const [healerAppointment, setHealerAppointment] = useState([]);

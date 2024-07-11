@@ -52,7 +52,7 @@ module.exports = (sequelize, Sequelize) => {    //is the same as normal export.
       stripeAccount: {
         type: Sequelize.STRING
       },
-      prices: {
+      servicePrices: {
         type: Sequelize.STRING   //self-added. Not sure yet.
       }
     },

@@ -8,18 +8,20 @@ exports.createService = async (req, res) => {
     // Validate request
     console.log(req.body);
 
-    if (!req.body.name || !req.body.description) {
+    if (!req.body.service || !req.body.description) {
         await res.status(400).send({
             message: "service name and description cannot be empty!"
         });
         return;
         }
 
-    const lastid = await User.max('uid');
+    const lastid = await Service.max('sid');
     const service = {
         sid: lastid !== 0 && lastid ? lastid + 1 : 1,
         service: req.body.service,
-        description: req.body.description
+        description: req.body.description,
+        createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
+        updatedAt: new Date('YYYY-MM-DD HH:MM:SS')
     };
 
     // Save Location in the database
@@ -28,7 +30,7 @@ exports.createService = async (req, res) => {
             console.log('received: ' + data);
         })
         .catch(err => {
-            console.log("Some error occurred while creating the User.");
+            console.log("Some error occurred while creating the Service.");
         });
 };
 

@@ -1,0 +1,12 @@
+.accountInfoEditorContainerContainer p {
+    margin-bottom: auto;
+}
+
+#formContainer {
+    margin: 0;
+    margin-left: 10px;
+}
+
+textarea {
+    width: 100%;
+}

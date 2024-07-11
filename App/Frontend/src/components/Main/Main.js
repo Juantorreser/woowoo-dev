@@ -52,6 +52,7 @@ import Account from '../account/account';
 import SignOut from '../account/signout';
 import Schedule from '../pages/schedule';
 import MessageBox from '../pages/message';
+import AddService from "../pages/addService";
 
 
 // Main acts as a container for the routing
@@ -72,8 +73,10 @@ const Main = () => {
                     <Route exact path='/account' element={<Account />} />
                     <Route exact path='/signout' element={<SignOut />} />
                     <Route exact path='/message' element={<MessageBox />} />
+                    <Route exact path='/addService' element={<AddService />} />
                 </Routes>
             </div>
+
         </main>
     );
 };
