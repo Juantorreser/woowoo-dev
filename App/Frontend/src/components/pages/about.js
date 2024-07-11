@@ -1,45 +1,35 @@
 import React from 'react';
-import './about.css';
-import aboutFile from './about.txt';
+import './about.css'; // Import your custom CSS file for additional styling
+import { Container, Row, Col } from 'react-bootstrap';
 
-function readFile(input) {
-	//Not entirely sure how this all works because I stole this from a stackoverflow post
-	//https://stackoverflow.com/questions/36921947/read-a-server-side-file-using-javascript
-	//There's also something about Chrome not allowing it because of a same origin request but it seems to work anyway
-	//This is also apparently deprecated and should be used asynchronously instead but I don't want to figure that out right now
-	var result = null;
-	var xmlhttp = new XMLHttpRequest();
-	
-	xmlhttp.open("GET", input, false);
-	xmlhttp.send();
-	
-	if (xmlhttp.status === 200) {
-		result = xmlhttp.responseText;
-	}
-	
-	return result;
+const AboutPage = () => {
+    return (
+        <div className="about-page">
+            {/* Animated Background */}
+            <div className="animated-background"></div>
+
+            <Container>
+                <Row className="justify-content-center">
+                    <Col md={8}>
+                        <div className="about-content">
+                            <h1 className="display-4 text-green mb-4">About Woo Woo Network</h1>
+                            <div className="text-left">
+                                <p>
+                                    Woo Woo Network was imagined by Kimberlee Klein to empower healers globally. Kimberlee works with those who have experienced pregnancy loss, guiding them towards spiritual healing and personal growth.
+                                </p>
+                                <p>
+                                    Recognizing the need for a platform that promotes healers effectively, Kimberlee founded Woo Woo Network to support healers in building sustainable businesses. We believe in the transformative power of holistic healing tools that enable clients to overcome life challenges peacefully.
+                                </p>
+                                <p>
+                                    At Woo Woo Network, we provide a safe space for clients to explore different healing modalities and capture the impact of healing sessions. Join us in discovering new tools and methodologies to enhance your spiritual journey!
+                                </p>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
+    );
 }
 
-class about extends React.Component{
-    render(){
-		let aboutText = readFile(aboutFile);
-        return(
-			<div className='about'>
-				<div className='hero'>
-					<div className="container">
-							<div className="left">
-								<h1>Woo</h1>
-								<h1>Woo</h1>
-								<h1>Network</h1>                
-							</div>
-							<div className="aboutContainer">
-								<pre className="aboutText">{aboutText}</pre>
-							</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
-}
-
-export default about
+export default AboutPage;

@@ -25,126 +25,173 @@ const transporter = nodemailer.createTransport({
     pass: EMAIL_PASS
   }
 })
-// const {GOOGLE_SECRET_KEY} = require('../config/google.config.js');
-// const initializeApp = require('firebase/app');
-// const {getMessaging, getToken} = require('firebase/messaging');
-// const {getTokenFromFirebase} = require('../firebase-messaging-sq.js');
-// const firebaseConfig = {
-//   apiKey: GOOGLE_SECRET_KEY
-// }
 
-// const app = initializeApp(firebaseConfig);
-// const messaging = initializeApp(app);
-// //Add the public key generated from the console:
-// getToken(messaging, {vapidKey: GOOGLE_SECRET_KEY})
-// .then((currentToken)=> {
-//   if(currentToken){
-//     //Add the token to the server.
-//   }
-//   else{
-//     console.log('No registration token available');
-//   }
-// })
-// .catch(err=> {
-//   console.log('An error occur when retrieving token');
-// });
 
 // This function is responsible for creating a new appointment and saving it to the database. 
 // It performs some basic input validation to ensure that required fields (healer, fbid, and uid) are provided in the request's body. 
 // If any of the validations fail, it sends a 400 Bad Request response with an appropriate error message. 
 // Otherwise, it generates a new aid for the appointment, constructs the appointment object, 
 // and saves it to the database using Appointment.create().
-exports.createAppointment = async (req, res) => {
-    // Validate request
-    console.log(req.body);
-    var healerEmail = "";
-    if (!req.body.healer) {
-      let message = "healer id can not be empty!";
-      await res.status(400).send({
-        message: message
-      });
-      return;
-    }
+// exports.createAppointment = async (req, res) => {
+//     // Validate request
+//     console.log(req.body);
+//     var healerEmail = "";
+//     if (!req.body.healer) {
+//       let message = "healer id can not be empty!";
+//       await res.status(400).send({
+//         message: message
+//       });
+//       return;
+//     }
 
-    console.log(!req.body.uid);
-    // if (!req.body.fbid || !req.body.uid) {
-      if (!req.body.uid) {
-      let message = "id can not be empty!";
-      await res.status(400).send({
-        message: message
-      });
-      return;
-    }
-    //find the email of the healer.
-    await User.findAll({   //find the account of the one being deleted.
-      where: {uid: req.body.healer}   //find the email fo the healer.
-    })
-    .then(async data=> {
+//     console.log(!req.body.uid);
+//     // if (!req.body.fbid || !req.body.uid) {
+//       if (!req.body.uid) {
+//       let message = "id can not be empty!";
+//       await res.status(400).send({
+//         message: message
+//       });
+//       return;
+//     }
+//     //find the email of the healer.
+//     await User.findAll({   //find the account of the one being deleted.
+//       where: {uid: req.body.healer}   //find the email fo the healer.
+//     })
+//     .then(async data=> {
         
-        try{
-          healerEmail = data[0].email;
-        }
-        catch(err){
-          console.log(err);
-        }
-    })
-    console.log("Healer email is: "+ healerEmail);
-    const lastid = await Appointment.max('aid');
-    const appointment = {
-      aid: lastid !== 0 && lastid ? lastid + 1 : 1,
-      healer: req.body.healer,
-      //client: req.body.ufbid,
-      client: req.body.uid,
-      timezone: req.body.timezone,
-      date: req.body.date,
-      time: req.body.time,
-      createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
-      updatedAt: null,
-      healerAccepted: 0
-    };
-    //find the email of the user as well as the intended healer:
+//         try{
+//           healerEmail = data[0].email;
+//         }
+//         catch(err){
+//           console.log(err);
+//         }
+//     })
+//     console.log("Healer email is: "+ healerEmail);
+//     const lastid = await Appointment.max('aid');
+//     const appointment = {
+//       aid: lastid !== 0 && lastid ? lastid + 1 : 1,
+//       healer: req.body.healer,
+//       //client: req.body.ufbid,
+//       client: req.body.uid,
+//       timezone: req.body.timezone,
+//       date: req.body.date,
+//       time: req.body.time,
+//       createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
+//       updatedAt: null,
+//       healerAccepted: null
+//     };
+//     //find the email of the user as well as the intended healer:
 
 
-    //get the token:
-    //getTokenFromFirebase();
-    const mailOptions = {
-      from: "woowoonetworkcanada@gmail.com", 
-      //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
-      to: healerEmail,   //this is the real one.
-      subject: "Testing", 
-      text: "Hello world", 
-      html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
-    };
+//     //get the token:
+//     //getTokenFromFirebase();
+//     const mailOptions = {
+//       from: "woowoonetworkcanada@gmail.com", 
+//       //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+//       to: healerEmail,   //this is the real one.
+//       subject: "Testing", 
+//       text: "Hello world", 
+//       html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
+//     };
 
-    const info = await transporter.sendMail(mailOptions, function(err, data){
-      if(err){
-        console.log("Error with sending mail: " + err)
+//     const info = await transporter.sendMail(mailOptions, function(err, data){
+//       if(err){
+//         console.log("Error with sending mail: " + err)
+//       }
+//       else{
+//         console.log("Email sent successfully");
+//       }
+//     })
+    
+
+
+//     await Appointment.create(appointment)
+//       .then(data => {
+//         console.log('received: ' + data);
+//         res.send(data);
+//       })
+//       .catch(err => {
+//         console.log("Some error occurred while creating the User.");
+//       });
+//   };
+
+
+exports.createAppointment = async (req, res) => {
+  // Validate request
+  var healerEmail = "";
+  if (!req.body.healer) {
+    console.log("a");
+      let message = "Healer ID cannot be empty!";
+      return res.status(400).send({ message });
+  }
+
+  if (!req.body.uid) {
+    console.log("b");
+      let message = "Client ID cannot be empty!";
+      return res.status(400).send({ message });
+  }
+
+  try {
+      // Find the email of the healer
+      const users = await User.findAll({ where: { uid: req.body.healer } });
+      if (!users || users.length === 0) {
+          let message = "Healer not found.";
+          return res.status(404).send({ message });
       }
-      else{
-        console.log("Email sent successfully");
-      }
-    })
-    // Save Location in the database. location is not defined yet.
+      healerEmail = users[0].email;
 
-    // await Appointment.create(location)
-    //   .then(data => {
-    //     console.log('received: ' + data);
-    //   })
-    //   .catch(err => {
-    //     console.log("Some error occurred while creating the User.");
-    //   });
-
-
-
-    await Appointment.create(appointment)
-      .then(data => {
-        console.log('received: ' + data);
-        res.send(data);
-      })
-      .catch(err => {
-        console.log("Some error occurred while creating the User.");
+      // Check if the time slot is already booked
+      const existingAppointment = await Appointment.findOne({
+          where: {
+              healer: req.body.healer,
+              date: req.body.date,
+              time: req.body.time,
+              healerAccepted: 1 // Only consider confirmed appointments
+          }
       });
-  };
+
+      if (existingAppointment) {
+        console.log("c");
+          return res.status(400).send({
+              message: "This time slot is already booked. Please choose another time."
+          });
+      }
+
+      // Create the appointment
+      const lastid = await Appointment.max('aid');
+      const appointment = {
+          aid: lastid !== 0 && lastid ? lastid + 1 : 1,
+          healer: req.body.healer,
+          client: req.body.uid,
+          timezone: req.body.timezone,
+          date: req.body.date,
+          time: req.body.time,
+          createdAt: new Date(),
+          updatedAt: null,
+          healerAccepted: null
+      };
+
+      // Send email notification
+      const mailOptions = {
+          from: "woowoonetworkcanada@gmail.com",
+          to: healerEmail,
+          subject: "New Appointment Scheduled",
+          html: `<div><h3>You have a new appointment</h3><p>Client: ${appointment.client}</p><p>Time: ${appointment.time}</p><p>Date: ${appointment.date}</p></div>`
+      };
+
+      await transporter.sendMail(mailOptions);
+      
+      // Save the appointment to the database
+      const newAppointment = await Appointment.create(appointment);
+      res.status(201).send(newAppointment);
+  } catch (err) {
+      console.error("Error while creating the appointment:", err);
+      res.status(500).send({
+          message: "Some error occurred while creating the appointment."
+      });
+  }
+};
+
 
   // This function retrieves all appointments for a specified healer. 
   // It expects the healer parameter to be passed as a query parameter in the request. 

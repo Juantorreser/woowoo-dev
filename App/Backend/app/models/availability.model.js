@@ -106,6 +106,9 @@ module.exports = (sequelize, Sequelize) => {
         date: {
             type: DataTypes.DATEONLY,
             allowNull: false,
+        },
+        service: {
+            type: Sequelize.STRING // Added service field
         }
     }, {
         tableName: 'availability',
@@ -114,3 +117,6 @@ module.exports = (sequelize, Sequelize) => {
 
     return Availability;
 };
+
+
+
