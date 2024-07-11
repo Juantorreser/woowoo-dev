@@ -58,6 +58,7 @@ exports.createAppointment = async (req, res) => {
     // Validate request
     console.log(req.body);
     var healerEmail = "";
+    var clientName = "";
     if (!req.body.healer) {
       let message = "healer id can not be empty!";
       await res.status(400).send({
@@ -80,14 +81,19 @@ exports.createAppointment = async (req, res) => {
       where: {uid: req.body.healer}   //find the email fo the healer.
     })
     .then(async data=> {
-        
         try{
           healerEmail = data[0].email;
+          
         }
         catch(err){
           console.log(err);
         }
     })
+
+    
+
+    //find the name of the client
+
     console.log("Healer email is: "+ healerEmail);
     const lastid = await Appointment.max('aid');
     const appointment = {
@@ -100,10 +106,23 @@ exports.createAppointment = async (req, res) => {
       time: req.body.time,
       createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
       updatedAt: null,
-      healerAccepted: 0
+      healerAccepted: null   //will be decided at the healer's schedule side.
     };
     //find the email of the user as well as the intended healer:
 
+    
+    //find the name of the client
+    await User.findAll({
+      where: {uid: appointment.client}
+    })
+    .then(async data=>{
+      try{
+        clientName = data[0].firstName + " "+ data[0].lastName;
+      }
+      catch(err){
+        console.log(err);
+      }
+    })
 
     //get the token:
     //getTokenFromFirebase();
@@ -113,7 +132,30 @@ exports.createAppointment = async (req, res) => {
       to: healerEmail,   //this is the real one.
       subject: "Testing", 
       text: "Hello world", 
-      html: `<div><h3>You have new appointment</h3> <p>Client:${appointment.client}</p> <p>Time: ${appointment.time}</p> <p>Date: ${appointment.date}</p></div>`
+      html: ` <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <h2 style="background-color: #f4f4f4; padding: 10px; border-bottom: 2px solid #e6e6e6; text-align: center; color: #2c3e50;">New Appointment Scheduled</h2>
+      <div style="padding: 20px;">
+        <p style="font-size: 16px;">Dear Healer,</p>
+        <p style="font-size: 16px;">You have a new appointment scheduled. Here are the details:</p>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+          <tr>
+            <th style="border: 1px solid #e6e6e6; padding: 10px; text-align: left; background-color: #f4f4f4;">Client</th>
+            <td style="border: 1px solid #e6e6e6; padding: 10px;">${clientName}</td>
+          </tr>
+          <tr>
+            <th style="border: 1px solid #e6e6e6; padding: 10px; text-align: left; background-color: #f4f4f4;">Date</th>
+            <td style="border: 1px solid #e6e6e6; padding: 10px;">${appointment.date}</td>
+          </tr>
+          <tr>
+            <th style="border: 1px solid #e6e6e6; padding: 10px; text-align: left; background-color: #f4f4f4;">Time</th>
+            <td style="border: 1px solid #e6e6e6; padding: 10px;">${appointment.time}</td>
+          </tr>
+        </table>
+        <p style="font-size: 16px;">Please confirm or reschedule the appointment as needed.</p>
+        <p style="font-size: 16px;">Thank you,</p>
+        <p style="font-size: 16px;">Woo Woo Network</p>
+      </div>
+    </div>`
     };
 
     const info = await transporter.sendMail(mailOptions, function(err, data){

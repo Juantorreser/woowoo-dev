@@ -18,6 +18,12 @@ module.exports = (sequelize, Sequelize)=> {
         },
         createdAt: {
             type: Sequelize.DATE
+        },
+        updatedAt: {
+            type: Sequelize.DATE
+        }, 
+        reply: {
+            type: Sequelize.STRING
         }
     });
     return message;

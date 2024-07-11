@@ -72,7 +72,7 @@ exports.createUser = async (req, res) => {
     region: req.body.region,
     format: req.body.format ? req.body.format : 0,
     stripeAccount: "",
-    prices: req.body.servicePrices ? req.body.servicePrices.toString() : null
+    servicePrices: req.body.servicePrices != null ? req.body.servicePrices.toString() : null
   };
   console.log(user.prices);
   // Validate request
@@ -119,6 +119,7 @@ exports.createUser = async (req, res) => {
         type: 'account_onboarding',
       });
       res.status(200).json({url: accountLink.url});
+      //res.redirect(accountLink.url);
       
     }
     catch(err){
@@ -250,8 +251,14 @@ exports.findAllHealers = (req, res) => {
     whereClause.email = req.query.email;
   }
 
-  sequelize.query(
-    `select u.uid, firstName, lastName, email, account, u.description, enabled, region, city, group_concat(distinct(service)) as services, format
+  // sequelize.query(
+  //   `select u.uid, firstName, lastName, email, account, u.description, enabled, region, city, group_concat(distinct(service)) as services, format
+  //   from users u join services s 
+  //   where find_in_set(s.sid, u.services)
+  //   group by u.uid`
+  // )
+  sequelize.query(   //not sure yet.
+    `select u.uid, firstName, lastName, email, account, u.description, enabled, region, city, group_concat(distinct(service)) as services, format, group_concat(distinct(servicePrices)) as servicePrices
     from users u join services s 
     where find_in_set(s.sid, u.services)
     group by u.uid`
@@ -529,7 +536,7 @@ exports.findAllEnabled = async (req, res) => {
 exports.payForSpecificHealer = async (req, res)=> {
   console.log("payForSpecificHealer");
   // const {amount, token} = req.body;
-
+  console.log(req.body);
   const {amount, healer_email} = req.body;
   console.log(healer_email);
   // const emails = req.body.items.map(item=> {    //return a list of healer's email
@@ -559,10 +566,6 @@ exports.payForSpecificHealer = async (req, res)=> {
 
   //Method 2: Session payment: Correct if tested but not sure yet until tested in frontend.
   try{
-
-    // const customer_id = await stripe.customers.list({
-    //   email: healer_email
-    // })
     var account_id = '';
     await User.findAll({ where: { email: req.body.healer_email} })
     .then(data => {
@@ -575,11 +578,14 @@ exports.payForSpecificHealer = async (req, res)=> {
           err.message || "Some error occurred while retrieving users."
       });
     });
+
+    console.log(account_id);
     //get the price based on the description.
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment', 
       line_items: req.body.items.map(item=> {
+        console.log("The item's price is: "+ item.price);
         return {
           price_data: {
             currency: req.body.currency, 
@@ -593,7 +599,7 @@ exports.payForSpecificHealer = async (req, res)=> {
         }
       }),
       payment_intent_data: {
-        application_fee_amount: 123,
+        application_fee_amount: 0,  //fee for the woowoonetwork
         transfer_data: {
           //destination: await customer_id.data[0].id
           //destination: 'acct_1Ja4OO7iSovqGMwf'
@@ -603,9 +609,11 @@ exports.payForSpecificHealer = async (req, res)=> {
       success_url: 'https://localhost:4200',
       cancel_url: 'https://localhost:4200'
     })
+    console.log("Successfully book an appointment. Now, ready to pay");
     res.json({url: session.url})
   }
   catch(err){
+    console.log(err);
     res.status(500).json({error: err.message})
   }
 
