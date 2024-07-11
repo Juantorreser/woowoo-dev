@@ -8,7 +8,6 @@ import options from '../dropdown/Services.js';
 import { MultiSelect } from 'react-multi-select-component';
 import './account.css';
 import { userSchema as schema } from './schema.js';
-
 const auth = getAuth(app);
 
 const renderError = (message) => <p className="warning">{message}</p>;
@@ -16,6 +15,8 @@ const renderError = (message) => <p className="warning">{message}</p>;
 const Account = () => {
 	// TODO: Warning: `value` prop on `input` should not be null. Consider using an empty string to clear the component or `undefined` for uncontrolled components.
 	//Above points at userState/setUserState having a useState of null
+
+	//Render different page based on whether it is a normal user or admin.
 	const [ userState, setUserState ] = useState(null);
 	const [ userDetails, setUserDetails ] = useState(null);
 	const [ userLocation, setUserLocation ] = useState(null);
