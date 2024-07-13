@@ -53,7 +53,7 @@ const Account = () => {
 			setUserState(user);
 			axios.get('http://localhost:8080/users').then(  (response) => {
 				// setUserDetails(chosenUser);
-				// console.log(response.data);
+				// console.log(response.data)
 				for(const i of response.data){
 					if (i.email === user.email){
 						setUserDetails(i);
