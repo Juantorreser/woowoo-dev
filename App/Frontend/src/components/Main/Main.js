@@ -53,7 +53,7 @@ import SignOut from '../account/signout';
 import Schedule from '../pages/schedule';
 import MessageBox from '../pages/message';
 import AddService from '../pages/addService';
-import ManageService from '../pages/manageService';
+import ManageService from '../pages/manageServices';
 
 
 // Main acts as a container for the routing
