@@ -8,6 +8,7 @@ import options from '../dropdown/Services.js';
 import { MultiSelect } from 'react-multi-select-component';
 import './account.css';
 import { userSchema as schema } from './schema.js';
+import { Button } from '../Button/button.js';
 const auth = getAuth(app);
 
 const renderError = (message) => <p className="warning">{message}</p>;
@@ -145,7 +146,8 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
-						
+						<br/>
+						<a href="/manageServices"><Button>Manage Services</Button></a>
 					</div>
 
 					{/* the edit account portion */}

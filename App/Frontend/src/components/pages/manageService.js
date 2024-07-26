@@ -2,7 +2,7 @@ import {Formik, Form, Field, ErrorMessage} from 'formik';
 import axios from 'axios';
 // using some aspects of account.css for consistency with account.js form styling
 import '../account/account.css';
-import './manageServices.css';
+// import './manageServices.css'; // No styles yet
 
 const ManageServices = () => {
     return (
