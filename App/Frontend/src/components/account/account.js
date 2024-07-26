@@ -466,6 +466,9 @@ const HealerOptions = (props) => {
 			onChange={e => {props.setSelectedServices(e); props.setServices(e)}}
 		/>
 		<ErrorMessage name="services" render={renderError} />
+		{/* Link to addService.js */}
+		<a href="/addService" className="linkDesign">Offer Something Else?</a>
+
 		{props.selectedServices.map(service=> {
 			return(
 				<>
