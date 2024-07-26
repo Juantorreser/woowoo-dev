@@ -53,7 +53,7 @@ import SignOut from '../account/signout';
 import Schedule from '../pages/schedule';
 import MessageBox from '../pages/message';
 import AddService from '../pages/addService';
-import ManageService from '../pages/manageServices';
+import ManageServices from '../pages/manageServices';
 
 
 // Main acts as a container for the routing
@@ -75,7 +75,7 @@ const Main = () => {
                     <Route exact path='/signout' element={<SignOut />} />
                     <Route exact path='/message' element={<MessageBox />} />
                     <Route exact path='/addService' element={<AddService />} />
-                    <Route exact path='/manageService' element={<ManageService />} />
+                    <Route exact path='/manageServices' element={<ManageServices />}/>
                 </Routes>
             </div>
 
