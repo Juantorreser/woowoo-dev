@@ -114,8 +114,8 @@ exports.createUser = async (req, res) => {
       user.stripeAccount = account.id;
       const accountLink = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: 'https://localhost:4200',
-        return_url: 'https://localhost:4200',
+        refresh_url: 'https://localhost:3000',
+        return_url: 'https://localhost:3000',
         type: 'account_onboarding',
       });
       res.status(200).json({url: accountLink.url});
@@ -238,13 +238,15 @@ exports.findAllHealers = (req, res) => {
   console.log('findAllHealers');
   let details = {};
 
+
+
   let whereClause = {
     account: {
       [Op.eq]: 1
     },
     enabled: {
       [Op.eq]: 1
-    }
+    }, 
   };
 
   if(req.query.email){
@@ -399,29 +401,83 @@ exports.findOneUser = async (req, res) => {
 };
 
 // Update a user by the id in the request
+// exports.updateUser = async (req, res) => {
+//   console.log('updateUser');
+
+//   const id = parseInt(req.body.uid);
+//   await User.update(id, {
+//     where: { uid: id }
+//   })
+//     .then(num => {
+//       if (num == 1) {
+//         res.status(200).send({
+//           message: "User was updated successfully."
+//         });
+//       } else {
+//         res.status(400).send({
+//           message: `Cannot update User with id=${id}. Maybe user was not found or req.body is empty!`
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: "Error updating user with id=" + id
+//       });
+//     });
+// };
+
+
 exports.updateUser = async (req, res) => {
   console.log('updateUser');
 
-  const id = parseInt(req.body.uid);
-  await User.update(id, {
-    where: { uid: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.status(200).send({
-          message: "User was updated successfully."
-        });
-      } else {
-        res.status(400).send({
-          message: `Cannot update User with id=${id}. Maybe user was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating user with id=" + id
+  const id = parseInt(req.params.uid); // Get uid from request params
+
+  // Initialize an empty object to hold the fields to be updated
+  const updateData = {};
+
+  // Only add fields to updateData if they are present in the request body
+  if (req.body.firstName !== undefined) updateData.firstName = req.body.firstName;
+  if (req.body.lastName !== undefined) updateData.lastName = req.body.lastName;
+  if (req.body.email !== undefined) updateData.email = req.body.email;
+  if (req.body.password !== undefined) updateData.password = req.body.password;
+  if (req.body.account !== undefined) updateData.account = req.body.account;
+  if (req.body.services !== undefined) updateData.services = req.body.services;
+  if (req.body.description !== undefined) updateData.description = req.body.description;
+  if (req.body.enabled !== undefined) updateData.enabled = req.body.enabled;
+  if (req.body.region !== undefined) updateData.region = req.body.region;
+  if (req.body.city !== undefined) updateData.city = req.body.city;
+  if (req.body.format !== undefined) updateData.format = req.body.format;
+  if (req.body.stripeAccount !== undefined) updateData.stripeAccount = req.body.stripeAccount;
+  if (req.body.servicePrices !== undefined) updateData.servicePrices = req.body.servicePrices;
+
+  try {
+    // Ensure there are fields to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).send({
+        message: "No fields to update."
       });
+    }
+
+    // Update user in the database
+    const [num] = await User.update(updateData, {
+      where: { uid: id }
     });
+
+    if (num === 1) {
+      res.status(200).send({
+        message: "User was updated successfully."
+      });
+    } else {
+      res.status(404).send({
+        message: `Cannot update User with id=${id}. Maybe user was not found or req.body is empty!`
+      });
+    }
+  } catch (err) {
+    console.error('Error updating user:', err); // Added for debugging
+    res.status(500).send({
+      message: "Error updating user with id=" + id
+    });
+  }
 };
 
 // Delete a user with the specified id in the request
@@ -606,8 +662,8 @@ exports.payForSpecificHealer = async (req, res)=> {
           destination: account_id
         }
       },
-      success_url: 'https://localhost:4200',
-      cancel_url: 'https://localhost:4200'
+      success_url: 'http://localhost:3000',
+      cancel_url: 'http://localhost:3000'
     })
     console.log("Successfully book an appointment. Now, ready to pay");
     res.json({url: session.url})
@@ -617,6 +673,23 @@ exports.payForSpecificHealer = async (req, res)=> {
     res.status(500).json({error: err.message})
   }
 
+}
+
+exports.financeReport = async (req,res)=>{
+  const accountID = req.params.stripeAccount;
+//   const account = await stripe.balance.retrieve({
+//     stripeAccount: accountID
+//   },  
+// );
+const account = await stripe.charges.list(
+  {
+  limit: 5,
+  },
+  {
+    stripeAccount: accountID
+  }
+);
+  res.status(200).send(account);
 }
 
 exports.testing = async(req, res)=> {

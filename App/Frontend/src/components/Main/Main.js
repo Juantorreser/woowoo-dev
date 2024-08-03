@@ -53,7 +53,10 @@ import SignOut from '../account/signout';
 import Schedule from '../pages/schedule';
 import MessageBox from '../pages/message';
 import AddService from "../pages/addService";
-
+import {AdminDashboard,EditServices, AdminUsers} from '../pages/adminDashboard';
+import AdminAccountSearch from "../pages/admin-account-search";
+import ManageUser from "../pages/ManageUser";
+import RegisterUser from "../pages/RegisterUser";
 
 // Main acts as a container for the routing
 const Main = () => {
@@ -74,6 +77,13 @@ const Main = () => {
                     <Route exact path='/signout' element={<SignOut />} />
                     <Route exact path='/message' element={<MessageBox />} />
                     <Route exact path='/addService' element={<AddService />} />
+                    <Route exact path='/admin' element = {<AdminDashboard/>}/>
+                    <Route exact path='/editServices' element = {<EditServices/>}/>
+                    <Route exact path='/adminUsers' element = {<AdminUsers/>}/>
+                    <Route exact path='/admin-account-search' element = {<AdminAccountSearch/>}/>
+                    <Route exact path='/manage-user' element = {<ManageUser/>}/>
+                    <Route exact path='/register' element = {<RegisterUser/>}/>
+                    <Route path="/manage-user/:userId" element={<ManageUser />} />
                 </Routes>
             </div>
 

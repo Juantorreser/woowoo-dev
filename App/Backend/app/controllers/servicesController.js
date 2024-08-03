@@ -49,6 +49,20 @@ exports.findAllServices = async (req, res) => {
     });
 };
 
+//Retrieve only the enabled one.
+exports.findAllEnabled = async (req,res)=> {
+    await Service.findAll({
+        where: {blocked: null}    //return only if the service is not blocked yet.
+    })
+    .then(data=> {
+        res.send(data);
+    })
+    .catch(err=> {
+        res.status(500).send({
+            message: err.message || "Some error occurred in finding the enabled services"
+        })
+    })
+}
 exports.findServiceById = async (req, res) => {
     const serviceIds = req.query.ids;
     console.log(serviceIds);
@@ -89,12 +103,12 @@ exports.updateService = (req, res) => {
 // Delete a user with the specified id in the request
 exports.deleteService = (req, res) => {
     const sid = req.params.sid;
-    Location.destroy({
+    Service.destroy({
         where: { sid: sid }
     })
     .then(num => {
         res.status(200).send({
-            message: "User was deleted successfully!"
+            message: "Service was deleted successfully!"
         });
     })
     .catch(err => {
@@ -103,3 +117,5 @@ exports.deleteService = (req, res) => {
         });
     });
 };
+
+

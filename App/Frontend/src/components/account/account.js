@@ -146,6 +146,13 @@ const Account = () => {
 							<p>{userDetails.description}</p>
 						</div>
 						
+						{/* admin button that leads to admin dashboard page if the user entered in is admin*/}
+						{userDetails.account == 2 ? <>
+							<br></br><button onClick = {
+							()=> {window.location.assign('/admin')}
+						}>Admin dashboard</button>
+						</> 
+						: <p></p>}
 					</div>
 
 					{/* the edit account portion */}

@@ -34,6 +34,12 @@ module.exports = (sequelize, Sequelize) => {
         },
         healerAccepted: {
             type: Sequelize.BOOLEAN
+        },
+        appointmentService: {
+          type: Sequelize.STRING
+        },
+        appointmentDuration: {
+          type: Sequelize.STRING
         }
     },
     { 

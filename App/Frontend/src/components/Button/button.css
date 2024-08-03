@@ -38,7 +38,7 @@
 
 /*Meant to be used for the navbar sign in/out buttons but the <Button> tag eats it and styling was done with the knowledge that it doesn't load.*/
 .btn--outline{
-    background-color: none;
+    background-color: #AB81CD;
     color: #F59D78;
     padding: 10px 20px;
     border-radius: 2px;

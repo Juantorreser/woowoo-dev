@@ -176,7 +176,21 @@ module.exports = function(router){
         })
         .post((req, res) => {
             services.createService(req, res);
-        });
+        });  
+        
+    //Enabled service
+    router.route('/enabledServices')
+    .get((req,res)=> {
+        services.findAllEnabled(req,res);
+    })
+    //enable/disable service from admin side.
+    router.route('/services/:sid')
+    .put((req, res)=> {
+        services.updateService(req,res);
+    })
+    .delete((req,res)=>{
+        services.deleteService(req,res);
+    });
 
     // Appointments
     router.route('/appointments')
@@ -228,6 +242,12 @@ module.exports = function(router){
         .post((req, res) => {
             users.payForSpecificHealer(req, res);
         });
+
+    //retrive information about an account, including finance
+    router.route('/financeReport/:stripeAccount')
+    .get((req,res)=> {
+        users.financeReport(req,res);
+    })
 
     router.route('/testing')
         .get((req, res) => {

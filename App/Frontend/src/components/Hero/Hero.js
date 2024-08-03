@@ -11,9 +11,9 @@ class Hero extends React.Component {
 			<div className='hero'>
 				<div className="container">
 					<div className="left">
-						<h1>Woo</h1>
-						<h1>Woo</h1>
-						<h1>Network</h1>
+						<h1>WooWooNetwork</h1>
+						{/* <h1>Woo</h1>
+						<h1>Network</h1> */}
 					</div>
 					<div className="right">
 						<h2>Woo Woo Network aims to help people worldwide.</h2>

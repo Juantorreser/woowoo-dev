@@ -23,7 +23,7 @@ const SignUp = () => {
 	const [servicePrices, setServicePrices] = useState([]);
 	//a reusable call to get the services listing from the API. 
 	const getServices = () => {
-		axios.get('http://localhost:8080/services')
+		axios.get('http://localhost:8080/enabledServices')   //not sure yet. Just added in
 		.then((response) => {
 			const responseOptions = response.data.map((service) => {
 				return {label: service.service, value: service.sid};
@@ -72,20 +72,18 @@ const SignUp = () => {
 								format: 0,
 								description: "",
 								terms: false, 
-								servicePrices: []
+								// servicePrices: []
 							}}
 							validationSchema={schema}
 							
 							onSubmit={(values, actions) => {
-								alert(servicePrices);
-								alert("The length of the servicePrices: "+ values.servicePrices.length);
 								//TODO: If registration fails due to it failing against the schema, alert the user
 								//setSubmitting keeps track of whether you are in the midst of submitting data
 								actions.setSubmitting(true);
 								(async () => {
-									selectedServices.forEach((service) => {
-										values.services.push(service.value)
-									})
+									// selectedServices.forEach((service) => {
+									// 	values.services.push(service.value)
+									// })
 
 									// servicePrices.length > 0 ? servicePrices.forEach((price) => {
 									// 	values.servicePrices.push(price.value)
@@ -322,7 +320,7 @@ const HealerOptions = (props) => {
 			
 		</Field>
 		<ErrorMessage name="services" render={renderError} />
-		<p>Price of services in 1 hour: </p>  {/* create texts depending on the amount of services the healer choose */}
+		{/* <p>Price of services in 1 hour: </p>  
 		{props.selectedServices.map(service=> {
 			priceOrder ++;
 			return(
@@ -342,7 +340,7 @@ const HealerOptions = (props) => {
 				</>	
 			)
 		})}
-		<ErrorMessage name="services" render={renderError} />
+		<ErrorMessage name="services" render={renderError} /> */}
 
 		<p>Delivery Format: </p>
 		<Field 

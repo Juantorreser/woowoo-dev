@@ -37,6 +37,7 @@ exports.createAppointment = async (req, res) => {
     console.log(req.body);
     var healerEmail = "";
     var clientName = "";
+    var serviceDuration = "";   //not yet determined
     if (!req.body.healer) {
       let message = "healer id can not be empty!";
       await res.status(400).send({
@@ -84,7 +85,9 @@ exports.createAppointment = async (req, res) => {
       time: req.body.time,
       createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
       updatedAt: null,
-      healerAccepted: null   //will be decided at the healer's schedule side.
+      healerAccepted: null,   //will be decided at the healer's schedule side.
+      appointmentService: req.body.service,
+      appointmentDuration: null
     };
     //find the email of the user as well as the intended healer:
 
@@ -95,6 +98,7 @@ exports.createAppointment = async (req, res) => {
     })
     .then(async data=>{
       try{
+        console.log(data[0]);
         clientName = data[0].firstName + " "+ data[0].lastName;
       }
       catch(err){
@@ -310,22 +314,22 @@ exports.findAllAppointments = async (req, res) => {
     });
 };
 
-// //fidn the history of appointments from a specific client:
-// exports.getClientAppointments = async (req, res)=> {
-//   const id = req.params.uid;
-//   await Appointment.findAll({
-//     where: {
-//       client: id
-//     }
-//   })
-//   .then(data=> {
-//     console.log(data);
-//     res.send(data);
-//   })
-//   .catch(err=> {
-//     res.status(500).send(err);
-//   })
-// }
+// //fiding the history of appointments from a specific client:
+exports.getClientAppointments = async (req, res)=> {
+  const id = req.params.uid;
+  await Appointment.findAll({
+    where: {
+      client: id
+    }
+  })
+  .then(data=> {
+    console.log(data);
+    res.send(data);
+  })
+  .catch(err=> {
+    res.status(500).send(err);
+  })
+}
 
 // This function is used to update an existing appointment based on its aid (appointment ID). 
 // It takes the aid from the request parameters and uses Appointment.update() to update the appointment with the new data provided in the request body. 

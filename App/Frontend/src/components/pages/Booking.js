@@ -219,15 +219,23 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
     const serviceOptions = healer.services.split(',');
     var priceOptions = [];
     console.log(healer);
-    if(healer.servicePrices.indexOf(",") > -1){   //servicePrices is in string form. find if the service prices has more than one price
-        const priceOptionsArray = healer.servicePrices.split(',');     //turn this string (format: '45,50') into array ([45,50])
-        priceOptionsArray.map(price=> {
-            priceOptions.push((Number(price)* 100).toString());
-        })
+
+    if(healer.servicePrices == null){
+        alert("This user does not have price. Please check again");
+        window.location.assign("/home");
     }
-    else{  //just add in that sigular price.
-        priceOptions.push((Number(healer.servicePrices)*100).toString());
+    else{
+        if(healer.servicePrices.indexOf(",") > -1){   //servicePrices is in string form. find if the service prices has more than one price
+            const priceOptionsArray = healer.servicePrices.split(',');     //turn this string (format: '45,50') into array ([45,50])
+            priceOptionsArray.map(price=> {
+                priceOptions.push((Number(price)* 100).toString());
+            })
+        }
+        else{  //just add in that sigular price.
+            priceOptions.push((Number(healer.servicePrices)*100).toString());
+        }
     }
+    
 
     
     
@@ -251,7 +259,6 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                         }
                         return acc;
                     }, []);
-
                     setTimeSlots(allTimeSlots.length > 0 ? allTimeSlots : []);
                 })
                 .catch(error => {
@@ -277,8 +284,6 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                 return errors;
             }}
             onSubmit={async (values, actions) => {
-                alert(priceOptions[0]);
-                alert("Seleted service is: "+ values.service);
                 var counter = -1;
                 //find the price of the service:
                 for(const serviceItem of serviceOptions){
@@ -287,7 +292,6 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                         break;
                     }
                 }
-                alert("Counter is: "+ counter);
                 const paymentData = {
                     
                    healer_name: healer.firstName + healer.lastName,
@@ -302,7 +306,6 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                     }
                    ]
                 }
-                alert(paymentData.items[0].price);
                 const appointmentData = {
                     ...values,
                     uid,

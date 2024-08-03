@@ -420,7 +420,7 @@ const auth = getAuth(app);
 
 const Schedule = () => {
     const [userDetails, setUserDetails] = useState({});
-
+    const [view, setView] = useState("0");
     useEffect(() => {
 
 		//let userD = "";
@@ -451,13 +451,28 @@ const Schedule = () => {
 
     return (
         <Container>
-            <ConfirmBox userDetails={userDetails} />
-            <HistoryBox userDetails={userDetails} />
+            {userDetails.account == 1?
+                <>
+                     <Button  onClick = {()=> {
+                        alert("Set to client view");
+                        setView("0");
+                    }}style = {view == "0"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Client</Button>
+                    <Button  onClick = {()=> {
+                        alert("Set to healer view");
+                        setView("1");
+                    }}style = {view == "1"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Healer</Button>
+                </>
+                :
+                <p></p>
+            }
+           
+            <ConfirmBox userDetails={userDetails} view = {view}/>
+            <HistoryBox userDetails={userDetails} view = {view} />
         </Container>
     );
 };
 
-const HistoryBox = ({ userDetails }) => {
+const HistoryBox = ({ userDetails, view}) => {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const endpoint = userDetails.account === 1 ? `appointments?healer=${userDetails.uid}` : `appointments/clients/${userDetails.uid}`;
@@ -549,11 +564,12 @@ const HistoryBox = ({ userDetails }) => {
 // }
 // >>>>>>> 793abc4e4b5b2a9cd95f857be617365eee8908e5
 
-const ConfirmBox = ({ userDetails }) => {
+const ConfirmBox = ({ userDetails, view }) => {
     const [healerAppointment, setHealerAppointment] = useState([]);
     const [confirm, setConfirm] = useState([]);
 
     useEffect(() => {
+        view == "1"?  //if the healer wants to be viewed as client or healer
         axios.get(`http://localhost:8080/appointments?healer=${userDetails.uid}`)
             .then((response) => {
                 const pendingAppointments = response.data.filter(x => x.healerAccepted === null);
@@ -561,8 +577,17 @@ const ConfirmBox = ({ userDetails }) => {
             })
             .catch(err => {
                 console.error("Error at schedule: ", err);
-            });
-    }, [userDetails, confirm]);
+            })
+        :
+        axios.get(`http://localhost:8080/appointments/clients/${userDetails.uid}`)
+        .then((response) => {
+            const pendingAppointments = response.data.filter(x => x.healerAccepted === null);
+            setHealerAppointment(pendingAppointments);
+        })
+        .catch(err => {
+            alert("Error at schedule: ", err);
+        });
+    }, [userDetails, confirm, view]);
 
     return (
         <Box my={4}>
@@ -570,21 +595,21 @@ const ConfirmBox = ({ userDetails }) => {
             {healerAppointment.map((appointment, index) => (
                 <Paper key={index} style={{ padding: '16px', marginBottom: '16px' }}>
                     <ClientBox appointment={appointment} user={userDetails} />
-                    {userDetails.account === 1 ?
-                        <Grid container spacing={2}>
-                            <Grid item>
-                                <ConfirmButton appointment={appointment} confirm={1} healerID={userDetails.uid} setConfirm={setConfirm} />
-                            </Grid>
-                            <Grid item>
-                                <ConfirmButton appointment={appointment} confirm={0} healerID={userDetails.uid} setConfirm={setConfirm} />
-                            </Grid>
-                            <Grid item>
-                                <RescheduleButton appointment={appointment} setConfirm={setConfirm} />
-                            </Grid>
-                        </Grid>
-                        :
-                        <CancelButton appointment={appointment} />
-                    }
+                    {/* {userDetails.account === 1 ? */}
+                    {view == "1" ? 
+                      <Grid container spacing={2}>
+                      <Grid item>
+                          <ConfirmButton appointment={appointment} confirm={1} healerID={userDetails.uid} setConfirm={setConfirm} />
+                      </Grid>
+                      <Grid item>
+                          <ConfirmButton appointment={appointment} confirm={0} healerID={userDetails.uid} setConfirm={setConfirm} />
+                      </Grid>
+                      <Grid item>
+                          <RescheduleButton appointment={appointment} setConfirm={setConfirm} />
+                      </Grid>
+                  </Grid>
+                  :
+                  <CancelButton appointment={appointment} />}
                 </Paper>
             ))}
         </Box>
@@ -611,6 +636,7 @@ const ClientBox = ({ appointment, user }) => {
             <Typography variant="body1">{receiver} {clientInfo.firstName} {clientInfo.lastName}</Typography>
             <Typography variant="body1">Time: {appointment.time}</Typography>
             <Typography variant="body1">Date: {appointment.date}</Typography>
+            <Typography variant="body1">Service: {appointment.appointmentService}</Typography>
         </Box>
     );
 };
