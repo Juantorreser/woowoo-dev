@@ -8,6 +8,7 @@ import options from '../dropdown/Services.js';
 import { MultiSelect } from 'react-multi-select-component';
 import './account.css';
 import { userSchema as schema } from './schema.js';
+import { Button } from '../Button/button.js';
 const auth = getAuth(app);
 
 const renderError = (message) => <p className="warning">{message}</p>;
@@ -145,6 +146,7 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
+
 						
 						{/* admin button that leads to admin dashboard page if the user entered in is admin*/}
 						{userDetails.account == 2 ? <>
@@ -153,6 +155,7 @@ const Account = () => {
 						}>Admin dashboard</button>
 						</> 
 						: <p></p>}
+
 					</div>
 
 					{/* the edit account portion */}
@@ -471,6 +474,9 @@ const HealerOptions = (props) => {
 			onChange={e => {props.setSelectedServices(e); props.setServices(e)}}
 		/>
 		<ErrorMessage name="services" render={renderError} />
+		{/* Link to addService.js */}
+		<a href="/addService" className="linkDesign">Offer Something Else?</a>
+
 		{props.selectedServices.map(service=> {
 			return(
 				<>

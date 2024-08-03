@@ -128,6 +128,9 @@
 .nonTextSignupForm p {
 	width: 100%;
 }
+.nonTextSignupForm p, .linkDesign {
+	width: 100%;
+}
 
 /*Multi-select field on the sign-up and account pages*/
 .nonTextSignupForm .multi-select {
@@ -251,4 +254,10 @@ fieldset {
 	border: 0;
 	padding-left: 2em;
 	padding-right: 2em;
+}
+
+/* For the forget password look */
+.linkDesign{
+	text-decoration: underline;
+	color: blue;
 }
