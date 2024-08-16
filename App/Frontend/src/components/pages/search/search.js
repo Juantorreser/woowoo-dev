@@ -157,7 +157,7 @@ const Search = () => {
         // //gets the initial list of healers (will eventually be all in range)
         const getInitialHealers = async () => { //add range param when ready.
             //console.log('getInitialHealers');
-            await axios.get('http://localhost:8080/users/healers')
+            await axios.get('http://localhost:8080/users/healers')    //might need to be changed so that only enabled healers can be seen.
             .then((response) => {
                 setInitHealers(response.data);
                 setHealers(response.data);

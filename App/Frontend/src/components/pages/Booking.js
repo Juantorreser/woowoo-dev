@@ -172,6 +172,12 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import './Booking.css';
 import './calendar.css';
+import { getAuth, updatePassword, updateEmail, reauthenticateWithCredential } from 'firebase/auth';
+import { app } from '../firebase/firebase-config';
+const auth = getAuth(app);
+
+
+
 
 const DefaultDayPicker = ({ onDateSelected }) => {
     const [date, setDate] = useState(new Date());
@@ -393,6 +399,34 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
 };
 
 const BookingPage = (props) => {
+    const [ userState, setUserState ] = useState(null);
+	const [ userDetails, setUserDetails ] = useState(null);
+    useEffect(() => {
+		//let userD = "";
+		//this method checks if the user is authenticated with firebase and essentially logged in.
+		auth.onAuthStateChanged( (user) => {
+			if(user){
+				console.log(user);
+                setUserState(user);
+                axios.get('http://localhost:8080/users').then(  (response) => {
+                    // setUserDetails(chosenUser);
+                    // console.log(response.data)
+                    for(const i of response.data){
+                        if (i.email === user.email){
+                            setUserDetails(i);
+                            break;
+                            //userD = i;
+                        }
+                        
+                    }
+                })
+            }
+            else{
+                alert("Sorry. You need to sign in before booking");
+                window.location.assign('signin');
+            }
+        })
+    }, [])
     console.log(props);
     const [selectedDate, setSelectedDate] = useState(null);
     const { healer, uid } = props;

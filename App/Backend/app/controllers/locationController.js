@@ -28,14 +28,15 @@ exports.createLocation = async (req, res) => {
       return;
     }
 
-    if (!req.body.fbid) {
-      let message = "id can not be empty!";
-      await res.status(400).send({
-        message: message
-      });
-      writeError(message);
-      return;
-    }
+    //fb id is not set up yet.
+    // if (!req.body.fbid) {
+    //   let message = "id can not be empty!";
+    //   await res.status(400).send({
+    //     message: message
+    //   });
+    //   writeError(message);
+    //   return;
+    // }
 
     var geoLat = "";
     var geoLng = "";

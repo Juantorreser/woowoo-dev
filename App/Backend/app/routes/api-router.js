@@ -32,6 +32,7 @@ module.exports = function(router){
         .delete((req, res) => {
             users.deleteAllUsers(req, res);
         })
+        router.route('/users/:uid')
         // Update a user with id
         .put((req, res) => {
             users.updateUser(req, res);
@@ -52,6 +53,8 @@ module.exports = function(router){
             // Uses request parameters to return healers
             users.findHealersWithParams(req, res);
         });
+
+    
 
     // Retrieve a single user with id
     router.route('/users/:uid')
@@ -247,6 +250,11 @@ module.exports = function(router){
     router.route('/financeReport/:stripeAccount')
     .get((req,res)=> {
         users.financeReport(req,res);
+    })
+
+    router.route('/stripeAccount/:stripeAccount')
+    .get((req,res)=> {
+        users.getStripeConnectedAccount(req,res);
     })
 
     router.route('/testing')

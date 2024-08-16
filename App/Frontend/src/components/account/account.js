@@ -50,7 +50,8 @@ const Account = () => {
 		//let userD = "";
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged( (user) => {
-			console.log(user);
+			if(user){
+				console.log(user);
 			setUserState(user);
 			axios.get('http://localhost:8080/users').then(  (response) => {
 				// setUserDetails(chosenUser);
@@ -89,6 +90,12 @@ const Account = () => {
 				// 	setHealerAppointment(response.data[0]);
 				// })
 			});
+			}
+			else{
+				alert("Sorry. Please try to sign in again");
+				window.location.assign('/signin');
+			}
+			
 	
 	// useEffect(()=> {
 	// 	// try{   //fetching appointments
@@ -219,6 +226,7 @@ const AccountForm = ({userDetails, userLocation}) => {
 	const [ submitting, setSubmitting ] = useState(false);
 	const [ selectedServices, setSelectedServices] = useState([]);
 	const [ options, setOptions ] = useState([]);
+	const [servicePrices, setServicePrices] = useState([]);
 
 	//get listing of services and set the options state to the response. 
 	const getServices = () => {
@@ -277,15 +285,33 @@ const AccountForm = ({userDetails, userLocation}) => {
 							services.forEach((service) => {
 								values.services.push(service.value)
 							})
+							
+							//pushing all the service prices into values.servicePrices
+							console.log(servicePrices);
+							servicePrices.map((servicePrice)=> {
+								values.servicePrices.push(servicePrice);
+							})
 						}
+
+						
 						//Not sure yet.
-						// Backend issues
-						// values.uid = userDetails.uid;
-						// console.log(await axios.get('http://localhost:8080/users/'+userDetails.uid));
-						// axios.put('http://localhost:8080/users/', values)
-						// .catch(err => {
-						// 	console.log(err);
-						// });
+						// Backend issues   . Should put new values to database
+						values.uid = userDetails.uid;
+						console.log(servicePrices);
+						if(values.servicePrices.length > 0){
+							//console.log(await axios.get('http://localhost:8080/users/'+userDetails.uid));
+							await axios.put('http://localhost:8080/users/'+ values.uid, values)
+							.then(response=> {
+								alert("Sucessfully change the user's information");
+							})
+							.catch(err => {
+								console.log(err);
+							});
+						}
+						else{
+							alert("The Service Prices are empty");
+						}
+						
 						actions.setSubmitting(false);
 					})();
 				}}
@@ -438,9 +464,11 @@ const AccountForm = ({userDetails, userLocation}) => {
 											// onChange={setServices}
 											labelledBy="Services"
 											setServices={setServices}
+											servicePrices = {servicePrices}
+											setServicePrices = {setServicePrices}
 										/>
 
-									) : <p>Not a healer</p>
+									) : <p></p>
 								}
 							<button type='submit' className="btn--login">Save</button>
 
@@ -457,12 +485,23 @@ const AccountForm = ({userDetails, userLocation}) => {
 //Healer-specific account settings. Should only be visible if the user selects the checkbox to indicate
 //they want their account to be set as a healer. 
 const HealerOptions = (props) => {
-	var priceOrder = 0;
+	var priceOrder = -1;
+	var tempArray = [];
+	var localSelectedService = [];
 	//on render, makes the call to the services API. Prevents too many calls on page load.
 	useEffect(() => {
 		props.getServices()
 	}, [])
+
+	useEffect(()=> {
+		console.log("props.servicePrices: "+props.servicePrices);
+		tempArray = props.servicePrices;
+	}, [props.servicePrices])
 	
+	// useEffect(()=> {
+	// 	console.log("props.servicePrices is: "+ props.servicePrices);
+	// 	tempArray = props.servicePrices;
+	// }, [props.servicePrices])
 	return (
 	<>
 		<p>Services Offered:</p>
@@ -477,25 +516,8 @@ const HealerOptions = (props) => {
 		{/* Link to addService.js */}
 		<a href="/addService" className="linkDesign">Offer Something Else?</a>
 
-		{props.selectedServices.map(service=> {
-			return(
-				<>
-					<Field
-					key={service}
-						type="text"
-						id="servicePrices"
-						name={'servicePrices['+ priceOrder + ']'}
-						label="Service Prices"
-						autoComplete="sprices"
-						autoFocus
-						required
-						onChange = {props.setServicePrices}
-					/>
-					<ErrorMessage name="servicePrices" render={renderError} />
-				</>
-			)
-			priceOrder++; //Does not run due to return
-		})}
+		<ServicePrices selectedServices = {props.selectedServices} servicePrices = {props.servicePrices} setServicePrices  = {props.setServicePrices} ></ServicePrices>
+		
 		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
@@ -531,6 +553,45 @@ const HealerOptions = (props) => {
 	)
 }
 
+
+const ServicePrices = ({selectedServices, setServicePrices, servicePrices})=> {
+	var priceOrder = -1;
+	var tempArray = [];
+	return(
+		<>
+			<p>Service Prices</p>
+		{selectedServices.map(service=> {
+			priceOrder ++;
+			return(
+				<>
+					<Field
+					key={service}
+						type="text"
+						id="servicePrices"
+						name={`servicePrices[${selectedServices.findIndex(x=> x == service)}]`}
+						label="Service Prices"
+						autoComplete="sprices"
+						autoFocus
+						required
+						onChange = {e=> {
+							var oldValue = servicePrices;
+							tempArray = oldValue;
+							console.log("tempArray before: "+ tempArray);
+							tempArray[selectedServices.findIndex(x=> x == service)] = e.target.value;
+							setServicePrices(tempArray);
+							console.log("tempArray after: "+ tempArray);
+						}}
+					
+					/>
+					<ErrorMessage name="servicePrices" render={renderError} />
+				</>
+			)
+		})}
+		</>
+		
+	
+	)
+}
 const Confirmbox = ({healer})=> {  //not sure yet.
 	const [healerAppointment, setHealerAppointment] = useState([{client: 1}]);
 	const [confirm, setConfirm] = useState(null);   //detects whether to reload or not.
@@ -566,19 +627,19 @@ const Confirmbox = ({healer})=> {  //not sure yet.
 						<p>Time: {appointment.time}</p>
 						<p>Date: {appointment.date}</p>
 						<button  onClick = {()=> {axios.put('http://localhost:8080/appointments/'+appointment.aid, {
-			healerAccepted: 1, 
-			client: appointment.client, 
-			aid: appointment.aid,
-			healer: healer, 
-			timezone: appointment.timezone,
-			date: appointment.date, 
-			time: appointment.time, 
-			createdAt: Date.now(), 
-			updatedAt: Date.now()
-		})
-		.then((response)=> {
-			console.log(response.data);
-		})
+							healerAccepted: 1, 
+							client: appointment.client, 
+							aid: appointment.aid,
+							healer: healer, 
+							timezone: appointment.timezone,
+							date: appointment.date, 
+							time: appointment.time, 
+							createdAt: Date.now(), 
+							updatedAt: Date.now()
+							})
+							.then((response)=> {
+								console.log(response.data);
+							})
 		arrayConfirm.push(true);
 		setConfirm(arrayConfirm);
 		}

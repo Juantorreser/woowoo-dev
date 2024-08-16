@@ -1,5 +1,5 @@
 module.exports = {
-    apiKey: "AIzaSyBHgWrdxrNW0tcheACV45rzou5b4jIZmC4",
+  apiKey: "AIzaSyBHgWrdxrNW0tcheACV45rzou5b4jIZmC4",
   authDomain: "woo-woo-network.firebaseapp.com",
   projectId: "woo-woo-network",
   storageBucket: "woo-woo-network.appspot.com",

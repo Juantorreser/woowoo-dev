@@ -1,4 +1,5 @@
 import { app } from '../firebase/firebase-config';
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getAuth, updatePassword, updateEmail, reauthenticateWithCredential } from 'firebase/auth';
@@ -15,8 +16,9 @@ import Button from 'react-bootstrap/Button';
 import UserModals from '../pages/userModals';
 // import { userSchema as schema } from './s4chema.js';
 import '../../bootstrap/dist/css/bootstrap.min.css';
-const auth = getAuth(app);
 
+
+const auth = getAuth(app);
 const AdminDashboard = ()=> {  
 	const [ userDetails, setUserDetails ] = useState(null);
 
@@ -43,6 +45,7 @@ const AdminDashboard = ()=> {
             }
         })
     }, [])
+   
 
     return(
         <Dashboard userDetails = {userDetails}></Dashboard>
@@ -64,7 +67,6 @@ const Header= ()=> {
             <Row >
                 <Col>
                     <Card style={{ width: '18rem' }}>
-                        <Card.Img variant="top" src="./admin-users.jpg" />
                         <Card.Body>
                             <Card.Title>Users</Card.Title>
                             <Card.Text>
@@ -84,7 +86,6 @@ const Header= ()=> {
 
                 <Col >
                     <Card style={{ width: '18rem' }}>
-                        <Card.Img variant="top" src="holder.js/100px180" />
                         <Card.Body>
                             <Card.Title>Services</Card.Title>
                             <Card.Text>
@@ -144,9 +145,10 @@ const ServicesTable = ({services})=> {
                                         <p style = {{"background-color": "green"}}>Enabled</p>
                                     </td>
                                     <td>
-                                    <button className = "tile-button "  style = {{"background-color": "red"}} onClick = {()=> 
+                                    <button style = {{"background-color": "red"}} onClick = {()=> 
                                     {
                                     alert("You are about to disable this service.");
+                                    
                                     tempService.blocked = 1;
                                     axios.put("http://localhost:8080/services/"+tempService.sid, tempService)
                                     .then(response=> {
@@ -166,7 +168,7 @@ const ServicesTable = ({services})=> {
                                     <p style = {{"background-color": "orange"}}>Disabled</p>
                                 </td>
                                 <td>
-                                <button className = "tile-button " style = {{"background-color": "green"}} onClick = {()=> 
+                                <button  style = {{"background-color": "green"}} onClick = {()=> 
                                 {
                                 alert("You are about to enable this service.");
                                 tempService.blocked = null;
@@ -253,7 +255,6 @@ const UsersList = ({users})=> {
                         <>
                             <Col xs lg = {4}>
                                 <Card className = "col" style={{ width: '18rem' }}>
-                                    <Card.Img variant="top" src="holder.js/100px180" />
                                     <Card.Body>
                                         <Card.Title>{user.firstName + " "+user.lastName}</Card.Title>
                                         <Card.Text>

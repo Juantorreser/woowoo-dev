@@ -21,6 +21,7 @@ const UserModals = ({show, showList, users, handleClose})=> {
   const [selectedUser, setSelectedUser] = useState({});
   const [appointmentHistory, setAppointmentHistory] = useState([{}]);
   const [paymentHistory, setPaymentHistory] = useState({});
+  const [stripeError, setStripeError] = useState({});
   var tempUser = {};
   useEffect(()=> {
     for(let i of users){
@@ -67,6 +68,21 @@ const UserModals = ({show, showList, users, handleClose})=> {
     }
     else{  //if the next user does not have a stripe account, make it empty again.
       setPaymentHistory({});
+    }
+  }, [selectedUser])
+
+  useEffect(async ()=> {
+    if(selectedUser.stripeAccount != null){
+      await axios.get("http://localhost:8080/stripeAccount/"+ selectedUser.stripeAccount)
+      .then(response=> {
+        setStripeError(response.data.errors);
+      })
+      .catch(err=> {
+        alert("Error while getting payment history: "+ err);
+      })
+    }
+    else{  //if the next user does not have a stripe account, make it empty again.
+      setStripeError({});
     }
   }, [selectedUser])
     return(

@@ -381,9 +381,11 @@
 // export default AdminAccountSearch;
 
 //-----------------------------------------------------------------------------
-
+import { app } from '../firebase/firebase-config';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getAuth, updatePassword, updateEmail, reauthenticateWithCredential } from 'firebase/auth';
+
 import {
   Container,
   Table,
@@ -396,6 +398,18 @@ import {
   TextField,
 } from '@material-ui/core';
 
+const firebaseConfig  ={
+  apiKey: "AIzaSyBHgWrdxrNW0tcheACV45rzou5b4jIZmC4",
+  authDomain: "woo-woo-network.firebaseapp.com",
+  projectId: "woo-woo-network",
+  storageBucket: "woo-woo-network.appspot.com",
+  messagingSenderId: "257418938856",
+  appId: "1:257418938856:web:6319ea7393e05ae3107c5d",
+  measurementId: "G-XNZR33LCJZ"
+};
+
+
+const auth = getAuth(app);
 const useStyles = makeStyles((theme) => ({
   searchContainer: {
     display: 'flex',
@@ -429,6 +443,21 @@ const AdminAccountSearch = () => {
       });
   }, []);
 
+//   //get the firebase's user ID
+//   const getFirebaseUserID = ({email})=> {
+//     var userID = '';
+//     auth.getUserByEmail(email)
+//     .then(userRecord=> {
+//         console.log("Successfully fetched user data from the email: "+ email);
+//         userID = userRecord.uid;
+//     })
+//     .catch(err=> {
+//         alert("Having issue with getting user's firebase uid");
+//     })
+//     return userID;
+// }
+
+
   const handleSearch = async (event) => {
     event.preventDefault();
     const searchQuery = event.target.elements.input.value.trim();
@@ -454,7 +483,7 @@ const AdminAccountSearch = () => {
       await axios.put(`http://localhost:8080/users/${userId}`, { enabled: newStatus });
       setUsers(prevUsers => prevUsers.map(user => user.uid === userId ? { ...user, enabled: newStatus } : user));
     } catch (error) {
-      console.error('There was an error updating the user status!', error);
+      alert('There was an error updating the user status!', error);
     }
   };
 
@@ -529,7 +558,10 @@ const AdminAccountSearch = () => {
               <td>
                 <Button
                   variant={user.enabled ? 'danger' : 'success'}
-                  onClick={() => toggleStatus(user.uid, user.enabled)}
+                  onClick={() => {
+                    toggleStatus(user.uid, user.enabled)
+                  }
+                  }
                 >
                   {user.enabled ? 'Disable' : 'Enable'}
                 </Button>

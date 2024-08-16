@@ -11,9 +11,22 @@ const { off } = require("process");
 const { sequelize } = require("../models");
 const  argon2 = require('argon2');   //used for hashing and salting password
 const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
+const {initializeApp} = require('firebase-admin/app');
+const {getAuth} = require('firebase-admin/auth');
+// const { getAuth } = require('firebase-admin/auth');
+const firebaseAdminConfig = require('../config/firebaseAdmin.config.js');
 
+// const firebaseAdmin = initializeApp(firebaseAdminConfig);
 
+var admin = require("firebase-admin");
 
+var serviceAccount = require("../config/woo-woo-network-firebase-adminsdk-wj9wt-df7a702297.json");
+
+const firebaseAdmin = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const firebaseAuth = getAuth(firebaseAdmin);
 
 // Most comment blocks were added in June 2023, but most of the code was written at least on year prior and possibly not all at the same time
 // There may be some inaccuracies with what exactly is happening because the I didn't write it originally
@@ -29,6 +42,28 @@ const hashingFunction = async (password)=> {
   catch(err){
     console.log(err);
   }
+}
+
+const findUserID = async (id)=> {    //find the ID on the firebase
+  var userID = "";
+  const specifiedUser = await User.findOne({
+    where: {
+      uid: id
+    }
+  });
+
+  const userEmail = specifiedUser.email;
+
+  await firebaseAuth.getUserByEmail(userEmail)
+  .then((userRecord)=> {
+      userID = userRecord.toJSON().uid;
+  })
+  .catch(err=> {
+    console.log("Error in finding firebase user ID: "+ err);
+  })
+
+
+  return userID;
 }
 exports.createUser = async (req, res) => {
   console.log('createUser');
@@ -114,13 +149,29 @@ exports.createUser = async (req, res) => {
       user.stripeAccount = account.id;
       const accountLink = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: 'https://localhost:3000',
-        return_url: 'https://localhost:3000',
+        refresh_url: 'http://localhost:3000',
+        return_url: 'http://localhost:3000',
         type: 'account_onboarding',
       });
+
+      //putting the new stripe Account into the specified user
+
+      const [num] = await User.update(account.id, {
+        where: { uid: user.uid }
+      });
+  
+      if (num === 1) {
+        console.log("Can create user but can not put new user's stripe ID into database")
+      } else {
+        // res.status(404).send({
+        //   message: `Cannot update User with id=${user.uid} with new stripe account. Maybe user was not found or req.body is empty!`
+        // });
+        console.log(`Cannot update User with id=${user.uid} with new stripe account. Maybe user was not found or req.body is empty!`);
+      }
       res.status(200).json({url: accountLink.url});
       //res.redirect(accountLink.url);
       
+
     }
     catch(err){
       console.log(err);
@@ -178,6 +229,8 @@ exports.createUser = async (req, res) => {
     //   {stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}'}
     // );
   
+
+
   }
  
   // Create user and try to set a location based on address
@@ -249,7 +302,7 @@ exports.findAllHealers = (req, res) => {
     }, 
   };
 
-  if(req.query.email){
+  if(req.query.email){   //if the request has a specific healer in the query
     whereClause.email = req.query.email;
   }
 
@@ -259,10 +312,10 @@ exports.findAllHealers = (req, res) => {
   //   where find_in_set(s.sid, u.services)
   //   group by u.uid`
   // )
-  sequelize.query(   //not sure yet.
+  sequelize.query(   
     `select u.uid, firstName, lastName, email, account, u.description, enabled, region, city, group_concat(distinct(service)) as services, format, group_concat(distinct(servicePrices)) as servicePrices
     from users u join services s 
-    where find_in_set(s.sid, u.services)
+    where find_in_set(s.sid, u.services) and u.enabled = 1
     group by u.uid`
   )
     .then(data => {
@@ -429,9 +482,30 @@ exports.findOneUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   console.log('updateUser');
-
+  var disabled = false;
   const id = parseInt(req.params.uid); // Get uid from request params
+  const userFirebaseID = await findUserID(id);   //get the firebase user ID
+  console.log(req.body);
+// //converting services and servicePrice into string, with each services divided by comma
 
+var tempService = "";
+var tempServicePrice = "";
+if(req.body.services !== undefined){
+  tempService = req.body.services.toString();
+}
+
+if(req.body.servicePrices !== undefined){
+  tempServicePrice = req.body.servicePrices.toString();
+}
+  
+ 
+    //find the email of that user
+
+  // const userEmail = await User.findOne({
+  //   where: {
+  //     uid: id
+  //   }
+  // });
   // Initialize an empty object to hold the fields to be updated
   const updateData = {};
 
@@ -441,16 +515,46 @@ exports.updateUser = async (req, res) => {
   if (req.body.email !== undefined) updateData.email = req.body.email;
   if (req.body.password !== undefined) updateData.password = req.body.password;
   if (req.body.account !== undefined) updateData.account = req.body.account;
-  if (req.body.services !== undefined) updateData.services = req.body.services;
+  // if (req.body.services !== undefined) updateData.services = req.body.services;
+  if (req.body.services !== undefined) updateData.services = tempService;
   if (req.body.description !== undefined) updateData.description = req.body.description;
   if (req.body.enabled !== undefined) updateData.enabled = req.body.enabled;
   if (req.body.region !== undefined) updateData.region = req.body.region;
   if (req.body.city !== undefined) updateData.city = req.body.city;
   if (req.body.format !== undefined) updateData.format = req.body.format;
   if (req.body.stripeAccount !== undefined) updateData.stripeAccount = req.body.stripeAccount;
-  if (req.body.servicePrices !== undefined) updateData.servicePrices = req.body.servicePrices;
-
+  // if (req.body.servicePrices !== undefined) updateData.servicePrices = req.body.servicePrices;
+  if (req.body.servicePrices !== undefined) updateData.servicePrices = tempServicePrice;
+  if(updateData.enabled == 0){
+    disabled = true;
+  }
+  else if(updateData.enabled == 1){
+    disabled = false;
+  }
   try {
+    console.log(userFirebaseID);
+    //getting the uid of the users that we want to update.
+    // await firebaseAuth.getUserByEmail(userEmail.email)
+    // .then((getUsersResult)=> {
+        
+    //     userFirebaseID = getUsersResult.toJSON().uid;
+    //     console.log(userFirebaseID);
+    // })
+    // .catch(err=> {
+    //   console.log('Error fetching user data: '+err);
+    // })
+
+    await firebaseAuth.updateUser(userFirebaseID, {
+      email: updateData.email,
+      password: updateData.password,
+      disabled: disabled
+    })
+    .then((userRecord)=> {
+      console.log("Successfully update the user");
+    })
+    .catch(err=> {
+      console.log("Error with updating user: "+err);
+    })
     // Ensure there are fields to update
     if (Object.keys(updateData).length === 0) {
       return res.status(400).send({
@@ -480,11 +584,13 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Delete a user with the specified id in the request
+// Delete a user with the specified id in the request and also the one in the firebase authentication.
 exports.deleteUser = async (req, res) => {
   console.log('deleteUser');
 
   const id = req.params.uid;
+
+  const userFirebaseID = await findUserID(id);
   await User.findAll({   //find the account of the one being deleted.
     where: {uid: id}
   })
@@ -497,6 +603,18 @@ exports.deleteUser = async (req, res) => {
         console.log("Something wrong with deleting the user's stripe account");
       }
   })
+
+  //delete the firebase ID
+
+  await firebaseAuth.deleteUser(uid)
+  .then(()=> {
+    console.log("Successfully delete user on firebase");
+  })
+  .catch(err=> {
+    console.log("Having error deleting the user on firebase: "+ err);
+  })
+
+  //deleting the user in SQL Workbench (db)
   await User.destroy({
     where: { uid: id }
   })
@@ -689,6 +807,14 @@ const account = await stripe.charges.list(
     stripeAccount: accountID
   }
 );
+  res.status(200).send(account);
+}
+
+//get more info on the connected account in Stripe
+exports.getStripeConnectedAccount = async (req,res)=> {
+  const accountID = req.params.stripeAccount;
+
+  const account = await stripe.accounts.retrieve(accountID)
   res.status(200).send(account);
 }
 

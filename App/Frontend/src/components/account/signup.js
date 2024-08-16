@@ -40,7 +40,7 @@ const SignUp = () => {
 	}
     const history = useNavigate(); // let's us get sent to another page or something
 	
-	auth.onAuthStateChanged((user) => {
+	auth.onAuthStateChanged((user) => {     //set it so that the current user is the one you will be logged in the next time.
 		setLoggedIn(user);
 	});
 
