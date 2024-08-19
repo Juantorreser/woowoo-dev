@@ -669,11 +669,11 @@ const ConfirmButton = ({ appointment, confirm, healerID, setConfirm }) => {
     );
 };
 
-const CancelButton = ({ appointment }) => {
+const CancelButton = ({ appointment }) => {    //cancel the appointment and make a re-fund feature(not yet).
     const handleCancel = () => {
         axios.delete(`http://localhost:8080/appointments/${appointment.aid}`)
             .then(() => {
-                console.log("Appointment cancelled");
+                alert("Appointment cancelled");
             })
             .catch(err => {
                 console.error("Error cancelling appointment: ", err);

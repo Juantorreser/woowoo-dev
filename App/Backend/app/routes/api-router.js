@@ -214,8 +214,8 @@ module.exports = function(router){
         appointments.getAppointments(req, res);
     }).put((req, res)=> appointments.updateAppointment(req, res))
     //delete specific appointments with specific fbid
-    router.route('/appointments/:fbid').delete((req, res)=> {
-        appointments.deleteAppointments(req, res);
+    router.route('/appointments/:aid').delete((req, res)=> {
+        appointments.deleteAppointment(req, res);
     })
 
     //find specific appointments from a user:

@@ -8,6 +8,8 @@ const {EMAIL_PASS} = require('../config/db.config.js');
 const { emitWarning } = require("process");
 const axios = require('axios');
 // const userFunction = require('./userController.js');
+const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
+const stripe = require('stripe')(STRIPE_SECRET_KEY);
 const transporter = nodemailer.createTransport({
   host: "woo-woo-network.firebaseapp.com",
   port: 4200,
@@ -387,20 +389,27 @@ exports.updateAppointment = async (req, res) => {
 // This function is responsible for deleting an appointment based on its fbid (assuming this is a typo, and it should be aid). 
 // It utilizes Appointment.destroy() to remove the appointment from the database. 
 // If the deletion is successful (indicated by num == 1), it sends a success message; otherwise, it sends an error message.
-exports.deleteAppointment = (req, res) => {
+exports.deleteAppointment = async (req, res) => {
   //const id = req.params.fbid;
   const id = req.params.aid;
+
+  //re-fund money first. Need to find the id of the payment as well as the amount.
+  const refund = await stripe.refunds.create({
+    
+  })
+  //find if the healer has accepted it or not. If accepted, might need to pay some extra fee
+
   Appointment.destroy({
-    where: { fbid: id }
+    where: { aid: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: "User was deleted successfully!"
+          message: "Appointment was deleted successfully!"
         });
       } else {
         res.send({
-          message: `Cannot delete user with id=${id}. Maybe user was not found!`
+          message: `Cannot delete appointment with id=${id}. Maybe user appointment  not found!`
         });
       }
     })
