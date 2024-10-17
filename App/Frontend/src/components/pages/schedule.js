@@ -22,7 +22,7 @@
 // 					//setUserDetails(chosenUser);
 // 					console.log(response.data);
 // 					for(const i of response.data){
-// 						if (i.email == user.email){
+// 						if (i.email.toLowerCase() == user.email.toLowerCase()){
 // 							console.log(i);
 // 							setUserDetails(i);
 // 							//userD = i;
@@ -245,7 +245,7 @@
 //             if (user) {
 //                 await axios.get('http://localhost:8080/users').then((response) => {
 //                     for (const i of response.data) {
-//                         if (i.email === user.email) {
+//                         if (i.email.toLowerCase() === user.email.toLowerCase()) {
 //                             setUserDetails(i);
 //                         }
 //                     }

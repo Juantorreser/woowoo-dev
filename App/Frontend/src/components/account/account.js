@@ -57,8 +57,6 @@ const Account = () => {
 				// setUserDetails(chosenUser);
 				// console.log(response.data)
 				for(const i of response.data){
-					console.log(i.email);
-					console.log(user.email);
 					if (i.email.toLowerCase() === user.email.toLowerCase()){
 						setUserDetails(i);
 						break;
