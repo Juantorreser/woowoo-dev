@@ -57,7 +57,9 @@ const Account = () => {
 				// setUserDetails(chosenUser);
 				// console.log(response.data)
 				for(const i of response.data){
-					if (i.email === user.email){
+					console.log(i.email);
+					console.log(user.email);
+					if (i.email.toLowerCase() === user.email.toLowerCase()){
 						setUserDetails(i);
 						break;
 						//userD = i;
@@ -130,7 +132,7 @@ const Account = () => {
 	return (
 		<>
 		{
-			userLocation ? 
+			userLocation && userDetails ? 
 			<>
 				<div className="userProfile">
 					<div className="userContainer">
