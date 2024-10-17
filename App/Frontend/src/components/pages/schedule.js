@@ -447,7 +447,7 @@ const Schedule = () => {
 				// )
 			}
 		});	
-	}, []); 
+	}, []);
 
     return (
         <Container>
@@ -456,11 +456,11 @@ const Schedule = () => {
                      <Button  onClick = {()=> {
                         alert("Set to client view");
                         setView("0");
-                    }}style = {view == "0"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Client</Button>
+                    }}style = {view == "0"? {"backgroundColor": "green", "marginRight": "20px"}: {"backgroundColor": "#9D96B8", "marginRight": "20px"}}>View as the Client</Button>
                     <Button  onClick = {()=> {
                         alert("Set to healer view");
                         setView("1");
-                    }}style = {view == "1"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Healer</Button>
+                    }}style = {view == "1"? {"backgroundColor": "green", "marginRight": "20px"}: {"backgroundColor": "#9D96B8", "marginRight": "20px"}}>View as the Healer</Button>
                 </>
                 :
                 <p></p>

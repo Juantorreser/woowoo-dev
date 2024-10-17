@@ -11,7 +11,7 @@ const auth = getAuth(app);
 
 const MessageBox = ()=>{
 	const [createNewMessage, setCreateNewMessage] = useState(false);
-    //TODO: contain the container for all the messages. 
+    //TODO: contain the container for all the messages.
     //Also, have a space for the sending messages depending on the user (healer or not).
     const [userDetails, setUserDetails] = useState({});
     useEffect(() => {
@@ -21,6 +21,7 @@ const MessageBox = ()=>{
 			console.log(user);
 			//setUserState(user);
 			if(user){
+				// setUserDetails(user);
 				await axios.get('http://localhost:8080/users').then(  (response) => {
 					////self added in from CodeGuru
 					//setUserDetails(chosenUser);
@@ -64,10 +65,9 @@ const UserBox = ({userDetails})=> {
 			console.log(err);
 		})
 	}, [userDetails]);
-
 	return (
 		<>
-			<h3>Upcomming messages</h3>
+			<h3>Upcoming messages</h3>
 			{
 				// useEffect(()=> {
 				// 	console.log(userMessage);
