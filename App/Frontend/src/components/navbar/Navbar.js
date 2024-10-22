@@ -5,67 +5,60 @@ import logo from '../../Images/logo.png';
 import { Button } from '../Button/button';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebase/firebase-config';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'; // Bootstrap components
 
-//firebase authentication instance
 const auth = getAuth(app);
 
-const Navbar = () => {
-	//const [menuOpen, setMenuOpen] = useState(false);
+const NavbarComponent = () => {
 	const [loggedIn, setLoggedIn] = useState(null);
 
-	//the firebase auth instance is checked to determine whether the user is signed in
+	// Check if user is logged in
 	auth.onAuthStateChanged((user) => {
 		setLoggedIn(user);
 	});
 
-	const Buttons = () => {
-		if(loggedIn){
-			return (
-				<div className="sign-up-buttons">
-					<a href="/account"><Button>Account</Button></a>
-					<a href="/signout"><Button className="btn--outline">Sign Out</Button></a>
-				</div>
-			)
-		} else { 
-			return (
-				<div className="sign-up-buttons">
-					<a href="/signin" className="sign-in-button"><Button className="btn--outline">Sign In</Button></a>
-					<a href="/signup" className="sign-up-button"><Button>Sign Up</Button></a>
-				</div>
-			)
-		}
-	}
+	return (
+		// Navbar Container
+		<Navbar collapseOnSelect expand="lg" bg="light" className="my-0" variant="light" style={{height: 'fit-content' }}>
+			<Container>
+				<Navbar.Brand href="/home">
+					<img src={logo} alt="Logo" style={{ height: '40px' }} />
+				</Navbar.Brand>
 
-	/*
-	const toggleMenu = () => {
-		setMenuOpen(!setMenuOpen);
-		console.log(menuOpen);
-	};
-	*/
+				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
-	return(
-		<nav className='navbar-items'>
-			<div className='logo-container'>
-				<a href='/home'>
-					<img className='logo' src={logo} alt='Logo'/>
-				</a>
-			</div>
-			<div className='menu-icon'>
-			</div>
-			<ul className={'nav-menu'}>
-				{MenuItems.map((item,index)=>{
-					return(
-						<li key={index}>
-							<a className={item.cName} href={item.url}>
-								{item.title}
-							</a>
-						</li>
-					)
-				})}
-			</ul>
-			{Buttons()}
-		</nav>
-	)
-}
+				<Navbar.Collapse id="responsive-navbar-nav" >
+					<Nav className="me-auto" style={{ width: 'fit-content' }}>
+						{MenuItems.map((item, index) => (<Nav.Link key={index} href={item.url} className="px-4" style={{backgroundColor: '#f8f9fa' }} > {item.title}</Nav.Link> ))}
+					</Nav>
 
-export default Navbar
+					<Nav>
+						{loggedIn ? ( 
+							<>
+								<Nav.Link href="/account" style={{backgroundColor: '#f8f9fa' }}>
+									<Button >Account</Button>
+								</Nav.Link>
+
+								<Nav.Link href="/signout" style={{backgroundColor: '#f8f9fa' }}>
+									<Button variant="outline-secondary">Sign Out</Button>
+								</Nav.Link>
+							</>
+						) : (
+							<>
+								<Nav.Link href="/signin" style={{backgroundColor: '#f8f9fa' }}>
+									<Button variant="outline-secondary">Sign In</Button>
+								</Nav.Link>
+
+								<Nav.Link href="/signup" style={{backgroundColor: '#f8f9fa' }}>
+									<Button>Sign Up</Button>
+								</Nav.Link>
+							</>
+						)}
+					</Nav>
+				</Navbar.Collapse>
+			</Container>
+		</Navbar>
+	);
+};
+
+export default NavbarComponent;
