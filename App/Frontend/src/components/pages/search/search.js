@@ -168,44 +168,58 @@ const Search = () => {
         getInitialHealers();
     }, []);
 
-    return(
-		<div className='body'>
-			<div className='healerFrame'>
-				{
-				initHealers ?
-				<Healers
-					data={{healers: healers, initHealers: initHealers, markers: currMarkers}}
-					getHealersWithFilter={getHealersWithFilter}
-					setHealers={setHealers}
-                    range={range}
-                    setRange={setRange}
-                    getMarkers={getMarkers}
-                    //getReviews={getReviews}
-                /> : 	<div className="loaderContainer">
-							<div className="loader"></div>
-						</div>
-				}
-			</div>
-			<div className='mapFrame'>
-				<div className='center_bar'>
-				</div>
-				{
-					markers && initHealers ?
-					<Map
-						data={{healers: initHealers, markers: currMarkers}}
-						handleActiveMarker={handleActiveMarker}
-						active={active}
-						setActive={setActive}
-                        range={range}
-                        location={location}
-                        setLocation={setLocation}
-                    /> : <div className="loaderContainer">
-							<div className="loader"></div>
-						</div>
-				}
-			</div>
-		</div>
+    return (
+        <div className="container">
+            <div className="row">
+                {/* For larger screens, this will take up 4 columns; for smaller, it'll take full width */}
+                <div className="col-lg-4 col-md-12 mb-3">
+                    <div className='healerFrame'>
+                        {initHealers ? (
+                            <Healers
+                                data={{
+                                    healers: healers,
+                                    initHealers: initHealers,
+                                    markers: currMarkers
+                                }}
+                                getHealersWithFilter={getHealersWithFilter}
+                                setHealers={setHealers}
+                                range={range}
+                                setRange={setRange}
+                                getMarkers={getMarkers}
+                            />
+                        ) : (
+                            <div className="loaderContainer">
+                                <div className="loader"></div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+    
+                {/* Map section: Takes 8 columns on larger screens and full width on smaller ones */}
+                <div className="col-lg-8 col-md-12">
+                    <div className='mapFrame'>
+                        <div className='center_bar'></div>
+                        {markers && initHealers ? (
+                            <Map
+                                data={{ healers: initHealers, markers: currMarkers }}
+                                handleActiveMarker={handleActiveMarker}
+                                active={active}
+                                setActive={setActive}
+                                range={range}
+                                location={location}
+                                setLocation={setLocation}
+                            />
+                        ) : (
+                            <div className="loaderContainer">
+                                <div className="loader"></div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
+    
 }
 
 export default Search

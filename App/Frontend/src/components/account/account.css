@@ -1,96 +1,96 @@
-/*Some styling on the page itself is loaded from healerFrame.css*/
-
-/*The purple box behind the user info on the account page*/
-.userProfile{
-	position: fixed;
-	background-color: #AB81CD;
-	display: flex;
-	height: 85%;
-	width: 100%;
-	margin: 0 auto;
+.Main {
+    background-color: #cacac2;
+    min-height: 100vh; 
 }
 
-/*The container for the left half of the account page*/
+/* User Profile Section */
+.userProfile {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    padding: 1em;
+    width: 100%;
+    max-width: 1100px; 
+    justify-content: space-between; /*  space between the two sections */
+}
+
+/* Container for the left half of the account page */
 .userContainer {
-	display: inline-block;
-	position: relative;
-	margin: 1em 1em 1em 1em;
-	width: 100%;
-	background: rgb(255, 255, 255);
-	flex-direction: row;
-	flex-wrap: wrap;
-	border-radius: 20px 0 0 20px;
+    background-color: #fff;
+    margin: 1em;
+    padding: 1.5em;
+    border-radius: 20px;
+    flex: 1 1 45%; /* Takes 45% of the available width */
+    min-width: 300px; /* Minimum width to avoid collapsing too soon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/*The container for the header on the account pages right side*/
+/* Container for the right half (form) */
+.reviewContainer {
+    background-color: #dcdcdc;
+    margin: 1em;
+    padding: 1.5em;
+    border-radius: 20px;
+    flex: 1 1 45%;
+    min-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Container on the right side */
 .accountEditorHeaderContainer {
-	padding: 10px 10px 10px 0;
-	margin: 10px 20px 0 20px;
-	border-bottom: 2px solid black;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid black;
 }
 
-/*The second line of text on the account pages right half, under the heading*/
+/* Subheading under the header on the right side */
 .accountEditUnderText {
-	align-items: center;
-	font-size: 100%;
-	height: 1em;
-	padding-right: 30px;
-	text-align: right;
+    text-align: left;
+    padding-right: 30px;
+    font-size: 100%;
 }
 
-/*The outer container for the bottom half of the right side of the account page*/
+/* Bottom half of the right side */
 .accountInfoEditorContainer {
-	display: flex;
-	flex-direction: column;
-	overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: auto;
 }
 
-/*The inner container that holds the actual form on the account page's right side*/
+/* Form container */
 .accountInfoEditorContainerContainer {
-	width: 290px;
-	max-width: 90%;
-	padding: 23px 0;
-	display: block;
-	position: relative;
-	border-radius: 3px;
-	/*background-color: white;*/
-	align-items: center;
-	margin: 0 auto;
+    padding: 10px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
 }
+
 .accountInfoEditorContainerContainer p {
-	margin-bottom: -10px;
-	margin-top: 5px;
+    margin-top: 15px;
 }
 
-/*The form on the account page*/
+/* Form */
 .accountInfoEditorForm {
-	/*background-color: white;*/
-	margin: 0 0.8vw;
-	max-width: 100%;
-	border-radius: 3px;
-	overflow-y: scroll;
+    margin: 0 0.8vw;
+    max-width: 100%;
 }
 
-/*Styling for the account page's scrollbar*/
-.accountInfoEditorForm::-webkit-scrollbar-track {
-	margin: 1vh;
-}
+/* Scrollbar styling */
 .accountInfoEditorForm::-webkit-scrollbar-thumb {
-	border-radius: 5px;
+    border-radius: 5px;
 }
 
-/* Styling the appointment box: */
-#appointmentBox{
-	
-	position: relative;
-	background-color: orange;
-	display: flex;
-	flex-direction: row;
-	overflow: scroll;
-}
-
-.overall{
-	position: relative;
-	display:flex;
-	flex-direction: column;
+/* Make sure the cards don't collapse too early */
+@media (max-width: 768px) {
+    .userProfile {
+        flex-direction: column;
+        align-items: center;
+    }
+    .userContainer,
+    .reviewContainer {
+        flex: 1 1 100%; /* Make both sections full-width on small screens */
+        min-width: unset; /* Remove min-width to allow better stacking */
+    }
 }

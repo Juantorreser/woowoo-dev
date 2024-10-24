@@ -27,7 +27,7 @@
 }
 
 .navbar-nav .nav-link:hover {
-    background-color: #E7E5E5;
+    background-color: #6c757d;
     border-radius: 10px;
     transition: all 0.3s ease-out;
 }
