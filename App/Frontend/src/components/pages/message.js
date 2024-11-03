@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import $ from 'jquery';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { Formik } from 'formik';
 import axios from 'axios';
 import { app } from '../firebase/firebase-config';
-import { MultiSelect } from 'react-multi-select-component'; 
+import { getAuth } from 'firebase/auth';
+import { Card, Row, Col, Button, Container, Form } from 'react-bootstrap'; 
+
 const auth = getAuth(app);
 
+<<<<<<< HEAD
 const MessageBox = ()=>{
 	const [createNewMessage, setCreateNewMessage] = useState(false);
     //TODO: contain the container for all the messages.
     //Also, have a space for the sending messages depending on the user (healer or not).
+=======
+const MessageBox = () => {
+    const [createNewMessage, setCreateNewMessage] = useState(false);
+>>>>>>> main
     const [userDetails, setUserDetails] = useState({});
+
     useEffect(() => {
+<<<<<<< HEAD
 		//let userD = "";
 		//this method checks if the user is authenticated with firebase and essentially logged in.
 		auth.onAuthStateChanged( async (user) => {
@@ -39,18 +44,86 @@ const MessageBox = ()=>{
 		});	
 	}, []); 
     return(
+=======
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await axios.get('http://localhost:8080/users').then((response) => {
+                    for (const i of response.data) {
+                        if (i.email === user.email) {
+                            setUserDetails(i);
+                            break;
+                        }
+                    }
+                });
+            }
+        });
+    }, []);
+
+    return (
+        <Container className="mb-5 pt-3">
+            <Row>
+                <Col>
+                    <h3>Upcoming messages</h3>
+                    <UserBox userDetails={userDetails} />
+                </Col>
+            </Row>
+            <Row className="mt-4">
+                <Col>
+                    <h3>Send new message</h3>
+                    <NewMessage userDetails={userDetails} />
+                </Col>
+            </Row>
+        </Container>
+    );
+};
+
+const UserBox = ({ userDetails }) => {
+    const [userMessage, setUserMessage] = useState([{}]);
+
+    useEffect(() => {
+        if (userDetails.uid) {
+            axios.get('http://localhost:8080/message/' + userDetails.uid).then((result) => {
+                setUserMessage(result.data);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    }, [userDetails]);
+
+    return (
+>>>>>>> main
         <>
-            {/* need to design the layout, and add in. Preferably a message board. Also, need to hash message when created*/}
-			{/* fetch all the message back from the specified url */}
-
-			<UserBox userDetails = {userDetails}></UserBox>
-			<NewMessage userDetails = {userDetails}></NewMessage>
+            <Row>
+                {userMessage.length > 0 ? (
+                    userMessage.map(message => (
+                        <Col key={message.mid} xs={12} md={6} className="mb-4">
+                            <Card>
+                                <Card.Body>
+                                    <UserInfo message={message} />
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    ))
+                ) : (
+                    <p>Currently no message yet</p>
+                )}
+            </Row>
         </>
-    )
-}
+    );
+};
 
+const UserInfo = ({ message }) => {
+    const [userInformation, setUserInformation] = useState({});
 
+    useEffect(() => {
+        if (message.from_user != null) {
+            axios.get('http://localhost:8080/users/' + message.from_user).then(result => {
+                setUserInformation(result.data);
+            });
+        }
+    }, [message]);
 
+<<<<<<< HEAD
 const UserBox = ({userDetails})=> {
 	const [userMessage, setUserMessage] = useState([{}])
 	const [newMes, setNewMes] = useState({});
@@ -101,156 +174,107 @@ const UserBox = ({userDetails})=> {
 		
 	)
 }
+=======
+    return (
+        <div>
+            <p><strong>From:</strong> {userInformation.firstName} {userInformation.lastName}</p>
+            <p><strong>Context:</strong> {message.context}</p>
+            <p><strong>Reply:</strong> {message.reply ? message.reply : <ReplyBox message={message} />}</p>
+        </div>
+    );
+};
 
+const ReplyBox = ({ message }) => {
+    return (
+        <Formik
+            initialValues={{
+                from_user: message.from_user,
+                to_user: message.to_user,
+                context: message.context,
+                reply: ''
+            }}
+            onSubmit={(values, actions) => {
+                axios.put('http://localhost:8080/message/' + message.mid, { values })
+                    .then(result => {
+                        console.log("Successfully sent");
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }}
+        >
+            {props => (
+                <Form onSubmit={props.handleSubmit}>
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            value={props.values.reply}
+                            name="reply"
+                        />
+                    </Form.Group>
+                    <Button type="submit" className="mt-2">Submit</Button>
+                </Form>
+            )}
+        </Formik>
+    );
+};
+>>>>>>> main
 
-const UserInfo = ({message, newMes, setNewMes})=> {
-	const [userInformation, setUserInformation] = useState({});
-	console.log(message);
-	//setNewMes(message);
-	
-	useEffect(()=> {
-		if(message.from_user != null){
-			axios.get('http://localhost:8080/users/'+ message.from_user)
-			.then(result=> {
-				console.log(result.data);
-				setUserInformation(result.data);
-			})
-		}
-	
-	}, []);
-	console.log(message.reply);
-	return(
-		<div key= {message.mid}>
-			<p>From: {userInformation.firstName } {userInformation.lastName}</p>
-			<p>Context: {message.context}</p>
-			<p>Reply: {
-				message.reply == "" || message.reply == null?
-				<>
-					<p>Enter here</p>
-					<ReplyBox message = {message}></ReplyBox>
-				</>
-				
-				:
-				<p>{message.reply}</p>
-			}
-			</p>
-			<br></br>
-		</div>
-	)
-	
-}
+const NewMessage = ({ userDetails }) => {
+    return (
+        <>
+            {userDetails.uid == null ? (
+                <p>Something is wrong</p>
+            ) : (
+                <Formik
+                    initialValues={{
+                        from_user: userDetails.uid,
+                        to_user: '',
+                        message: ''
+                    }}
+                    onSubmit={(values, actions) => {
+                        axios.post('http://localhost:8080/message/', { values })
+                            .then(result => {
+                                console.log("Successfully sent");
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }}
+                >
+                    {props => (
+                        <Form onSubmit={props.handleSubmit}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>To User:</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.to_user}
+                                    name="to_user"
+                                />
+                            </Form.Group>
 
-const ReplyBox = ({message})=> {
-	return(
-		<Formik
-       initialValues={
-		{
-			from_user: message.from_user,
-			to_user: message.to_user,
-			context: message.context,
-			reply: ''
-			}
-		}
-       onSubmit={(values, actions) => {
-        //  setTimeout(() => {
-        //    alert(JSON.stringify(values, null, 2));
-        //    actions.setSubmitting(false);
-        //  }, 1000);
-		console.log(values);
-			axios.put('http://localhost:8080/message/'+ message.mid, {values})
-			.then(result=> {
-				console.log("Successfully sent")
-			})
-			.catch(err=> {
-				console.log(err);
-			})
-       }}
-     >
-       {props => (
-         <form onSubmit={props.handleSubmit}>
-           <input
-             type="text"
-             onChange={props.handleChange}
-             onBlur={props.handleBlur}
-             value={props.values.reply}
-             name="reply"
-           />
-           {props.errors.name && <div id="feedback">{props.errors.name}</div>}
-           <button type="submit">Submit</button>
-         </form>
-       )}
-     </Formik>
- );
-	
-}
+                            <Form.Group className="mb-3">
+                                <Form.Label>Context:</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.message}
+                                    name="message"
+                                />
+                            </Form.Group>
 
-//send according to names.
-const NewMessage = ({userDetails})=> {
-	console.log(userDetails);
-	//const [userID, setUserID] = useState("");
-	useEffect(()=> {
-		console.log(userDetails);
-	}, [userDetails])
-	return(
-		<>
-		{
-			userDetails.uid == null?
-			<p>Something is wrong</p>
-			:
-			<>
-			<h3>Send new message</h3>
-		<Formik
-			initialValues={
-				{
-					from_user: userDetails.uid,
-					to_user: '',
-					message: ''
-				}
-			}
-			onSubmit={(values, actions) => {
-				//  setTimeout(() => {
-				//    alert(JSON.stringify(values, null, 2));
-				//    actions.setSubmitting(false);
-				//  }, 1000);
-					console.log(values);
-					axios.post('http://localhost:8080/message/',{values})
-					.then(result=> {
-						console.log("Successfully sent")
-					})
-					.catch(err=> {
-						console.log(err);
-					})
-			}}
-     >
-       {props => (
-         <form onSubmit={props.handleSubmit}>
-			
-			<b>To User:</b>
-		<input
-             type="text"
-             onChange={props.handleChange}
-             onBlur={props.handleBlur}
-             value={props.values.to_user}
-             name="to_user"
-           />
-		<b>Context</b>
-		<input
-		type="text"
-		onChange={props.handleChange}
-		onBlur={props.handleBlur}
-		value={props.values.message}
-		name="message"
-        />
-        {props.errors.name && <div id="feedback">{props.errors.name}</div>}
-        <button type="submit">Submit</button>
-         </form>
-       )}
-     </Formik>
-	 </>
-		}
-		
-		</>
-		
-	)
-}
+                            <Button type="submit">Submit</Button>
+                        </Form>
+                    )}
+                </Formik>
+            )}
+        </>
+    );
+};
+
 export default MessageBox;

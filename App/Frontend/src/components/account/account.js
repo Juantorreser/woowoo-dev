@@ -9,6 +9,8 @@ import { MultiSelect } from 'react-multi-select-component';
 import './account.css';
 import { userSchema as schema } from './schema.js';
 import { Button } from '../Button/button.js';
+import { Container, Row, Col } from 'react-bootstrap'; // Import Bootstrap 
+
 const auth = getAuth(app);
 
 const renderError = (message) => <p className="warning">{message}</p>;
@@ -128,6 +130,7 @@ const Account = () => {
 	};
 
 	return (
+<<<<<<< HEAD
 		<>
 		{
 			userLocation && userDetails ? 
@@ -153,43 +156,55 @@ const Account = () => {
 						<div className="description" id="accountDescription">
 							<p>{userDetails.description}</p>
 						</div>
+=======
+        <Container fluid className="Main">
+            {userLocation ? (
+                <Row className="justify-content-center">
+                    {/* Left Section: User Info */}
+                    <Col xs={12} md={5} className="mb-4">
+                        <div className="userContainer">
+                            <div className="healerSelectedColumn2">
+                                <div className="healerSelectedTop" id="user-name">
+                                    <p>{userDetails.firstName} {userDetails.lastName}</p>
+                                </div>
+                                <div className="healerSelectedMiddle" id="services">
+                                    <DisplayServices options={options} userDetails={userDetails} />
+                                </div>
+                                <hr />
+                                <div className="description" id="accountDescription">
+                                    <p>{userDetails.description}</p>
+                                </div>
+                            </div>
+                            {/* Admin button if user is admin */}
+                            {userDetails.account === 2 && (
+                                <div className="text-center">
+                                    <button onClick={() => window.location.assign('/admin')}>Admin dashboard</button>
+                                </div>
+                            )}
+                        </div>
+                    </Col>
+>>>>>>> main
 
-						
-						{/* admin button that leads to admin dashboard page if the user entered in is admin*/}
-						{userDetails.account == 2 ? <>
-							<br></br><button onClick = {
-							()=> {window.location.assign('/admin')}
-						}>Admin dashboard</button>
-						</> 
-						: <p></p>}
-
-					</div>
-
-					{/* the edit account portion */}
-					<div className="reviewContainer">
-						<div className="accountEditorHeaderContainer">
-							<div className="reviewTop">
-								<h1 className="reviewHeader">Edit Account Info</h1>
-							</div>
-							<div className="reviewMiddle">
-								<div className="accountEditUnderText">
-									<p>Save when finished making changes.</p>
-								</div>
-							</div>
-						</div>
-						<AccountForm userDetails={userDetails} userLocation={userLocation}/>
-					</div>	
-				</div>
-			</>
-			: 
-			<>
-				<div className="loaderContainer">
-					<div className="loader"></div>
-				</div>
-			</>
-		}
-		</>
-	)
+                    {/* Right Section: Edit Form */}
+                    <Col xs={12} md={5} className="mb-4, mr-5">
+                        <div className="reviewContainer">
+                            <div className="accountEditorHeaderContainer">
+                                <h1 className="reviewHeader">Edit Account Info</h1>
+                                <div className="accountEditUnderText">
+                                    {/*<p>Save when finished making changes.</p>*/}
+                                </div>
+                            </div>
+                            <AccountForm userDetails={userDetails} userLocation={userLocation} />
+                        </div>
+                    </Col>
+                </Row>
+            ) : (
+                <div className="loaderContainer">
+                    <div className="loader"></div>
+                </div>
+            )}
+        </Container>
+    );
 }
 
 const DisplayServices = (props) => {

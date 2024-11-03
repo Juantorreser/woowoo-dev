@@ -143,7 +143,7 @@ Review: Lets the user leave a review for a given healer.*/
 	margin: 1em 1em 1em 0em;
 	display: flex;
 	flex-direction: column;
-	border-radius: 0 20px 20px 0;
+	border-radius: 20px;
 }
 
 /*Container for the upper portion of the right half of the healer info modal*/
@@ -164,14 +164,14 @@ Review: Lets the user leave a review for a given healer.*/
 	color: initial;
 	outline: initial;
 	text-shadow: initial;
-	text-align: right;
+	text-align: left;
 	display: flex;
 	flex-direction: row;
 	align-content: space-between;
 	padding-left: 20px;
 	height: 1.2em;
 	margin: 0em;
-	justify-content: right;
+	justify-content: left;
 	padding-right: 20px;
 }
 

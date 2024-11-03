@@ -343,3 +343,9 @@
 	margin-top: 10px;
 	position: relative;
 }
+
+@media (max-width: 767.98px) {
+    .mapFrame {
+        margin-top: 20px; /* Adding margin between the dropdowns and the map */
+    }
+}
