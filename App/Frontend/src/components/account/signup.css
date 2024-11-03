@@ -1,0 +1,112 @@
+
+.triangle {
+    width: 100%;
+    height: 100%;
+    background-image:
+    linear-gradient(to bottom right, #9D96B8 75%, transparent 0),
+    linear-gradient(to bottom right, #9D96B8 25%, transparent 0);
+    background-size: 50.05% 100%;
+    background-repeat: no-repeat;
+    background-position: left,right;
+}
+
+.signupForm{
+  
+    width: 100vw;
+    height: 83vh;
+    display: flex;
+    flex-direction:column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.emailTag{
+    padding: 0.32em 0;
+    border-radius:0.4em;
+    height: 2.5em;
+    width: 6em;
+    text-align: center;
+    margin-bottom: 1em;
+    margin-left: 1.5em;
+    background-color: blanchedalmond;
+}
+.passwordTag{
+    padding: 0.32em 0;
+    border-radius:0.4em;
+    height: 2.5em;
+    width: 8em;
+    text-align: center;
+    margin-bottom: 1em;
+    margin-left: 1.5em;
+    background-color: blanchedalmond;
+}
+
+.formPassword{
+    width: 15em;
+    height: 3.8em;
+    background-color:#9D96B8; 
+    border-radius:0.4em;
+    text-align: center;
+}
+
+.formEmail{
+    text-align: center;
+    width: 20em;
+    height: 3.8em;
+    background-color: #EAFFFD; 
+    border-radius:0.4em;
+}
+
+.register{
+    border: 2;
+    text-align: center;
+    transition: 0.3s;
+    padding-top: 0.25em;
+    height: 2em;
+    margin: 1em;
+    width: 13em;
+    border-radius:0.2em;
+    background-color: none;
+}
+
+.loginButton{
+    margin-left: 2.4em;
+}
+
+.register:hover {
+    transition: 0.5s;
+    border: 1;
+    padding-top: 0.25em;
+    height: 2em;
+    margin: 1em;
+    width: 13em;
+    border-radius:0.2em;
+    background-color: #EAFFFD ;
+    opacity:0.9;
+}
+
+.container {
+    width: 80%;
+    height: 1200px;
+    margin: auto;
+    padding: 10px;
+}
+
+.leftBlock {
+    background: white;
+    width: 600px;
+    height: 600px;
+    float: left;
+}
+
+.rightBlock {
+    background: white;
+    width: 1200px;
+    height: 1200px;
+}
+
+fieldset {
+    border: 0;
+}
