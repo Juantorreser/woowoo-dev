@@ -7,49 +7,23 @@ import { Card, Row, Col, Button, Container, Form } from 'react-bootstrap';
 
 const auth = getAuth(app);
 
-<<<<<<< HEAD
-const MessageBox = ()=>{
-	const [createNewMessage, setCreateNewMessage] = useState(false);
-    //TODO: contain the container for all the messages.
-    //Also, have a space for the sending messages depending on the user (healer or not).
-=======
 const MessageBox = () => {
     const [createNewMessage, setCreateNewMessage] = useState(false);
->>>>>>> main
     const [userDetails, setUserDetails] = useState({});
+    const [loggedIn, setLoggedIn] = useState(null); // Records whether a user is logged in or not
+
+	// Check if user is logged in
+	auth.onAuthStateChanged((user) => {
+		setLoggedIn(user); // Update Logged in status
+	});
 
     useEffect(() => {
-<<<<<<< HEAD
-		//let userD = "";
-		//this method checks if the user is authenticated with firebase and essentially logged in.
-		auth.onAuthStateChanged( async (user) => {
-			console.log(user);
-			//setUserState(user);
-			if(user){
-				// setUserDetails(user);
-				await axios.get('http://localhost:8080/users').then(  (response) => {
-					////self added in from CodeGuru
-					//setUserDetails(chosenUser);
-					console.log(response.data);
-					for(const i of response.data){
-						if (i.email.toLowerCase() == user.email.toLowerCase()){
-							console.log(i);
-							setUserDetails(i);
-							break;  //not sure yet
-							//userD = i;
-						}
-					}
-				});
-			}
-		});	
-	}, []); 
-    return(
-=======
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 await axios.get('http://localhost:8080/users').then((response) => {
                     for (const i of response.data) {
-                        if (i.email === user.email) {
+                        if (i.email.toLowerCase() === user.email.toLowerCase()) {
+                            console.log(i);
                             setUserDetails(i);
                             break;
                         }
@@ -59,7 +33,8 @@ const MessageBox = () => {
         });
     }, []);
 
-    return (
+    // Returns the message box and messages if a user is authenticated. Otherwise return a message prompting the user to log in.
+    return loggedIn ? (
         <Container className="mb-5 pt-3">
             <Row>
                 <Col>
@@ -74,6 +49,12 @@ const MessageBox = () => {
                 </Col>
             </Row>
         </Container>
+    ) : (
+        <>
+            <h1>
+                Sign In to View Messages
+            </h1>
+        </>
     );
 };
 
@@ -91,7 +72,6 @@ const UserBox = ({ userDetails }) => {
     }, [userDetails]);
 
     return (
->>>>>>> main
         <>
             <Row>
                 {userMessage.length > 0 ? (
@@ -123,58 +103,6 @@ const UserInfo = ({ message }) => {
         }
     }, [message]);
 
-<<<<<<< HEAD
-const UserBox = ({userDetails})=> {
-	const [userMessage, setUserMessage] = useState([{}])
-	const [newMes, setNewMes] = useState({});
-	console.log(userDetails);
-	useEffect(()=> {
-		axios.get('http://localhost:8080/message/'+ userDetails.uid)
-		.then(result=> {
-			console.log(result.data);
-			setUserMessage(result.data);
-		})
-		.catch(err=> {
-			console.log(err);
-		})
-	}, [userDetails]);
-	return (
-		<>
-			<h3>Upcoming messages</h3>
-			{
-				// useEffect(()=> {
-				// 	console.log(userMessage);
-				// 	userMessage.map(message=> {
-				// 		console.log(message);
-				// 		return(
-				// 			// <div key= {message.mid}>
-				// 			//<p>From: {getUserName(message.from_user)}</p>
-				// 			<p>Context: {message.context}</p>
-				// 			// </div>
-				// 			//<UserInfo message = {message}></UserInfo>
-				// 		)
-				// 	})
-				// }, [userMessage])
-				userMessage.length > 0?
-				userMessage.map(message=> {
-					console.log(message);
-					
-					return(
-						// <div key= {message.mid}>
-						//<p>From: {getUserName(message.from_user)}</p>
-						//<p>Context: {message.context}</p>
-						// </div>
-						<UserInfo message = {message} newMes = {newMes} setNewMes = {setNewMes}></UserInfo>
-					)
-				})
-				: 
-				<p>Currently no message yet</p>
-			}
-		</>
-		
-	)
-}
-=======
     return (
         <div>
             <p><strong>From:</strong> {userInformation.firstName} {userInformation.lastName}</p>
@@ -220,7 +148,6 @@ const ReplyBox = ({ message }) => {
         </Formik>
     );
 };
->>>>>>> main
 
 const NewMessage = ({ userDetails }) => {
     return (
@@ -255,6 +182,7 @@ const NewMessage = ({ userDetails }) => {
                                     value={props.values.to_user}
                                     name="to_user"
                                 />
+                                <p className='text-danger'>User Not Found</p>
                             </Form.Group>
 
                             <Form.Group className="mb-3">

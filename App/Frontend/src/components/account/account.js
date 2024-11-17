@@ -130,33 +130,6 @@ const Account = () => {
 	};
 
 	return (
-<<<<<<< HEAD
-		<>
-		{
-			userLocation && userDetails ? 
-			<>
-				<div className="userProfile">
-					<div className="userContainer">
-						<div className = "healerSelectedColumn2">
-							<div className="healerSelectedTop" id="user-name">
-								<p>{userDetails.firstName} {userDetails.lastName}</p>
-							</div>
-							<div className="healerSelectedMiddle" id="services">
-								{/* <p>{userDetails.services}</p> */}
-								<DisplayServices options={options} userDetails={userDetails} />
-							</div>
-							<hr/>
-							<div className="healerSelectedBottom">
-								<div className='icons'>
-									<div className="icons">
-									</div>
-								</div>
-							</div>
-						</div>
-						<div className="description" id="accountDescription">
-							<p>{userDetails.description}</p>
-						</div>
-=======
         <Container fluid className="Main">
             {userLocation ? (
                 <Row className="justify-content-center">
@@ -183,7 +156,6 @@ const Account = () => {
                             )}
                         </div>
                     </Col>
->>>>>>> main
 
                     {/* Right Section: Edit Form */}
                     <Col xs={12} md={5} className="mb-4, mr-5">

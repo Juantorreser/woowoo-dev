@@ -434,7 +434,7 @@ const Schedule = () => {
 					//setUserDetails(chosenUser);
 					console.log(response.data);
 					for(const i of response.data){
-						if (i.email == user.email){
+						if (i.email.toLowerCase() == user.email.toLowerCase()){
 							console.log(i);
 							setUserDetails(i);
 							break;
