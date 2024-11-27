@@ -238,7 +238,6 @@ module.exports = function(router){
         .delete((req, res) => {
             availability.deleteAvailability(req, res);
         });
-    
 
     // Using Stripe payment
     router.route('/payment')

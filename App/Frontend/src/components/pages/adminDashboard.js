@@ -32,7 +32,7 @@ const AdminDashboard = ()=> {
                     // setUserDetails(chosenUser);
                     // console.log(response.data)
                     for(const i of response.data){
-                        if (i.email === user.email){
+                        if (i.email.toLowerCase() === user.email.toLowerCase()){
                             setUserDetails(i);
                             break;
                         }

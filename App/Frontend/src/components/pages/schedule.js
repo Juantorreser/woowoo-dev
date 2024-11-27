@@ -22,7 +22,7 @@
 // 					//setUserDetails(chosenUser);
 // 					console.log(response.data);
 // 					for(const i of response.data){
-// 						if (i.email == user.email){
+// 						if (i.email.toLowerCase() == user.email.toLowerCase()){
 // 							console.log(i);
 // 							setUserDetails(i);
 // 							//userD = i;
@@ -245,7 +245,7 @@
 //             if (user) {
 //                 await axios.get('http://localhost:8080/users').then((response) => {
 //                     for (const i of response.data) {
-//                         if (i.email === user.email) {
+//                         if (i.email.toLowerCase() === user.email.toLowerCase()) {
 //                             setUserDetails(i);
 //                         }
 //                     }
@@ -434,7 +434,7 @@ const Schedule = () => {
 					//setUserDetails(chosenUser);
 					console.log(response.data);
 					for(const i of response.data){
-						if (i.email == user.email){
+						if (i.email.toLowerCase() == user.email.toLowerCase()){
 							console.log(i);
 							setUserDetails(i);
 							break;
@@ -447,7 +447,7 @@ const Schedule = () => {
 				// )
 			}
 		});	
-	}, []); 
+	}, []);
 
     return (
         <Container>
@@ -456,11 +456,11 @@ const Schedule = () => {
                      <Button  onClick = {()=> {
                         alert("Set to client view");
                         setView("0");
-                    }}style = {view == "0"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Client</Button>
+                    }}style = {view == "0"? {"backgroundColor": "green", "marginRight": "20px"}: {"backgroundColor": "#9D96B8", "marginRight": "20px"}}>View as the Client</Button>
                     <Button  onClick = {()=> {
                         alert("Set to healer view");
                         setView("1");
-                    }}style = {view == "1"? {"background-color": "green", "margin-right": "20px"}: {"background-color": "#9D96B8", "margin-right": "20px"}}>View as the Healer</Button>
+                    }}style = {view == "1"? {"backgroundColor": "green", "marginRight": "20px"}: {"backgroundColor": "#9D96B8", "marginRight": "20px"}}>View as the Healer</Button>
                 </>
                 :
                 <p></p>

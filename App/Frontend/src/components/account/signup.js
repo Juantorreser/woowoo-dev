@@ -330,9 +330,7 @@ const HealerOptions = (props) => {
 			
 		</Field>
 		<ErrorMessage name="services" render={renderError} />
-
-
-		{/* <p>Price of services in 1 hour: </p>  
+		<p>Price of services in 1 hour: </p>  
 		{props.selectedServices.map(service=> {
 			priceOrder ++;
 			return(
@@ -352,11 +350,9 @@ const HealerOptions = (props) => {
 				</>	
 			)
 		})}
-		<ErrorMessage name="services" render={renderError} /> */}
+		<ErrorMessage name="services" render={renderError} />
 
-
-
-		<p style={{ marginBottom: '1px', marginTop: '10px'}}>Delivery Format: </p>
+		<p>Delivery Format: </p>
 		<Field 
 			name="format" 
 			as="select" 

@@ -10,13 +10,20 @@ const auth = getAuth(app);
 const MessageBox = () => {
     const [createNewMessage, setCreateNewMessage] = useState(false);
     const [userDetails, setUserDetails] = useState({});
+    const [loggedIn, setLoggedIn] = useState(null); // Records whether a user is logged in or not
+
+	// Check if user is logged in
+	auth.onAuthStateChanged((user) => {
+		setLoggedIn(user); // Update Logged in status
+	});
 
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 await axios.get('http://localhost:8080/users').then((response) => {
                     for (const i of response.data) {
-                        if (i.email === user.email) {
+                        if (i.email.toLowerCase() === user.email.toLowerCase()) {
+                            console.log(i);
                             setUserDetails(i);
                             break;
                         }
@@ -26,7 +33,8 @@ const MessageBox = () => {
         });
     }, []);
 
-    return (
+    // Returns the message box and messages if a user is authenticated. Otherwise return a message prompting the user to log in.
+    return loggedIn ? (
         <Container className="mb-5 pt-3">
             <Row>
                 <Col>
@@ -41,6 +49,12 @@ const MessageBox = () => {
                 </Col>
             </Row>
         </Container>
+    ) : (
+        <>
+            <h1>
+                Sign In to View Messages
+            </h1>
+        </>
     );
 };
 
@@ -168,6 +182,7 @@ const NewMessage = ({ userDetails }) => {
                                     value={props.values.to_user}
                                     name="to_user"
                                 />
+                                <p className='text-danger'>User Not Found</p>
                             </Form.Group>
 
                             <Form.Group className="mb-3">
