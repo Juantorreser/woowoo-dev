@@ -19,7 +19,16 @@ const NavbarComponent = () => {
 
 	return (
 		// Navbar Container
-		<Navbar collapseOnSelect expand="lg" bg="light" className="my-0" variant="light" style={{height: 'fit-content' }}>
+		<Navbar collapseOnSelect expand="lg" bg="light" className="my-0" variant="light"  
+			style={{
+				height: 'fit-content',
+				backgroundColor: '#ffffff',
+				boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+				position: 'fixed',
+				top: 0,
+				width: '100%',
+				zIndex: 1000,
+			}} >
 			<Container>
 				<Navbar.Brand href="/home">
 					<img src={logo} alt="Logo" style={{ height: '40px' }} />

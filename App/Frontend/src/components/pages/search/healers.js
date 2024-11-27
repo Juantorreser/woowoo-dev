@@ -65,7 +65,7 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 							src={require("../../../Images/regions/toronto.jpg")}
 							alt=""
 						/>
-						<h1>Search</h1>
+						{/*<h1>Search</h1>*/}
 						<div className="sortBar">
 							{
 								data.healers ? <Dropdown 
