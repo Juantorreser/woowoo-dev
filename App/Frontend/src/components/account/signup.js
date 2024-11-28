@@ -54,7 +54,7 @@ const SignUp = () => {
 		return (
 			<div className='hero'>
 				<div className="triangle">  
-					<div className="container">
+					<div style={{ display: 'flex'}} className="container">
 						<Formik
 							initialValues={{
 								firstName: "",
@@ -143,52 +143,58 @@ const SignUp = () => {
 										onSubmit={handleSubmit}
 									>
 										<div className="signupPageContainer">
-											<p>First Name:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>First Name</p>
 											<Field
 												type="text"
 												id="firstName"
 												name="firstName"
 												label="First Name"
 												autoComplete="fname"
+												placeholder="Enter your first name"
+
 												autoFocus
 												required
 												/>
 											<ErrorMessage name="firstName" render={renderError} />
 											
-											<p>Last Name:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Last Name</p>
 											<Field
 												type="text"
 												id="lastName"
 												name="lastName"
 												label="Last Name"
 												autoComplete="lname"
+												placeholder="Enter your last name"
+
 												required
 											/>
 											<ErrorMessage name="lastName" render={renderError} />
 											
-											<p>Email:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Email</p>
 											<Field
 												id="email"
 												label="Email"        
 												type="email"
 												name="email"
 												autoComplete="email"
+												placeholder="Enter your email"
 												required
 											/>
 											<ErrorMessage name="email" render={renderError} />
 											
-											<p>Password:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Password</p>
 											<Field
 												label="Password"
 												type="password"
 												name="password"
 												id="password"
 												autoComplete="current-password"
+												placeholder="Enter your password"
 												required
 											/>
 											<ErrorMessage name="password" render={renderError} />
 											
-											<p>Confirm Password:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Confirm Password</p>
 											<Field
 												label="Confirm Password"
 												type="password"
@@ -199,58 +205,63 @@ const SignUp = () => {
 											/>
 											<ErrorMessage name="confirmPassword" render={renderError} />
 										
-											<p>Address:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Address</p>
 											<Field
 												label="Address"
 												type="text"
 												name="address"
 												id="address"
 												autoComplete="address"
+												placeholder="Enter your address"
 											/>
 											<ErrorMessage name="address" render={renderError} />
 											
-											<p>City:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>City</p>
 											<Field
 												label="City"
 												type="text"
 												name="city"
 												id="city"
 												autoComplete="city"
+												placeholder="Enter your city"
 											/>
 											<ErrorMessage name="city" render={renderError} />
 											
-											<p>Province:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Province:</p>
 											<Field
 												label="Province"
 												type="text"
 												name="province"
 												id="province"
 												autoComplete="province"
+												placeholder="Enter your province"
 											/>
 											<ErrorMessage name="province" render={renderError} />
 											
-											<p>Country:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Country:</p>
 											<Field
 												label="Country"
 												type="text"
 												name="country"
 												id="country"
 												autoComplete="country"
+												placeholder="Enter your country"
 											/>
 											<ErrorMessage name="country" render={renderError} />
 											
-											<p>Postal Code:</p>
+											<p className="" style={{ marginBottom: '1px', marginTop: '15px'}}>Postal Code:</p>
 											<Field
 												label="Postal code"
 												type="text"
 												name="postalCode"
 												id="postalCode"
 												autoComplete="postalCode"
+												placeholder="Enter your postal code"
 											/>
 											<ErrorMessage name="postalCode" render={renderError} />
 		
 											<div className="nonTextSignupForm">
-												<div className="selectBox">
+												<div style={{ backgroundColor: 'darkseagreen'}} className="selectBox">
 													<p>Are you a healer?</p>
 													<Field 
 														name="isHealer" 
@@ -298,8 +309,7 @@ const SignUp = () => {
 	}
 }
 
-//similarly to the Account edit page, Healer options defines the fields related only to 
-//those users who wish to be healers and listed in the healer search. 
+/*similarly to the Account edit page, Healer options defines the fields related only to those users who wish to be healers and listed in the healer search. */
 const HealerOptions = (props) => {
 	var priceOrder = -1;
 	//on render, fetches the services from the service API, limiting network calls until needed. 
@@ -309,7 +319,7 @@ const HealerOptions = (props) => {
 	
 	return (
 	<>
-		<p>Services Offered:</p>
+		<p style={{ marginBottom: '1px', marginTop: '20px'}}>Services Offered:</p>
 		<Field
 			name="services"
 			as={MultiSelect}
@@ -354,7 +364,7 @@ const HealerOptions = (props) => {
 		</Field>
 		<ErrorMessage name="format" render={renderError} />
 		
-		<p>Personal Description:</p>
+		<p style={{ marginBottom: '1px', marginTop: '20px'}}>Personal Description:</p>
 		<Field
 			name="description" 
 			as="textarea"

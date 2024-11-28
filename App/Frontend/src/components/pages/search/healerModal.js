@@ -73,7 +73,7 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
         fetchCurrentUser();
         fetchReviews();
     }, [healerState.uid]);
-
+    
     const handleReviewSubmit = async (values, actions) => {
         try {
             if (currentUserNumericId) {
@@ -100,10 +100,9 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
     if (bookingModal) {
         return (
             <div className="healerClicked">
-                <div className="closeModal" onClick={() => {
-                    setExpandedTicket(false);
-                    setBookingModal(false);
-                }}></div>
+                <div className="closeModal" onClick={() => 
+                    { setExpandedTicket(false); setBookingModal(false);  }}>
+                </div>
                 <div className="singleHealer">{healerState.name}
                     <div className="bookerSelected">
                         <div className="healerSelectedTop">

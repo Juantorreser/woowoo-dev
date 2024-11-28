@@ -194,7 +194,7 @@ input, select {
 .warning {
   display: block !important;
   font-size: 0.75rem !important;
-  margin-top: -0.5rem !important;
+  margin-top: 0px !important;
   margin-bottom: 0.5rem !important;
   color: #f14668 !important;
 }
