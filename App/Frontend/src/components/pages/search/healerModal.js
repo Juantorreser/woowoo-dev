@@ -10,11 +10,9 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase/firebase-config';
 
 // Firebase authentication instance
-console.log("fetching database");
 const auth = getAuth(app);
 
 const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingModal, reviewModal, setReviewModal, availability }) => {
-    console.log("fetching database 2");
     const [reviews, setReviews] = useState([]);
     const [avgReview, setAvgReview] = useState(0);
     const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
