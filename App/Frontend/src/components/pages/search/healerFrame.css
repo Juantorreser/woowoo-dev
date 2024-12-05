@@ -8,7 +8,7 @@ Review: Lets the user leave a review for a given healer.*/
 
 /* margin-top helps all the page tops to not hide under the nav bar*/
 main {
-	margin-top: 80px;
+	margin-top: 60px;
 }
 /*The purple background border used on all three modals*/
 .singleHealer {

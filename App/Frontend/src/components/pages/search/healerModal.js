@@ -10,9 +10,11 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../../firebase/firebase-config';
 
 // Firebase authentication instance
+console.log("fetching database");
 const auth = getAuth(app);
 
 const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingModal, reviewModal, setReviewModal, availability }) => {
+    console.log("fetching database 2");
     const [reviews, setReviews] = useState([]);
     const [avgReview, setAvgReview] = useState(0);
     const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
@@ -60,6 +62,7 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
             try {
                 const response = await axios.get(`http://localhost:8080/review/${healerState.uid}`);
                 const reviewsData = response.data;
+                console.log(reviewsData);
                 const reviewTotal = reviewsData.reduce((acc, review) => acc + review.rating, 0);
                 const avgReviews = reviewsData.length > 0 ? reviewTotal / reviewsData.length : 0;
 
