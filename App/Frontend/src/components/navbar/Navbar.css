@@ -6,6 +6,15 @@
     position: relative;
 }
 
+/* Css for the role box */
+.badge {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
 /* Container for the Woo Woo Network logo on the navbar */
 .logo-container {
     width: 10vh;

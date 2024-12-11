@@ -28,11 +28,17 @@ const Search = () => {
         setActive(marker);
     };
 
-    //using the response from the healers API, sets the healer and marker states based on the filtered response
-    // 'Cities' filters by cities. only one city can be selected at a time currently (June 2023)
-    // 'Services' filters by the types of services provided (e.g. Meditation, Yoga, etc.). 
-    // 'deliveryFormat' is an integer representing whether the healer is available online, in-person, or both:
-    //      - 0 is both, 1 is in-person only, 2 is online only
+    
+
+    /**
+     * using the response from the healers API, sets the healer and marker states based on the filtered response
+     'Cities' filters by cities. only one city can be selected at a time currently (June 2023)
+     'Services' filters by the types of services provided (e.g. Meditation, Yoga, etc.). 
+     'deliveryFormat' is an integer representing whether the healer is available online, in-person, or both:
+     - 0 is both, 1 is in-person only, 2 is online onl
+
+     * @param {*} filters 
+     */
     const getHealersWithFilter = async (filters) => {
         
 		if (filters.Cities) {
@@ -60,25 +66,14 @@ const Search = () => {
             //filter the healer response by the selected range (default 50)
             let inRangeResponse = response.data.filter((healer) => {
                 
-                //console.log('response.data ', response.data);
-                //console.log('filters ', filters);
-                //console.log('healer ', healer);
-                
                 let currMarkerPos = markers.find(mrkrObj => mrkrObj.id === healer.uid);
-                
-                //console.log('currMarkerPos ', currMarkerPos);
-                //console.log('currMarkerPos, markers, healer', currMarkerPos, ' ', markers, ' ', healer);
-                //console.log('markers[0].id ', markers[0].id, ', healer.uid ', healer.uid);
                 
                 if(currMarkerPos){
                     let distanceBetweenPoints = window.google.maps.geometry.spherical.computeDistanceBetween(
                         {lat: parseFloat(location.view.lat), lng: parseFloat(location.view.lng)},
                         {lat: parseFloat(currMarkerPos.position.lat), lng: parseFloat(currMarkerPos.position.lng)}
                     ) / 1000;
-                    /*
-                    console.log('distanceBetweenPoints ', distanceBetweenPoints);
-                    console.log('distanceBetweenPoints <= range', distanceBetweenPoints <= range);
-                    */
+
                     if(distanceBetweenPoints <= range){
                         return healer;
                     }
@@ -96,10 +91,16 @@ const Search = () => {
         });
     };
 
-    //uses healers to get each individual id, saves those to an array,
-    //and passes that as the parameter to the location api.
-    //'first' parameter indicates whether to get all markers or just those associated
-    //with the current healers array.
+    
+
+    /**
+     * uses healers to get each individual id, saves those to an array,
+       and passes that as the parameter to the location api.
+      'first' parameter indicates whether to get all markers or just those associated
+      with the current healers array.
+     * @param {*} returnedHealers 
+     * @param {*} first 
+     */
     const getMarkers = async (returnedHealers, first) => {
         //console.log('getMarkers called with healers: ', returnedHealers, ' ', first);
         let ids = returnedHealers.map((healer) => {

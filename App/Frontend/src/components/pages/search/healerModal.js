@@ -60,6 +60,7 @@ const HealerModal = ({ healerState, setExpandedTicket, bookingModal, setBookingM
             try {
                 const response = await axios.get(`http://localhost:8080/review/${healerState.uid}`);
                 const reviewsData = response.data;
+                console.log(reviewsData);
                 const reviewTotal = reviewsData.reduce((acc, review) => acc + review.rating, 0);
                 const avgReviews = reviewsData.length > 0 ? reviewTotal / reviewsData.length : 0;
 

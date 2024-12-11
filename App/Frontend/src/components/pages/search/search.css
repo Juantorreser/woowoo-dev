@@ -6,7 +6,7 @@
 .healerFrame{
 	position: fixed;
     display: block;
-    width: 45%;
+    width: 36%;
     float: left;
     height: 88.5%;
     overflow-y: scroll; 
@@ -28,7 +28,7 @@
 	float: right;
 	width: 55%;
 	height: 88.5%;
-	z-index: -5;
+	z-index: auto;
 	top: 80px;
 	right: 0;
 }
