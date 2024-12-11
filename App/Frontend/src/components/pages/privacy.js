@@ -1,26 +1,33 @@
-import React from 'react'
+import React from 'react';
 import privacy_policy from './privacy policy.pdf';
 
-//Privacy is an embedded pdf document that can be easily modified and updated by the project sponsor. 
-class privacy extends React.Component{
-    render(){
-        return(
-			<div className='about'>
-				<div className='hero'>
-					<div className="container">
-						<div className="left">
-							<h1>Woo</h1>
-							<h1>Woo</h1>
-							<h1>Network</h1>                
-						</div>
-						<div className="policyContainer">
-							<embed className="privacyPolicy" src={privacy_policy} />
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
+// Privacy is a component that redirects the user to view the PDF directly.
+class Privacy extends React.Component {
+    render() {
+        return (
+            <div className='about'>
+                <div className='hero'>
+                    <div className="container text-center">
+                        <div className="left">
+                            <h1>Woo</h1>
+                            <h1>Woo</h1>
+                            <h1>Network</h1>
+                        </div>
+                        <div className="policyContainer mt-4">
+                            <a
+                                href={privacy_policy}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-primary"
+                            >
+                                View Privacy Policy
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
-export default privacy
+export default Privacy;

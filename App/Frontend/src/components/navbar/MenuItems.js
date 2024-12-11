@@ -5,13 +5,6 @@ export const MenuItems=[
         url:'search',
         cName: 'nav-links'
     },
-    /*
-	{
-        title:'Services',
-        url:'./services',
-        cName: 'nav-links'
-    },
-	//*/
     {
         title:'About',
         url:'./about',
