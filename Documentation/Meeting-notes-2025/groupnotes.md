@@ -24,3 +24,19 @@
 
     
 ## Week 2 (May 21, 2025)
+- review status of the project
+- find the tasklist (previous tasklist not available at the moment)
+- 2025 directory iteration in git
+- look for existing test cases
+- create user testing cases--real testimonials
+- identify issues and what might be missing in the application (shoreh's notes)
+- create working tasklist
+ -- re-arrange the search area for finding the healers
+ -- missing the testing data
+ -- Determine which features are the most important (with the help of the client) to get started on after we get access. 
+
+
+ - For next session, plan is to work on the existing tasklist.
+
+## Week 2 (May 23, 2025)
+
