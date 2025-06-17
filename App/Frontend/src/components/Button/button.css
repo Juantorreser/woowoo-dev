@@ -18,28 +18,29 @@
 }
 .btn:hover {
     transition: all 0.3s ease-out;
-    background:#F59D78;
+    background:#7f5bc5;
     transition: 200ms;
+    color: aliceblue;
 }
 
 /*Styling applied to the sign in and sign up buttons in the navbar*/
 .btn--primary{
-    background-color: #9D96B8;
-    border-radius: 5px;
+    background-color: #9C70F3;
+    border-radius: 8px;
 }
 
 /*More styling applied to the sign in and sign up buttons in the navbar, this was done by the last team so I have no idea if this does something for something else*/
 .btn--bar{
-    padding: 0.5rem 1rem;
-    border-radius: 2px;
-    font-size: 20px;
-    color: black;
+    padding: 0.45rem 1.7rem;
+    border-radius: 8px;
+    font-size: 18px;
+    color: aliceblue;
 }
 
 /*Meant to be used for the navbar sign in/out buttons but the <Button> tag eats it and styling was done with the knowledge that it doesn't load.*/
 .btn--outline{
-    background-color: #AB81CD;
-    color: #F59D78;
+    background-color: #9C70F3;
+    color: #26A899;
     padding: 10px 20px;
     border-radius: 2px;
     transition: all 0.3s ease-out;
