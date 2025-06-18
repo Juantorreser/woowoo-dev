@@ -1,0 +1,4 @@
+Primary Color (Teal): #26A899
+Secondary color (Purple): #9C70F3
+White color: #f0f8ff
+Gray borders: #A9B3C2
