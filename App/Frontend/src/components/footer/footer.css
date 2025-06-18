@@ -12,8 +12,8 @@ footer {
   color: aliceblue;
   text-align: center;
 }
-h1 {
-  color: aliceblue;
+footer h1 {
+  color: aliceblue !important;
   margin-bottom: 5px;
 }
 /*Styling applied to the link that is shown on the footer*/
