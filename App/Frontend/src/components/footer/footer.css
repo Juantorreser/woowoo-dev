@@ -2,14 +2,22 @@
 
 /*Generic styling for the footer*/
 footer {
-	position:fixed;
-	bottom:0;
-	width:100%;
-	background-color: white;
-	padding-left: 0.5vw;
+  width: 100%;
+  background-color: #26a899;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 30px 1px;
+  color: aliceblue;
+  text-align: center;
 }
-
+h1 {
+  color: aliceblue;
+  margin-bottom: 5px;
+}
 /*Styling applied to the link that is shown on the footer*/
 .footerLink {
-    display: block;
+  display: block;
+  text-decoration: underline;
 }
