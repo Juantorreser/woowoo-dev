@@ -69,14 +69,15 @@ const Main = () => {
                     <Route exact path='/home' element={<Home />} />
                     <Route exact path='/search' element={<Search />} />
                     <Route exact path='/services' element={<Services />} />
-                    <Route exact path='/about' element={<About />} />
+                    {/* <Route exact path='/about' element={<About />} /> */}
                     <Route exact path='/schedule' element={<Schedule />} />
                     <Route exact path='/privacy' element={<Privacy />} />
+                    <Route exact path='/login' element={<SignIn />} />
                     <Route exact path='/signin' element={<SignIn />} />
                     <Route exact path='/signup' element={<Signup />} />
                     <Route exact path='/account' element={<Account />} />
                     <Route exact path='/signout' element={<SignOut />} />
-                    <Route exact path='/message' element={<MessageBox />} />
+                    <Route exact path='/messages' element={<MessageBox />} />
                     <Route exact path='/addService' element={<AddService />} />
                     <Route exact path='/admin' element = {<AdminDashboard/>}/>
                     <Route exact path='/editServices' element = {<EditServices/>}/>

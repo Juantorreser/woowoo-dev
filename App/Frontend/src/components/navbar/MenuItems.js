@@ -1,24 +1,24 @@
 //navbar links can be added here. 
-export const MenuItems=[
+export const MenuItems = [
     {
-        title:'Find Healers',
-        url:'search',
+        title: 'About',
+        url: './home#about',
         cName: 'nav-links'
     },
     {
-        title:'About',
-        url:'./about',
+        title: 'Find Healers',
+        url: './search',
         cName: 'nav-links'
     },
     {
-        title:'Schedule',
-        url:'./schedule',
+        title: 'Schedule',
+        url: './schedule',
         cName: 'nav-links'
     }
     ,
     {
-        title: 'Message',
-        url: './message',
+        title: 'Messages',
+        url: './messages',
         cName: 'nav-links'
     }
 ];
