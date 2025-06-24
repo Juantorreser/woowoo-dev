@@ -82,7 +82,7 @@ const NavbarComponent = () => {
 				zIndex: 1000,
 			}}
 		>
-			<Container>
+			<Container fluid>
 				{/* Navbar Brand - Logo */}
 				<Navbar.Brand href="/home" className="d-flex align-items-center">
 					<img src={logo} alt="Logo" style={{ height: "40px" }} />
@@ -115,20 +115,18 @@ const NavbarComponent = () => {
 						{loggedIn ? (
 							<>
 								{/* Account button */}
-								<Nav.Link href="/account" style={{ backgroundColor: "#f8f9fa" }}>
-									<Button>Account</Button>
+								<Nav.Link href="/account" className="px-4">
+									Profile
 								</Nav.Link>
 
 								{/* Sign Out button */}
 								<Nav.Link
-									href="/signout"
-									style={{ backgroundColor: "#f8f9fa" }}
-								>
-									<Button variant="outline-secondary">Sign Out</Button>
+									href="/signout" className="px-4">
+									Sign Out
 								</Nav.Link>
 
 								{/* Display the user's role */}
-								<Nav.Item>
+								{/* <Nav.Item>
 									<span
 										className="badge bg-primary"
 										style={{
@@ -139,7 +137,7 @@ const NavbarComponent = () => {
 									>
 										{userRole.charAt(0).toUpperCase() + userRole.slice(1)}
 									</span>
-								</Nav.Item>
+								</Nav.Item> */}
 							</>
 						) : (
 							<>
