@@ -1,0 +1,96 @@
+#login {
+  background: linear-gradient(to bottom, #1b5757 0%, #26a899 90%);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  background-color: #f0f8ff;
+  border: solid 5px #a9b3c2;
+  border-radius: 8px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 30px;
+  transition: all 0.3s ease-out;
+  width: 50%;
+}
+
+.login-card .header {
+  display: flex;
+  width: 100%;
+}
+
+.login-card .header div {
+  padding: 20px 0;
+  width: 50%;
+  text-align: center;
+  color: #7f7e83;
+  font-size: 1.4rem;
+  font-weight: 500;
+  transition: all ease-in-out 0.2s;
+}
+
+.login-card .header div.active-tab {
+  width: 50%;
+  text-align: center;
+  color: #9c70f3;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: solid 4px #9c70f3;
+  padding-bottom: 0;
+  transition: all ease-in-out 0.2s;
+  background-color: #f0f8ff;
+}
+
+.login-card .header div p {
+  padding: 0;
+  margin: 0;
+}
+
+.login-card .body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card form {
+  width: 80%;
+}
+
+.login-card form label {
+  font-weight: 500;
+}
+
+.login-card form input {
+  font-weight: 400;
+  padding: 8px 15px;
+  border: solid 2px #9c70f393;
+}
+
+.login-card form input:focus {
+  border: solid 2px #9c70f3;
+  outline: none;
+  box-shadow: 0 0 5px rgba(195, 42, 255, 0.6);
+}
+
+.header {
+  cursor: pointer;
+}
+
+.login-card .btn {
+  width: 100% !important;
+  margin: 15px 0 !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .login-card {
+    width: 85%;
+  }
+}
