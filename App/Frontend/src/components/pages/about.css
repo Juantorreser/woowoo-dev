@@ -1,68 +1,73 @@
 /* About Page Styles */
 .about-page {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #a8e063, #56ab2f); /* Light green gradient background */
-    overflow: hidden;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  overflow: hidden;
 }
 
 /* About Content Styles */
 .about-content {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    z-index: 1;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 /* Animation for Paragraphs */
 .about-content p {
-    font-size: 1.2em;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    opacity: 0; /* Initially hidden */
-    transform: translateY(20px); /* Start position */
-    animation: slideUp 3s forwards cubic-bezier(0.2, 0.8, 0.2, 1); /* Animation properties */
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  opacity: 0; /* Initially hidden */
+  transform: translateY(20px); /* Start position */
+  animation: slideUp 3s forwards cubic-bezier(0.2, 0.8, 0.2, 1); /* Animation properties */
 }
 
 @keyframes slideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-
-
 .about-content h1 {
-    color: #4caf50;
-    font-size: 2.5em;
-    margin-bottom: 20px;
+  color: #4caf50;
+  font-size: 2.5em;
+  margin-bottom: 20px;
 }
 
 /* Animated Background */
 .animated-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1) url('https://source.unsplash.com/random/1920x1080?nature,forest') center/cover;
-    z-index: 0;
-    animation: backgroundAnimation 10s ease-in-out infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1)
+    url("https://source.unsplash.com/random/1920x1080?nature,forest") center/cover;
+  z-index: 0;
+  animation: backgroundAnimation 10s ease-in-out infinite;
 }
 
 /* Keyframes for Background Animation */
 @keyframes backgroundAnimation {
-    0% { opacity: 0.5; }
-    50% { opacity: 0.8; }
-    100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

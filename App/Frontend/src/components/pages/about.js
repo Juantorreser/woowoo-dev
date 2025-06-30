@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 const AboutPage = () => {
     return (
-        <div className="about-page">
+        <section id="about" className="about-page">
             {/* Animated Background */}
             <div className="animated-background"></div>
 
@@ -28,7 +28,7 @@ const AboutPage = () => {
                     </Col>
                 </Row>
             </Container>
-        </div>
+        </section>
     );
 }
 

@@ -1,63 +1,72 @@
-/* Ensure this only affects the Hero section and not the navbar */
-.hero-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
 /* Make the hero background responsive */
 .hero {
-    width: 100%;
-    height: 100vh;
-    background: url('../../Images/bkg.jpg') no-repeat center center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  width: 100%;
+  height: 95vh;
+  background: #26a899;
+  text-align: center;
+  padding-top: 100px;
 }
 
 /* Main title styling */
 .hero h1 {
-    color: black;
-    font-size: 5rem;
-    font-weight: 300;
-    text-shadow: 1px 1px 0 rgb(49, 49, 49);
-    -webkit-user-select: none;
-    user-select: none;
-    margin-bottom: 1rem;
+  color: aliceblue !important;
+  font-size: 4rem;
+  font-weight: bold;
 }
 
 /* Subtitle styling */
 .hero h2 {
-    color: black;
-    font-weight: bold;
-    font-size: 2rem;
+  color: aliceblue;
+  opacity: 70%;
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-/* Sign-up button styles */
-.sign-up-buttons a {
-    margin: 0 10px;
+/* Paragraph Styling */
+.hero p {
+  color: aliceblue;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
-.sign-up-buttons .btn--learn {
-    font-size: 1.2rem;
-    padding: 0.7rem 1.5rem;
+.hero span {
+  color: aliceblue;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.divider-container {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.abt-link {
+  color: #26a899; /* or any contrasting color depending on your image */
+  font-weight: bold;
+  font-size: 1.5rem;
+  z-index: 1;
 }
 
 /* Responsive text scaling for mobile */
 @media (max-width: 768px) {
-    .hero h1 {
-        font-size: 3rem;
-    }
+  .hero h1 {
+    font-size: 2rem;
+  }
 
-    .hero h2 {
-        font-size: 1.5rem;
-    }
+  /* Subtitle styling */
+  .hero h2 {
+    font-size: 1rem;
+  }
 
-    .sign-up-buttons .btn--learn {
-        font-size: 1rem;
-        padding: 0.5rem 1rem;
-    }
+  /* Paragraph Styling */
+  .hero p {
+    font-size: 1.2rem;
+  }
+
+  .hero span {
+    font-size: 1rem;
+  }
 }
