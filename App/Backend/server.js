@@ -7,9 +7,13 @@ const sql = require("mysql2");
 const config = require("./app/config/db.config");
 const router = express.Router();
 const stripeConfig = require("./app/config/stripe.config.js");
-const Stripe = require ('stripe');
+const Stripe = require('stripe');
 const stripeAPI = new Stripe(stripeConfig.STRIPE_API_KEY);
 const appSecret = stripeConfig.STRIPE_SECRET_KEY;
+
+var corsOptions = {
+  origin: "http://localhost:3000"
+};
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -18,24 +22,30 @@ app.use(express.static('public/imgs'));
 
 require("./app/routes/api-router.js")(app);
 
-var corsOptions = {
-  origin: "http://localhost:4200"
-};
-
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
+db.sequelize.sync().then(() => {
+  console.log("✅ DB synced.");
 });
+
+console.log("DEBUG DB CONFIG:", config);
+
 
 let connection = sql.createConnection({
   host: config.HOST,
   user: config.USER,
-  database: config.DB
+  password: config.PASSWORD,
+  database: config.DB,
+  port: config.PORT
 });
 
-connection.connect(err =>  {
-  if(err) 
-    console.log('DataBase Connection Error'+ err);
+connection.connect(err => {
+  if (err) {
+    console.log('❌ DataBase Connection Error: ' + err);
+    return;
+  }
+  console.log('✅ MySQL connected successfully (raw connection).');
 });
+
+
 
 //simple routing
 app.get("/", (req, res) => {
