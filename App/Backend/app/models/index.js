@@ -3,18 +3,18 @@ const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");   //sequelize package helps generate complex queries to get to the db
 
 //instantiates sequelize to connect api to mysql database
-const sequelize = new Sequelize("woowoodev", "root", null, {
-  password: null,
-  operatorsAliases: 0,
-  dialect: "mysql",
-  port: 8888,
-  pool: {
-    max: dbConfig.pool.max,
-    min: dbConfig.pool.min,
-    acquire: dbConfig.pool.acquire,
-    idle: dbConfig.pool.idle
+const sequelize = new Sequelize(
+  dbConfig.DB,
+  dbConfig.USER,
+  dbConfig.PASSWORD,
+  {
+    host: dbConfig.HOST,
+    port: dbConfig.PORT || 3306,
+    dialect: dbConfig.dialect,
+    pool: dbConfig.pool
   }
-});
+);
+
 
 
 
