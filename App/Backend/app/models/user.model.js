@@ -24,7 +24,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          notEmpty: true, // Ensures the field is not empty
+          notEmpty: true,
         },
       },
       lastName: {
@@ -37,9 +37,9 @@ module.exports = (sequelize, Sequelize) => {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true, // Ensure email uniqueness
+        unique: true,
         validate: {
-          isEmail: true, // Validate email format
+          isEmail: true,
         },
       },
       password: {
@@ -72,6 +72,26 @@ module.exports = (sequelize, Sequelize) => {
       city: {
         type: Sequelize.STRING,
         comment: "User's city",
+      },
+      province: {
+        type: Sequelize.STRING,
+        comment: "User's province",
+      },
+      country: {
+        type: Sequelize.STRING,
+        comment: "User's country",
+      },
+      postal: {
+        type: Sequelize.STRING,
+        comment: "User's postal code",
+      },
+      address: {
+        type: Sequelize.STRING,
+        comment: "User's full street address",
+      },
+      phone: {
+        type: Sequelize.STRING,
+        comment: "User's phone number",
       },
       role: {
         type: DataTypes.ENUM("healer", "client", "admin"),
