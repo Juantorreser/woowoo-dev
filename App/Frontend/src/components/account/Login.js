@@ -24,12 +24,14 @@ const registerSchema = yup.object().shape({
     province: yup.string(),
     country: yup.string(),
     postalCode: yup.string(),
+    phone: yup.string(),
     isHealer: yup.boolean(),
     services: yup.array(),
     format: yup.number(),
     description: yup.string(),
     terms: yup.boolean().oneOf([true], 'You must accept the terms'),
 });
+
 
 const Login = () => {
     const baseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -54,7 +56,7 @@ const Login = () => {
                 <Formik
                     initialValues={{
                         firstName: '', lastName: '', email: '', password: '', confirmPassword: '',
-                        address: '', city: '', province: '', country: '', postalCode: '',
+                        address: '', city: '', province: '', country: '', postalCode: '', phone: '',
                         isHealer: false, services: [], format: 0, description: '', terms: false
                     }}
                     validationSchema={registerSchema}
@@ -67,9 +69,23 @@ const Login = () => {
 
                             const newUser = {
                                 fbid: userCredential.user.uid,
-                                ...values,
+                                firstName: values.firstName,
+                                lastName: values.lastName,
+                                email: values.email,
+                                password: values.password,
+                                address: values.address,
+                                city: values.city,
+                                province: values.province,
+                                country: values.country,
+                                postal: values.postalCode,
+                                phone: values.phone,
+                                isHealer: values.isHealer,
+                                format: values.format,
+                                description: values.description,
+                                terms: values.terms,
                                 services: selectedServices.map(s => s.value)
                             };
+
 
                             const response = await axios.post(`${baseUrl}/users`, newUser);
                             window.location.assign(response.data?.url || '/');
@@ -102,6 +118,8 @@ const Login = () => {
                             <input type="text" name="province" value={values.province} onChange={handleChange} placeholder="Province" />
                             <input type="text" name="country" value={values.country} onChange={handleChange} placeholder="Country" />
                             <input type="text" name="postalCode" value={values.postalCode} onChange={handleChange} placeholder="Postal Code" />
+                            <input type="text" name="phone" value={values.phone} onChange={handleChange} placeholder="Phone Number" />
+
 
                             <label>
                                 <input type="checkbox" name="isHealer" checked={values.isHealer} onChange={handleChange} /> I am a healer
