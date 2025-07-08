@@ -122,20 +122,34 @@ const Login = () => {
 
 
                             <label>
-                                <input type="checkbox" name="isHealer" checked={values.isHealer} onChange={handleChange} /> I am a healer
+                                <input
+                                    type="checkbox"
+                                    name="isHealer"
+                                    checked={values.isHealer}
+                                    onChange={(e) => setFieldValue("isHealer", e.target.checked)}
+                                /> I am a healer
                             </label>
 
                             {values.isHealer && (
                                 <>
                                     <label>Services Offered</label>
                                     <MultiSelect
+                                        className="custom-multiselect"
                                         options={options}
                                         value={selectedServices}
                                         onChange={(selected) => {
                                             setSelectedServices(selected);
                                             setFieldValue("services", selected.map(s => s.value));
                                         }}
+                                        overrideStrings={{
+                                            allItemsAreSelected: "All selected",
+                                            noOptions: "No options",
+                                            search: "Search services...",
+                                            selectAll: "Select all",
+                                            selectSomeItems: "Select..."
+                                        }}
                                     />
+
                                     <label>Delivery Format</label>
                                     <select name="format" value={values.format} onChange={handleChange}>
                                         <option value={0}>Both Online and In-Person</option>
