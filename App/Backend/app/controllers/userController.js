@@ -9,10 +9,10 @@ const locations = require('./locationController');
 const Op = db.Sequelize.Op;   //Op meaning operator. You can think of it as a conditional clause.
 const { off } = require("process");
 const { sequelize } = require("../models");
-const  argon2 = require('argon2');   //used for hashing and salting password
-const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
-const {initializeApp} = require('firebase-admin/app');
-const {getAuth} = require('firebase-admin/auth');
+const argon2 = require('argon2');   //used for hashing and salting password
+const { STRIPE_SECRET_KEY } = require('../config/stripe.config.js');
+const { initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
 // const { getAuth } = require('firebase-admin/auth');
 const firebaseAdminConfig = require('../config/firebaseAdmin.config.js');
 
@@ -33,18 +33,18 @@ const firebaseAuth = getAuth(firebaseAdmin);
 // const stripe = require('stripe')(process.env.NEXT_STRIPE_SECRET_KEY);
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 // Create and Save a new user
-const hashingFunction = async (password)=> {
-  try{
+const hashingFunction = async (password) => {
+  try {
     const hashedPassword = await argon2.hash(password);
     console.log(`Hashed password: ${hashedPassword}`)
     return hashedPassword;
   }
-  catch(err){
+  catch (err) {
     console.log(err);
   }
 }
 
-const findUserID = async (id)=> {    //find the ID on the firebase
+const findUserID = async (id) => {    //find the ID on the firebase
   var userID = "";
   const specifiedUser = await User.findOne({
     where: {
@@ -55,12 +55,12 @@ const findUserID = async (id)=> {    //find the ID on the firebase
   const userEmail = specifiedUser.email;
 
   await firebaseAuth.getUserByEmail(userEmail)
-  .then((userRecord)=> {
+    .then((userRecord) => {
       userID = userRecord.toJSON().uid;
-  })
-  .catch(err=> {
-    console.log("Error in finding firebase user ID: "+ err);
-  })
+    })
+    .catch(err => {
+      console.log("Error in finding firebase user ID: " + err);
+    })
 
 
   return userID;
@@ -94,7 +94,7 @@ exports.createUser = async (req, res) => {
     email: req.body.email,
     emailVerified: false,
     //password: req.body.password,   //need to hash this.
-    password: await hashingFunction(req.body.password),  
+    password: await hashingFunction(req.body.password),
     account: req.body.isHealer ? 1 : 0,
     description: req.body.description ? req.body.description : null,
     address: req.body.address ? req.body.address : null,
@@ -120,8 +120,8 @@ exports.createUser = async (req, res) => {
   }
 
   //if the user is a healer, add the healer to the stripe account. 
-  if(user.account == 1){
-    try{
+  if (user.account == 1) {
+    try {
       const account = await stripe.accounts.create({
         country: 'CA',
         email: user.email,
@@ -139,11 +139,11 @@ exports.createUser = async (req, res) => {
         capabilities: {
           card_payments: {
             requested: true
-          }, 
+          },
           transfers: {
             requested: true
           }
-        }, 
+        },
         business_type: "individual"
       });
       user.stripeAccount = account.id;
@@ -159,7 +159,7 @@ exports.createUser = async (req, res) => {
       const [num] = await User.update(account.id, {
         where: { uid: user.uid }
       });
-  
+
       if (num === 1) {
         console.log("Can create user but can not put new user's stripe ID into database")
       } else {
@@ -168,17 +168,17 @@ exports.createUser = async (req, res) => {
         // });
         console.log(`Cannot update User with id=${user.uid} with new stripe account. Maybe user was not found or req.body is empty!`);
       }
-      res.status(200).json({url: accountLink.url});
+      res.status(200).json({ url: accountLink.url });
       //res.redirect(accountLink.url);
-      
+
 
     }
-    catch(err){
+    catch (err) {
       console.log(err);
     }
 
-    
-    
+
+
     // const customerSource = await stripe.customers.createSource({
     //   source: {
     //       account_number: req.body.accountNumber,
@@ -188,7 +188,7 @@ exports.createUser = async (req, res) => {
     //       account_holder_name: user.firstName+ user.lastName
     //   }
     // })
-    
+
     // const token = await stripe.tokens.create({
     //   card: {
     //     number: req.body.accountNumber,
@@ -228,16 +228,16 @@ exports.createUser = async (req, res) => {
     //   {email: 'person@example.edu'},
     //   {stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}'}
     // );
-  
+
 
 
   }
- 
+
   // Create user and try to set a location based on address
   console.log(user);
   User.create(user)
     .then(async data => {
-      if(user.address !== null){
+      if (user.address !== null) {
         locations.createLocation({
           body: {
             uid: user.uid,
@@ -248,7 +248,7 @@ exports.createUser = async (req, res) => {
       }
 
       //if the user is a healer, then make a stripe user account for the healer to earn money.
-      
+
     })
     .then(() => {
       //success - 201 created
@@ -256,7 +256,7 @@ exports.createUser = async (req, res) => {
       //   user
       // });
       console.log(user);
-      
+
     })
     .catch(err => {
       //500 server error
@@ -265,8 +265,8 @@ exports.createUser = async (req, res) => {
           err.message || 'Some error occurred while creating the User.'
       });
     });
-    //creating a stripe link that will enter in more information for the user.
-    
+  //creating a stripe link that will enter in more information for the user.
+
 };
 
 // Retrieve all Users from the database where region is  ? 
@@ -299,10 +299,10 @@ exports.findAllHealers = (req, res) => {
     },
     enabled: {
       [Op.eq]: 1
-    }, 
+    },
   };
 
-  if(req.query.email){   //if the request has a specific healer in the query
+  if (req.query.email) {   //if the request has a specific healer in the query
     whereClause.email = req.query.email;
   }
 
@@ -312,7 +312,7 @@ exports.findAllHealers = (req, res) => {
   //   where find_in_set(s.sid, u.services)
   //   group by u.uid`
   // )
-  sequelize.query(   
+  sequelize.query(
     `select u.uid, firstName, lastName, email, account, u.description, enabled, region, city, group_concat(distinct(service)) as services, format, group_concat(distinct(servicePrices)) as servicePrices
     from users u join services s 
     where find_in_set(s.sid, u.services) and u.enabled = 1
@@ -333,57 +333,57 @@ exports.findAllHealers = (req, res) => {
   This function uses the data from the request body to build up a variable containing all of the search parameters
   Each of the parameters are automatically formatted for sql using the db.sequelize.op library
   The query only includes relevant search clauses (e.g. it won't search for email if no email is in the request body)
-*/ 
+*/
 exports.findHealersWithParams = (req, res) => {
   console.log('findHealersWithParams req.body: ', req.body);
 
   //params to retrieve only active accounts that are also healers. 
   let params = {
-      account: {
-        [Op.eq]: 1
-      },
-      enabled: {
-        [Op.eq]: 1
-      }
+    account: {
+      [Op.eq]: 1
+    },
+    enabled: {
+      [Op.eq]: 1
+    }
   };
-  
-  if(req.body.fbid){
+
+  if (req.body.fbid) {
     params.fbid = {
       [Op.eq]: `${req.body.fbid}`
     };
   }
 
-  if(req.body.email){
+  if (req.body.email) {
     params.email = {
       [Op.eq]: `${req.body.email}`
     };
   }
 
   //filter handling:
-  if(req.body.cityParam){
+  if (req.body.cityParam) {
     params.city = {
       [Op.like]: `${req.body.cityParam}`
     };
-  } 
-  
-  if(req.body.serviceParam){
+  }
+
+  if (req.body.serviceParam) {
     params.services = {
       [Op.in]: `${req.body.serviceParam}`
     };
-  } 
+  }
 
-  if(req.body.deliveryFormat){
-    switch(req.body.deliveryFormat){
+  if (req.body.deliveryFormat) {
+    switch (req.body.deliveryFormat) {
       case 0:
         params.format = {
-          [Op.in]: [0,1,2]
+          [Op.in]: [0, 1, 2]
         };
         break;
-      case 1: 
+      case 1:
         params.format = {
-          [Op.in]: [1 ,0]
+          [Op.in]: [1, 0]
         };
-      case 2: 
+      case 2:
         params.format = {
           [Op.in]: [2, 0]
         };
@@ -420,15 +420,15 @@ exports.findHealersWithParams = (req, res) => {
     GROUP BY u.uid
     ${params.services ? `HAVING services LIKE '%${req.body.serviceParam}%'` : ``}`
   )
-  .then(data => {
-    console.log(data[0]);
-    res.status(200).send(data[0]);
-  })
-  .catch(err => {
-    res.status(500).send(
-      "Some error occurred while retrieving users."
-    );
-  });
+    .then(data => {
+      console.log(data[0]);
+      res.status(200).send(data[0]);
+    })
+    .catch(err => {
+      res.status(500).send(
+        "Some error occurred while retrieving users."
+      );
+    });
 };
 
 // Find a single user with an id
@@ -486,20 +486,20 @@ exports.updateUser = async (req, res) => {
   const id = parseInt(req.params.uid); // Get uid from request params
   const userFirebaseID = await findUserID(id);   //get the firebase user ID
   console.log(req.body);
-// //converting services and servicePrice into string, with each services divided by comma
+  // //converting services and servicePrice into string, with each services divided by comma
 
-var tempService = "";
-var tempServicePrice = "";
-if(req.body.services !== undefined){
-  tempService = req.body.services.toString();
-}
+  var tempService = "";
+  var tempServicePrice = "";
+  if (req.body.services !== undefined) {
+    tempService = req.body.services.toString();
+  }
 
-if(req.body.servicePrices !== undefined){
-  tempServicePrice = req.body.servicePrices.toString();
-}
-  
- 
-    //find the email of that user
+  if (req.body.servicePrices !== undefined) {
+    tempServicePrice = req.body.servicePrices.toString();
+  }
+
+
+  //find the email of that user
 
   // const userEmail = await User.findOne({
   //   where: {
@@ -513,7 +513,9 @@ if(req.body.servicePrices !== undefined){
   if (req.body.firstName !== undefined) updateData.firstName = req.body.firstName;
   if (req.body.lastName !== undefined) updateData.lastName = req.body.lastName;
   if (req.body.email !== undefined) updateData.email = req.body.email;
-  if (req.body.password !== undefined) updateData.password = req.body.password;
+  if (req.body.password !== undefined) {
+    updateData.password = await hashingFunction(req.body.password);
+  }
   if (req.body.account !== undefined) updateData.account = req.body.account;
   // if (req.body.services !== undefined) updateData.services = req.body.services;
   if (req.body.services !== undefined) updateData.services = tempService;
@@ -521,14 +523,19 @@ if(req.body.servicePrices !== undefined){
   if (req.body.enabled !== undefined) updateData.enabled = req.body.enabled;
   if (req.body.region !== undefined) updateData.region = req.body.region;
   if (req.body.city !== undefined) updateData.city = req.body.city;
+  if (req.body.address !== undefined) updateData.address = req.body.address;
+  if (req.body.postal !== undefined) updateData.postal = req.body.postal;
+  if (req.body.province !== undefined) updateData.province = req.body.province;
+  if (req.body.country !== undefined) updateData.country = req.body.country;
+  if (req.body.phone !== undefined) updateData.phone = req.body.phone
   if (req.body.format !== undefined) updateData.format = req.body.format;
   if (req.body.stripeAccount !== undefined) updateData.stripeAccount = req.body.stripeAccount;
   // if (req.body.servicePrices !== undefined) updateData.servicePrices = req.body.servicePrices;
   if (req.body.servicePrices !== undefined) updateData.servicePrices = tempServicePrice;
-  if(updateData.enabled == 0){
+  if (updateData.enabled == 0) {
     disabled = true;
   }
-  else if(updateData.enabled == 1){
+  else if (updateData.enabled == 1) {
     disabled = false;
   }
   try {
@@ -536,7 +543,7 @@ if(req.body.servicePrices !== undefined){
     //getting the uid of the users that we want to update.
     // await firebaseAuth.getUserByEmail(userEmail.email)
     // .then((getUsersResult)=> {
-        
+
     //     userFirebaseID = getUsersResult.toJSON().uid;
     //     console.log(userFirebaseID);
     // })
@@ -549,12 +556,12 @@ if(req.body.servicePrices !== undefined){
       password: updateData.password,
       disabled: disabled
     })
-    .then((userRecord)=> {
-      console.log("Successfully update the user");
-    })
-    .catch(err=> {
-      console.log("Error with updating user: "+err);
-    })
+      .then((userRecord) => {
+        console.log("Successfully update the user");
+      })
+      .catch(err => {
+        console.log("Error with updating user: " + err);
+      })
     // Ensure there are fields to update
     if (Object.keys(updateData).length === 0) {
       return res.status(400).send({
@@ -592,27 +599,27 @@ exports.deleteUser = async (req, res) => {
 
   const userFirebaseID = await findUserID(id);
   await User.findAll({   //find the account of the one being deleted.
-    where: {uid: id}
+    where: { uid: id }
   })
-  .then(async data=> {
+    .then(async data => {
       const account = data[0].stripeAccount;
-      try{
+      try {
         const deletedAccount = await stripe.account.del(account);
       }
-      catch(err){
+      catch (err) {
         console.log("Something wrong with deleting the user's stripe account");
       }
-  })
+    })
 
   //delete the firebase ID
 
   await firebaseAuth.deleteUser(uid)
-  .then(()=> {
-    console.log("Successfully delete user on firebase");
-  })
-  .catch(err=> {
-    console.log("Having error deleting the user on firebase: "+ err);
-  })
+    .then(() => {
+      console.log("Successfully delete user on firebase");
+    })
+    .catch(err => {
+      console.log("Having error deleting the user on firebase: " + err);
+    })
 
   //deleting the user in SQL Workbench (db)
   await User.destroy({
@@ -674,7 +681,7 @@ exports.findAllEnabled = async (req, res) => {
 //accepting payment.
 // exports.acceptPayment = async (req, res)=> {
 //   console.log('payForSpecificHealer');
-  
+
 //   //confirm if the id is valid first.
 //   const id = req.params.uid;
 //   await User.find({
@@ -691,7 +698,7 @@ exports.findAllEnabled = async (req, res) => {
 //             currency: req.params.currency,
 //             payment: req.params.paymentType,
 //             customer: req.params.customer
-            
+
 //           })
 //           res.send({message: "Payment completed"})
 //         }
@@ -707,11 +714,11 @@ exports.findAllEnabled = async (req, res) => {
 
 //create payment: Not sure yet.
 
-exports.payForSpecificHealer = async (req, res)=> {
+exports.payForSpecificHealer = async (req, res) => {
   console.log("payForSpecificHealer");
   // const {amount, token} = req.body;
   console.log(req.body);
-  const {amount, healer_email} = req.body;
+  const { amount, healer_email } = req.body;
   console.log(healer_email);
   // const emails = req.body.items.map(item=> {    //return a list of healer's email
   //     item.healer_email
@@ -739,35 +746,35 @@ exports.payForSpecificHealer = async (req, res)=> {
   // }
 
   //Method 2: Session payment: Correct if tested but not sure yet until tested in frontend.
-  try{
+  try {
     var account_id = '';
-    await User.findAll({ where: { email: req.body.healer_email} })
-    .then(data => {
-      account_id = data[0].stripeAccount;
-      //res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving users."
+    await User.findAll({ where: { email: req.body.healer_email } })
+      .then(data => {
+        account_id = data[0].stripeAccount;
+        //res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving users."
+        });
       });
-    });
 
     console.log(account_id);
     //get the price based on the description.
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      mode: 'payment', 
-      line_items: req.body.items.map(item=> {
-        console.log("The item's price is: "+ item.price);
+      mode: 'payment',
+      line_items: req.body.items.map(item => {
+        console.log("The item's price is: " + item.price);
         return {
           price_data: {
-            currency: req.body.currency, 
+            currency: req.body.currency,
             product_data: {
               name: item.service_name,
               //service_name: item.service
             },
-            unit_amount: item.price 
+            unit_amount: item.price
           },
           quantity: item.quantity
         }
@@ -784,41 +791,41 @@ exports.payForSpecificHealer = async (req, res)=> {
       cancel_url: 'http://localhost:3000'
     })
     console.log("Successfully book an appointment. Now, ready to pay");
-    res.json({url: session.url})
+    res.json({ url: session.url })
   }
-  catch(err){
+  catch (err) {
     console.log(err);
-    res.status(500).json({error: err.message})
+    res.status(500).json({ error: err.message })
   }
 
 }
 
-exports.financeReport = async (req,res)=>{
+exports.financeReport = async (req, res) => {
   const accountID = req.params.stripeAccount;
-//   const account = await stripe.balance.retrieve({
-//     stripeAccount: accountID
-//   },  
-// );
-const account = await stripe.charges.list(
-  {
-  limit: 5,
-  },
-  {
-    stripeAccount: accountID
-  }
-);
+  //   const account = await stripe.balance.retrieve({
+  //     stripeAccount: accountID
+  //   },  
+  // );
+  const account = await stripe.charges.list(
+    {
+      limit: 5,
+    },
+    {
+      stripeAccount: accountID
+    }
+  );
   res.status(200).send(account);
 }
 
 //get more info on the connected account in Stripe
-exports.getStripeConnectedAccount = async (req,res)=> {
+exports.getStripeConnectedAccount = async (req, res) => {
   const accountID = req.params.stripeAccount;
 
   const account = await stripe.accounts.retrieve(accountID)
   res.status(200).send(account);
 }
 
-exports.testing = async(req, res)=> {
+exports.testing = async (req, res) => {
   res.send("Testing");
 }
 

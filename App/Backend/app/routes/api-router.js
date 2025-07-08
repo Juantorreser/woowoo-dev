@@ -17,7 +17,7 @@ const availability = require('../controllers/availabilityController.js'); // Imp
 const authController = require('../controllers/login.js');
 const router = express.Router();
 
-module.exports = function(router){
+module.exports = function (router) {
 
     // Retrieve all users and create a new user
     router.route('/users')
@@ -32,7 +32,7 @@ module.exports = function(router){
         .delete((req, res) => {
             users.deleteAllUsers(req, res);
         })
-        router.route('/users/:uid')
+    router.route('/users/:uid')
         // Update a user with id
         .put((req, res) => {
             users.updateUser(req, res);
@@ -54,7 +54,7 @@ module.exports = function(router){
             users.findHealersWithParams(req, res);
         });
 
-    
+
 
     // Retrieve a single user with id
     router.route('/users/:uid')
@@ -179,21 +179,21 @@ module.exports = function(router){
         })
         .post((req, res) => {
             services.createService(req, res);
-        });  
-        
+        });
+
     //Enabled service
     router.route('/enabledServices')
-    .get((req,res)=> {
-        services.findAllEnabled(req,res);
-    })
+        .get((req, res) => {
+            services.findAllEnabled(req, res);
+        })
     //enable/disable service from admin side.
     router.route('/services/:sid')
-    .put((req, res)=> {
-        services.updateService(req,res);
-    })
-    .delete((req,res)=>{
-        services.deleteService(req,res);
-    });
+        .put((req, res) => {
+            services.updateService(req, res);
+        })
+        .delete((req, res) => {
+            services.deleteService(req, res);
+        });
 
     // Appointments
     router.route('/appointments')
@@ -205,21 +205,21 @@ module.exports = function(router){
             //appointments.getAppointments(req, res);
             appointments.findAllAppointments(req, res);
         })
-        // .delete((req, res) => {
-        //     appointments.deleteAppointments(req, res);
-        // });
+    // .delete((req, res) => {
+    //     appointments.deleteAppointments(req, res);
+    // });
 
     //find specific appointments with specific aid
-    router.route('/appointments/:aid').get((req, res)=> {
+    router.route('/appointments/:aid').get((req, res) => {
         appointments.getAppointments(req, res);
-    }).put((req, res)=> appointments.updateAppointment(req, res))
+    }).put((req, res) => appointments.updateAppointment(req, res))
     //delete specific appointments with specific fbid
-    router.route('/appointments/:aid').delete((req, res)=> {
+    router.route('/appointments/:aid').delete((req, res) => {
         appointments.deleteAppointment(req, res);
     })
 
     //find specific appointments from a user:
-    router.route('/appointments/clients/:uid').get((req, res)=> {
+    router.route('/appointments/clients/:uid').get((req, res) => {
         appointments.getClientAppointments(req, res);
     })
     // Availability
@@ -247,33 +247,33 @@ module.exports = function(router){
 
     //retrive information about an account, including finance
     router.route('/financeReport/:stripeAccount')
-    .get((req,res)=> {
-        users.financeReport(req,res);
-    })
+        .get((req, res) => {
+            users.financeReport(req, res);
+        })
 
     router.route('/stripeAccount/:stripeAccount')
-    .get((req,res)=> {
-        users.getStripeConnectedAccount(req,res);
-    })
+        .get((req, res) => {
+            users.getStripeConnectedAccount(req, res);
+        })
 
     router.route('/testing')
         .get((req, res) => {
             users.testing(req, res);
         });
-    
+
     //Route for message
     router.route('/message/:uid')
-    .get((req, res)=> {
-        message.findAllMessage(req, res);
-    })
+        .get((req, res) => {
+            message.findAllMessage(req, res);
+        })
     //reply to a message in the database
     router.route('/message/:mid')
-    .put((req,res)=> {
-        message.replyToMessage(req,res);
-    })
+        .put((req, res) => {
+            message.replyToMessage(req, res);
+        })
 
     router.route('/message')
-    .post((req,res)=> {
-        message.sendMessage(req, res);
-    })
+        .post((req, res) => {
+            message.sendMessage(req, res);
+        })
 };
