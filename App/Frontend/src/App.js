@@ -9,6 +9,7 @@ const App = () => {
 		<>    
 			<Navbar />
 			<Main />
+			{/* <FeaturedHealers /> */}
 			<Footer />
 		</>
 	)

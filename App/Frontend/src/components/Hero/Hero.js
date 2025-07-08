@@ -37,9 +37,19 @@ class Hero extends React.Component {
                     </div>
 
 
+                </div>
+            </div>
+        );
+    }
+}
+
+export default Hero;
 
 
-                    {/* <div className="row justify-content-center align-items-center text-center">
+
+
+
+{/* <div className="row justify-content-center align-items-center text-center">
 
                         <div className="col-12">
                             <h1>Woo Woo Network</h1>
@@ -58,10 +68,3 @@ class Hero extends React.Component {
                             </div>
                         </div>
                     </div> */}
-                </div>
-            </div>
-        );
-    }
-}
-
-export default Hero;

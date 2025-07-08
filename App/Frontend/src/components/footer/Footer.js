@@ -6,7 +6,7 @@ import './footer.css';
 const Footer = () => {
     return(
 		<footer>
-			<div className="footer">
+			<div className="footer" style={{padding: '20px', textAlign: 'center'}}>
 				<h1>Woo Woo Network 2025</h1>
 				<Link className="footerLink" to="/privacy">Privacy Statement</Link>
 			</div>
