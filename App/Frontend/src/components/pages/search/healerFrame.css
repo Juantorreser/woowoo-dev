@@ -5,11 +5,11 @@ Booking/Calendar: Lets the user book an appointment with a healer. Styling is lo
 Review: Lets the user leave a review for a given healer.*/
 /*"Healer item" refers to an individual search result. One healer item contains the healers name, up to 2 or 3 services, some or all of the healers description, and three buttons that open modals*/
 
-
 /* margin-top helps all the page tops to not hide under the nav bar*/
 main {
 	margin-top: 60px;
 }
+
 /*The purple background border used on all three modals*/
 .singleHealer {
     z-index: 10000; /* <-- Higher than healerClicked */
@@ -23,9 +23,10 @@ main {
     margin: auto;
     border-radius: 30px;
     overflow: auto;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 
 /**
 	The dimming effect rendered behind the modals*/
@@ -34,14 +35,13 @@ main {
     left: 0;
     z-index: 9999; /* <-- Increased z-index */
     position: fixed;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 
 /*An overlay put on top of the healerClicked div the user can click to close the modal once it's been opened*/
 .closeModal {
@@ -64,20 +64,12 @@ main {
 .healer .icon {
 	position: relative;
 	z-index: 2;
-	-webkit-filter: brightness(100%);
-	-webkit-transition: all 0.1s ease;
-    -moz-transition: all 0.1s ease;
-    -o-transition: all 0.1s ease;
-    -ms-transition: all 0.1s ease;
-    transition: all 0.1s ease;
+	filter: brightness(100%);
+	transition: filter 0.15s ease;
 }
 .healer .icon:hover {
-	-webkit-filter: brightness(70%);
-    -webkit-transition: all 0.1s ease;
-    -moz-transition: all 0.1s ease;
-    -o-transition: all 0.1s ease;
-    -ms-transition: all 0.1s ease;
-    transition: all 0.1s ease;
+	filter: brightness(70%);
+	transition: filter 0.15s ease;
 }
 
 /*The exit button is unused and was replaced with the closeModal class. If rendered, the exit button allows a user to close an open modal.*/
@@ -100,7 +92,6 @@ main {
 	left: 0;
 	position: absolute;
 	transform-origin: center left;
-	/*transition: all 0.1s ease-in;*/
 	width: 141.4214px;
 	z-index: -1;
 }
@@ -150,58 +141,52 @@ main {
 .reviewContainer {
 	position: relative;
 	width: 100%;
-	background-color: lightgrey;
+	background-color: #f5f5f5;
 	margin: 1em 1em 1em 0em;
 	display: flex;
 	flex-direction: column;
 	border-radius: 20px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	padding: 10px 20px;
+	color: #333;
 }
 
 /*Container for the upper portion of the right half of the healer info modal*/
 .reviewHeaderContainer {
-	padding: 10px;
-	margin: 10px;
+	padding: 10px 0;
+	margin: 10px 0;
+	border-bottom: 2px solid #ddd;
 }
 
 /*Container for the title of the right half of the healer info modal*/
 .reviewHeader {
-	font-weight: initial;
-	font-size: xx-large;
-	font-family: inherit;
-	position: initial;
-	left: initial;
-	padding-right: 1em;
-	transform: initial;
-	color: initial;
-	outline: initial;
-	text-shadow: initial;
+	font-weight: 600;
+	font-size: 2rem;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	text-align: left;
 	display: flex;
-	flex-direction: row;
-	align-content: space-between;
-	padding-left: 20px;
+	align-items: center;
 	height: 1.2em;
-	margin: 0em;
-	justify-content: left;
-	padding-right: 20px;
+	margin: 0;
+	padding-left: 20px;
+	color: #6a1b9a;
 }
 
 /*Container for a single reviews star and for the healers average star rating*/
 .reviewStars {
 	align-items: center;
-	font-size: 110%;
+	font-size: 1.15rem;
 	height: 1em;
-	color: grey;
+	color: #888;
 	padding-right: 15px;
 	text-align: right;
-	/*-webkit-text-stroke: 0.5px black;*/
 }
 
 /*Further styling applied to just the individual reviews stars*/
-.singleReview .reviewStars{
+.singleReview .reviewStars {
 	display: flex;
 	margin-left: auto;
-	transform: scale(0.8, 0.8);
+	transform: scale(0.85);
 	padding-right: 0;
 }
 
@@ -211,23 +196,40 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
-	/*border: 1px solid black;*/
+	padding: 10px 0;
+	scrollbar-width: thin;
+	scrollbar-color: #8563a1 #e1d8f0;
+	max-height: 320px;
+}
+
+/* Custom scrollbar for Webkit browsers */
+.reviewsContainer::-webkit-scrollbar {
+	width: 8px;
+}
+.reviewsContainer::-webkit-scrollbar-track {
+	background: #e1d8f0;
+	border-radius: 10px;
+}
+.reviewsContainer::-webkit-scrollbar-thumb {
+	background-color: #8563a1;
+	border-radius: 10px;
+	border: 2px solid #e1d8f0;
 }
 
 /*Container for an individual review on the healer info modal*/
 .singleReview {
-	border-radius:1%;
-	object-fit: cover;
-	margin: 0 20px;
-	/*height: 150px;*/
+	border-radius: 8px;
+	margin: 0 20px 10px 20px;
 	display: flex;
 	flex-direction: column;
-	box-shadow: 0px 4px 4px #b6b6b6;
-	border: grey;
-	border-width: 5px 20px 10px 5px;
-	border-style: solid;
-	background: inherit;
-	margin-bottom: 10px;
+	box-shadow: 0 3px 6px #b6b6b6;
+	background: white;
+	border: 1px solid #ccc;
+	padding: 15px 20px;
+	transition: box-shadow 0.2s ease;
+}
+.singleReview:hover {
+	box-shadow: 0 6px 12px #a17fbf;
 }
 
 /*Container for an individual reviews description on the healer info modal*/
@@ -236,14 +238,20 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 	min-height: 50px;
 	max-height: 130px;
 	overflow-y: auto;
-	border-top: 2px solid grey;
-	padding-left: 5px;
-	background: white;
+	border-top: 2px solid #ccc;
+	padding-left: 10px;
+	background: #fff;
+	font-size: 0.95rem;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 /*Styling applied to the individidual reviews description text*/
 .reviewText pre {
 	margin: 0;
+	font-family: inherit;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 /*Container for the left half of the healer info modal*/
@@ -252,19 +260,23 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 	position: relative;
 	margin: 1em 0 1em 1em;
 	width: 100%;
-	background: rgb(255, 255, 255);
+	background: #fff;
 	flex-direction: row;
 	flex-wrap: wrap;
 	border-radius: 20px 0 0 20px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	padding: 15px 20px;
+	color: #333;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /*Unused, would contain an image of the healer.*/
 .img_healerSelected {
-	border-radius:2%;
+	border-radius: 8px;
 	object-fit: cover;
-	width:13em;
-	height:13em ;
-	box-shadow: 3px 3px #000000;
+	width: 13em;
+	height: 13em;
+	box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
 }
 
 /*Unused*/
@@ -276,8 +288,8 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 
 /*Container for the top portion of the healer info modal*/
 .healerSelectedColumn2 {
-	padding: 10px;
-	margin: 10px;
+	padding: 10px 0;
+	margin: 10px 0;
 }
 
 /*Container for the healers name on all modals*/
@@ -288,17 +300,20 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 	align-content: space-between;
 	padding-left: 20px;
 	height: 1.2em;
-	margin-top: 0em;
+	margin-top: 0;
 	font-size: xx-large;
+	color: #4a148c;
+	font-weight: 700;
 }
 
 /*Container for the healers provided services on all modals*/
 .healerSelectedMiddle {
 	align-items: center;
-	font-size: 110%;
-	/*max-height: 2em;*/
-	color: grey;
+	font-size: 1.1rem;
+	color: #666;
 	padding-left: 30px;
+	word-break: break-word;
+	white-space: normal;
 }
 
 /*Unused. Would contain tags applied to the healer but that proposed functionality was ignored.*/
@@ -310,26 +325,32 @@ This one needs still needs a bit of styling applied to the scroll bar.*/
 
 /*Container for an individual healers description in the healer info modal*/
 .description {
-	border-radius:1%;
+	border-radius: 8px;
 	object-fit: cover;
 	margin: 0 20px;
-	padding: 0 5px;
+	padding: 10px 15px;
 	height: 50%;
-	overflow-y: scroll;
+	overflow-y: auto;
 	display: block;
-	box-shadow: 0px 4px 4px #b6b6b6;
-	border: lightgrey;
-	border-width: 5px 5px 10px 20px;
-	border-style: solid;
+	box-shadow: 0 4px 8px #b6b6b6;
+	border: 1px solid lightgrey;
+	background: #fafafa;
+	font-size: 1rem;
+	color: #222;
+	line-height: 1.4;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 /*The text that loads when a healer has no reviews yet.
 Due to a bug this is unloaded almost immediately*/
 #noReviewText {
 	display: flex;
-	justify-content: right;
+	justify-content: flex-end;
 	padding-right: 50px;
 	margin-right: 10px;
+	color: #888;
+	font-style: italic;
 }
 
 /*Container for the review modal.*/
@@ -340,9 +361,12 @@ Due to a bug this is unloaded almost immediately*/
 	padding: 1em;
 	width: 100%;
 	max-width: 100%;
-	background: rgb(255, 255, 255);
+	background: #fff;
 	flex-flow: column;
 	border-radius: 20px;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	color: #333;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /*Container for the lower portion of the review modal.*/
@@ -358,42 +382,214 @@ Due to a bug this is unloaded almost immediately*/
 .reviewPageContainer {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
+	margin-top: 0;
+	overflow-y: auto;
+	padding: 0 15px 15px 15px;
+	height: 290px;
 }
 
-/*Container for the rating portion of the review modal's form*/
-.reviewRatingContainer {
-	width: 100%;
+/*Container for the review form heading*/
+.reviewPageHeader {
+	font-weight: 700;
+	font-size: 2rem;
+	color: #6a1b9a;
+	margin-bottom: 0.25em;
+	text-align: center;
 }
 
-/*Container for the stars on the review modal's form*/
-.form-ratings {
+/*The input box container for the reviewer's name*/
+.inputBox {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 12px;
+}
+
+/*The input fields for the review modal*/
+input[type="text"],
+input[type="email"],
+textarea {
+	width: 100%;
+	padding: 10px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	font-size: 1rem;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+	border-color: #8563a1;
+	outline: none;
+	background-color: #f8f0ff;
+}
+
+/*The textarea box for the reviewer's text*/
+textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+
+/*The submit button for the review modal*/
+.reviewSubmit {
+	background: linear-gradient(135deg, #8a2387 0%, #e94057 50%, #f27121 100%);
+	color: white;
+	font-weight: 600;
+	font-size: 1.2rem;
+	padding: 12px 0;
+	border: none;
+	border-radius: 25px;
+	cursor: pointer;
 	margin-top: 10px;
-}
-
-/*Container for the review description portion of the review modal's form*/
-.reviewDescriptionContainer {
+	transition: background 0.3s ease;
 	width: 100%;
-	height: 100%;
+	box-shadow: 0 3px 8px rgba(138, 35, 135, 0.5);
 }
 
-/*Styling applied to the <textarea> for the users review on the review modal*/
-#reviewDescription {
-	height: 130px;
-	overflow-y: scroll;
-	overflow-x: hidden;
+.reviewSubmit:hover,
+.reviewSubmit:focus {
+	background: linear-gradient(135deg, #7a1a74 0%, #d6334c 50%, #d65a1a 100%);
+	outline: none;
+}
+
+/*Styling for the healer item that appears on the search page*/
+/*The base container for the healer item*/
+.healer {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	padding: 15px 20px;
+	margin: 12px auto;
 	width: 100%;
-	margin-top: 6px;
+	max-width: 450px;
+	min-width: 350px;
+	background: #fff;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+	border-radius: 25px;
+	cursor: default;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	color: #333;
+	transition: box-shadow 0.3s ease;
 }
 
-/*Container for the submit button on the review modal*/
-.reviewSubmitButton {
-	margin: 1em;
+/*When a healer is hovered or focused, add a subtle lift and shadow*/
+.healer:hover,
+.healer:focus-within {
+	box-shadow: 0 8px 18px rgba(138, 35, 135, 0.4);
+	transform: translateY(-3px);
+	transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-/*Styling applied to the black line separating the top and bottom portions of the review modal and booking modal*/
-.bookerSelected hr, .reviewSelected hr {
-	width: 100%;
+/*Container for the healers name on the healer item*/
+.healer .healerName {
+	font-weight: 700;
+	font-size: 1.8rem;
+	color: #6a1b9a;
+	margin-bottom: 8px;
+	user-select: none;
+}
+
+/*Container for the healers description shown on the healer item*/
+.healer .healerDescription {
+	font-size: 1rem;
+	line-height: 1.3;
+	color: #555;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	word-wrap: break-word;
+}
+
+/*Container for the services offered by the healer on the healer item*/
+.healer .services {
+	margin-top: 10px;
+	font-size: 1rem;
+	color: #777;
+}
+
+/*Container for the three buttons shown on each healer item*/
+.healerButtons {
+	display: flex;
+	margin-top: 10px;
+	gap: 10px;
+}
+
+/*General styling for all three buttons on the healer item*/
+.healerButtons button {
+	flex: 1;
+	background-color: #8563a1;
+	color: white;
+	border: none;
+	border-radius: 20px;
+	padding: 8px 0;
+	cursor: pointer;
+	font-weight: 600;
+	transition: background-color 0.25s ease;
+	box-shadow: 0 2px 6px rgba(133, 99, 161, 0.6);
+}
+
+/*Button hover effect*/
+.healerButtons button:hover {
+	background-color: #6a1b9a;
+}
+
+/*Healer Info modal button is disabled pointer-events to allow clicks through this layer to the .healerModalButton overlay behind it*/
+.healerButtons .healerInfo {
+	pointer-events: none;
+}
+
+/*Booking and Review buttons have pointer events normally*/
+.healerButtons .booking,
+.healerButtons .review {
+	pointer-events: auto;
+}
+
+/*Fix for smaller screen widths - responsive adjustments*/
+@media (max-width: 768px) {
+	.singleHealer {
+		flex-direction: column;
+		width: 90vw;
+		height: auto;
+		max-height: 90vh;
+	}
+
+	.healerSelected,
+	.reviewContainer {
+		width: 100%;
+		margin: 0;
+		border-radius: 15px 15px 0 0;
+	}
+
+	.reviewSubmit {
+		max-width: 100%;
+	}
+
+	.healer {
+		max-width: 100%;
+		min-width: auto;
+		padding: 10px;
+	}
+}
+
+
+/* for close button x on top-right */
+/* Common styles for close button in modals */
+.modal-close-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 40px;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+  z-index: 100;
+  transition: color 0.2s ease;
+}
+
+.modal-close-button:hover {
+  color: #000;
 }
