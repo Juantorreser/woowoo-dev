@@ -3,14 +3,15 @@
 /*"Healer item" refers to an individual result on the search page. Containing the healers name, 2 or so services, modal buttons, and some or all of the healers description*/
 
 /*Outer container for the left portion of the search page*/
-.healerFrame{
+.healerFrame {
 	position: fixed;
-    display: block;
-    width: 36%;
-    float: left;
-    height: 88.5%;
-    overflow-y: scroll; 
-    overflow-x: hidden; 
+	display: block;
+	width: 36%;
+	float: left;
+	height: 88.5%;
+	overflow-y: scroll; 
+	overflow-x: hidden;
+	z-index: 10;
 }
 
 /*Inner container for the left portion of the search page*/
@@ -20,7 +21,7 @@
 }
 
 /*Container for the right portion of the search page*/
-.mapFrame{
+.mapFrame {
 	position: absolute;
 	display: flex;
 	flex-direction: row;
@@ -28,10 +29,11 @@
 	float: right;
 	width: 55%;
 	height: 88.5%;
-	z-index: auto;
 	top: 80px;
 	right: 0;
+	z-index: 1;
 }
+
 
 /*Seemingly unrendered despite the div being loaded. Likely an early attempt at a separator for the search page.*/
 .center_bar{
