@@ -14,11 +14,9 @@ main {
 .singleHealer {
     z-index: 10000; /* <-- Higher than healerClicked */
     position: relative;
-    background-color: #8563a1;
-    height: 700px;
     max-height: 95%;
     display: flex;
-    width: 1300px;
+    width: 1000px;
     max-width: 95%;
     margin: auto;
     border-radius: 30px;
