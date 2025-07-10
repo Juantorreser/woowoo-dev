@@ -62,7 +62,7 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 				<div className="healerResults">
 					<div className="page-deets">
 						<img className="img_region" 
-							src={require("../../../Images/regions/toronto.jpg")}
+							src={require("../../../Images/regions/mario-mendez-MxxLminkATY-unsplash.jpg")}
 							alt=""
 						/>
 						{/*<h1>Search</h1>*/}

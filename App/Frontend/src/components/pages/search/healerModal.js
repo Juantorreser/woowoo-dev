@@ -22,6 +22,28 @@ const HealerModal = ({
   const [avgReview, setAvgReview] = useState(0);
   const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
 
+  // Generate time slots from 10:00 AM to 3:30 PM in 30-min intervals
+  const generateTimeSlots = () => {
+    const slots = [];
+    let start = new Date();
+    start.setHours(10, 0, 0, 0); // 10:00 AM
+    const end = new Date();
+    end.setHours(15, 30, 0, 0); // 3:30 PM
+
+    while (start <= end) {
+      const hour = start.getHours();
+      const minute = start.getMinutes();
+      const formatted = `${((hour + 11) % 12) + 1}:${minute === 0 ? "00" : minute} ${
+        hour >= 12 ? "PM" : "AM"
+      }`;
+      slots.push(formatted);
+      start = new Date(start.getTime() + 30 * 60000); // add 30 mins
+    }
+    return slots;
+  };
+
+  const timeSlots = generateTimeSlots();
+
   useEffect(() => {
     const fetchCurrentUser = () => {
       auth.onAuthStateChanged(async (user) => {
