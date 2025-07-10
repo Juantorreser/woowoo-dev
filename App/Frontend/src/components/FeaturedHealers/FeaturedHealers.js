@@ -1,87 +1,63 @@
-import React, { useState } from "react";
+import React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import A1 from './images/A1.jpg';
+import A3 from './images/A3.jpg';
 
 const FeaturedHealers = () => {
-  const cards = [
-    { id: 1, title: "Card 1", text: "Some quick example text." },
-    { id: 2, title: "Card 2", text: "Some more example text." },
-    { id: 3, title: "Card 3", text: "Even more example text." },
-  ];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const prevCard = () => {
-    setCurrentIndex((prev) => (prev === 0 ? cards.length - 1 : prev - 1));
-  };
-
-  const nextCard = () => {
-    setCurrentIndex((prev) => (prev === cards.length - 1 ? 0 : prev + 1));
-  };
-
   return (
-    <div className="container py-4">
+    <div
+      className="container py-4"
+      style={{
+        minHeight: '50vh',
+        backgroundColor: '#FFFFFF'
+      }}
+    >
       <h2
         className="text-center mb-4"
-        style={{ fontWeight: "bold", color: "#1ABC9C" }}
+        style={{
+          fontWeight: 'bold',
+          color: '#1ABC9C'
+        }}
       >
         Featured Healers
       </h2>
 
-      {/* Always horizontal row */}
-      <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
-        {/* Prev Button */}
-        <button
-          type="button"
-          onClick={prevCard}
-          className="btn btn-success"
-          style={{ borderRadius: "4px" }}
-        >
-          &lt;
-        </button>
-
-        {/* Card(s) */}
-        <div
-          className="d-flex justify-content-center flex-wrap gap-3"
-          style={{ flex: "1 1 auto", maxWidth: "900px" }}
-        >
-          {/* On mobile, show only current card; on larger screens, show all */}
-          {window.innerWidth < 768
-            ? (
-              <div
-                key={cards[currentIndex].id}
-                className="card shadow-sm mx-auto"
-                style={{ maxWidth: "300px", minHeight: "150px", flex: "1 1 300px" }}
-              >
-                <div className="card-body text-center">
-                  <h5 className="card-title">{cards[currentIndex].title}</h5>
-                  <p className="card-text">{cards[currentIndex].text}</p>
-                </div>
-              </div>
-            )
-            : (
-              cards.map((card) => (
-                <div
-                  key={card.id}
-                  className="card shadow-sm"
-                  style={{ width: "250px", minHeight: "150px" }}
-                >
-                  <div className="card-body text-center">
-                    <h5 className="card-title">{card.title}</h5>
-                    <p className="card-text">{card.text}</p>
-                  </div>
-                </div>
-              ))
-            )}
+      {/* cards */}
+      <div className="row g-5 justify-content-center">
+        <div className="col-12 col-sm-6 col-md-4">
+          <div className="card h-100 shadow-sm">
+            <img src={A1} alt="Healer 1"/>
+            <div className="card-body">
+              <h5 className="card-title" style={{fontWeight:'bold'}}>Divyanshu</h5>
+              <h6 className="card-subtitle mb-2 text-muted">Spiritual Healer</h6>
+              <p className="card-text">
+                Divyanshu is a compassionate spiritual healer who guides people on their journey toward inner peace, self-awareness, 
+                and emotional healing. Using ancient practices, meditation, and energy work, he helps individuals release negativity,
+                align their mind, body, and spirit, and connect with their higher self.
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Next Button */}
-        <button
-          type="button"
-          onClick={nextCard}
-          className="btn btn-info"
-          style={{ borderRadius: "4px" }}
-        >
-          &gt;
+        <div className="col-12 col-sm-6 col-md-4">
+          <div className="card h-100 shadow-sm">
+            <img src={A3} className="card-img-top" alt="Healer 2" />
+            <div className="card-body">
+              <h5 className="card-title">Karan</h5>
+              <h6 className="card-subtitle mb-2 text-muted">Life Coach</h6>
+              <p className="card-text">
+                Karan is a dedicated life coach who helps individuals discover their potential, build confidence, 
+                set meaningful goals, and overcome challenges through guidance, motivation, and practical strategies for personal and professional growth.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Button */}
+      <div className='d-flex justify-content-center mt-4'>
+        <button className="btn btn-primary px-4 py-2 rounded-pill shadow">
+          See More
         </button>
       </div>
     </div>
