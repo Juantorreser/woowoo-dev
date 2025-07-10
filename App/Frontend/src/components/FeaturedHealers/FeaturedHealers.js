@@ -1,7 +1,7 @@
 import React from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
 import A1 from './images/A1.jpg';
 import A3 from './images/A3.jpg';
+import {Button} from '../Button/button'
 
 const FeaturedHealers = () => {
   return (
@@ -56,9 +56,9 @@ const FeaturedHealers = () => {
 
       {/* Button */}
       <div className='d-flex justify-content-center mt-4'>
-        <button className="btn btn-primary px-4 py-2 rounded-pill shadow">
+        <Button className="btn btn-primary px-4 py-2 rounded-pill shadow">
           See More
-        </button>
+        </Button>
       </div>
     </div>
   );
