@@ -3,10 +3,10 @@
 /*I don't believe this does anything*/
 *{
 	--bg: #242526;
-	--bg-accent: #9D96B8;
-	--text0color: #dadce1;
+	--bg-accent: #26a899;
+	--text0color: #000000;
 	--nav-size: 60px;
-	--border: 1px solif #9D96B8;
+	--border: 1px solif #26a899;
 	--border-radius: 8px;
 	--speed: 500ms;
 }
@@ -91,7 +91,7 @@ a{
 	position: fixed;
 	margin-top: 350px;
 	transform: translateX(92px);
-	background-color:#F59D78;
+	background-color:#26a899;
 	width: 300px;
 	height: 300px;
 	flex-wrap: wrap;
@@ -184,7 +184,7 @@ a{
 	text-align: left;
 }
 .menu-option:hover{
-	background-color: #F59D78;
+	background-color: #26a899;
 }
 
 /*Unused*/

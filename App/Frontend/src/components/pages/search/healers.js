@@ -23,9 +23,9 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 	};
 
 	
-	const fetchAvailability = async (healer) => {
+	const fetchAvailability = async (uid) => {
 		try {
-			const response = await axios.get(`http://localhost:8080/availability/:uid?healer=${healer.uid}`);
+			const response = await axios.get(`http://localhost:8080/availability/:uid?healer=${uid}`);
 			setAvailability(response.data);
 		} catch (error) {
 			console.error("Error fetching availability:", error);
@@ -62,7 +62,7 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 				<div className="healerResults">
 					<div className="page-deets">
 						<img className="img_region" 
-							src={require("../../../Images/regions/toronto.jpg")}
+							src={require("../../../Images/regions/mario-mendez-MxxLminkATY-unsplash.jpg")}
 							alt=""
 						/>
 						{/*<h1>Search</h1>*/}
@@ -129,10 +129,6 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 																await fetchAvailability(healer.uid);
 															}}
 															alt="Open review modal"
-														/>
-														<img className="icon" 
-															src={require("../../../Images/icons/3.png")}
-															alt="Open something, currently does nothing"
 														/>
 													</div>
 												</div>

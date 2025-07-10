@@ -6,7 +6,7 @@
 .healerFrame {
 	position: fixed;
 	display: block;
-	width: 36%;
+	width: 35%;
 	float: left;
 	height: 88.5%;
 	overflow-y: scroll; 
@@ -15,7 +15,7 @@
 }
 
 /*Inner container for the left portion of the search page*/
-.top_left{
+.top_left {
 	width: 100%;
 	height: 100%;
 }
@@ -27,39 +27,39 @@
 	flex-direction: row;
 	border-left: 3px solid black;
 	float: right;
-	width: 55%;
+	width: 50%;
 	height: 88.5%;
 	top: 80px;
 	right: 0;
+	
 	z-index: 1;
 }
 
-
 /*Seemingly unrendered despite the div being loaded. Likely an early attempt at a separator for the search page.*/
-.center_bar{
+.center_bar {
 	color: #000000;
-	border-color:#000000;
+	border-color: #000000;
 	height: 100%;
 }
 
 /*Unused. Might've been meant to be a container for sortBar*/
-.sort{
-    display: flex;
-    flex-direction: row;
+.sort {
+	display: flex;
+	flex-direction: row;
 }
 
 /*Container for the search dropdowns.*/
-.sortBar{
+.sortBar {
 	margin-left: 0;
 	margin-right: auto;
 	width: 100%;
-	/*margin-top: -10em;*/
 	height: 2.5em;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-content: center;
 }
+
 /*Styling applied to all divs in the above*/
 .sortBar div {
 	width: 100%;
@@ -68,22 +68,28 @@
 /*Containers for each dropdown*/
 .sortBar .dd-wrapper {
 	position: relative;
-	max-width: 33.3333333%
+	max-width: 33.3333333%;
 }
 
 /*Slight widening of the far right "dropdown" so there isn't a single column of pixels that aren't covered by dropdowns*/
 .sortBar .formatButtonWrapper {
-	max-width: 33.4%
+	max-width: 33.4%;
 }
 
 /*Container for the container of the dropdown button text (inner container is a div with no classes attached)*/
 .sortBar .dd-menu {
-	border: 1px solid black;
+	border: 1px solid #26a899;
 	height: 27px;
 	text-align: center;
-	background: #b4acd3;
-	/*background: lightgrey;*/
+	background: #ffffff;
+	color: #000;
 	position: relative;
+	box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
+	transition: background 0.3s ease;
+	cursor: pointer;
+}
+.sortBar .dd-menu:hover {
+	background: #e0f7f4;
 }
 
 /*Styling applied to the items contained in the dropdowns*/
@@ -92,16 +98,15 @@
 }
 
 /*Outer container for the top portion of the left part of the search page*/
-.healerResults{
+.healerResults {
 	position: relative;
 	background-color: white;
 	box-shadow: -1px 12px 20px rgb(255, 255, 255);
-	
 }
 
 /*Inner container for the top portion of the left part of the search page*/
 .page-deets {
-    width: 100%;
+	width: 100%;
 }
 
 /*Styling applied to the big "Search" text on the search page*/
@@ -113,28 +118,26 @@
 	position: absolute;
 	left: 5%;
 	top: -50px;
-	color: white;
-	outline: #000000;
-	text-shadow:
-	1px 1px 0 rgb(49, 49, 49);
-	-webkit-user-select: none; /* Safari */        
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+/Edge */
-	user-select: none; /* Standard */
+	background: linear-gradient(to right, #26a899, #9c70f3);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	text-shadow: none;
+	user-select: none;
 }
 
 /*Styling applied to the image behind the big "Search" text on the search page*/
-.page-deets .img_region{
-    overflow: hidden;
-    border-radius:0.5%;
-    object-fit: cover;
-    width: 100%;
-    height: 10em;
-    margin: 0 0 0 0;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0px 5px 4px rgb(201, 201, 201);
+.page-deets .img_region {
+	overflow: hidden;
+	border-radius: 0.5%;
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	box-shadow: 0px 5px 4px rgb(201, 201, 201);
+	max-height: 200px;
 }
 
 /*Container for the distance slider and related elements on the search page*/
@@ -144,15 +147,21 @@
 	flex-direction: column;
 	align-items: center;
 	margin: auto;
-	-webkit-user-select: none; /* Safari */        
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+/Edge */
-	user-select: none; /* Standard */
+	user-select: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	background: #26a899;
+	border: 2px solid #9c70f3;
+}
+input[type="range"]::-moz-range-thumb {
+	background: #26a899;
+	border: 2px solid #9c70f3;
 }
 
 /*Container for the lower portion of the left part of the search page*/
 .users {
-	overflow-y: scroll; 
+	overflow-y: scroll;
 	font-family: 'noto', serif;
 	text-align: left;
 	width: 100%;
@@ -165,40 +174,43 @@
 }
 
 /*Unused, meant for a healer image to load as part of the healer item*/
-.img_healer{
-    border-radius:2%;
-    object-fit: cover;
-    width:11.3em;
-    height:11.3em ;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    box-shadow: 3px 3px #000000;
+.img_healer {
+	border-radius: 2%;
+	object-fit: cover;
+	width: 11.3em;
+	height: 11.3em;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	box-shadow: 3px 3px #000000;
 }
 
 /*Container for a healer item and the overlay-button that opens the healer info modal*/
-.healer{
-    margin: 1em; 
-	padding: 10px 10px 0 10px; /*padding-bottom is effectively done by .healerColumn2:after's height property*/
-    background: rgb(255, 255, 255);
-    display: flex;
-    flex-direction: row;
-    height: 13.3em;
-    box-shadow: -4px 5px 4px rgb(201, 201, 201);
+.healer {
+	margin: 1em;
+	padding: 10px 10px 0 10px;
+	background: rgb(255, 255, 255);
+	display: flex;
+	flex-direction: row;
+	height: 13.3em;
+	box-shadow: -4px 5px 4px rgb(201, 201, 201);
 	cursor: pointer;
 	position: relative;
-	-webkit-transition: all 0.1s ease;
-    -moz-transition: all 0.1s ease;
-    -o-transition: all 0.1s ease;
-    -ms-transition: all 0.1s ease;
-    transition: all 0.1s ease;
+	transition: all 0.1s ease;
 }
 .healer:hover {
-	background-color: #F59D78;
+	background-color: #26a899;
+	color: white;
+	transform: scale(1.01);
+}
+.healer:hover .healerTop,
+.healer:hover .healerMiddle,
+.healer:hover .healerBottom {
+	color: white;
 }
 
 /*The fade out for when a healer items description is too long. This is the orange version that shows when you hover over the div.*/
-.healer:after { 
+.healer:after {
 	content: "";
 	position: absolute;
 	z-index: 1;
@@ -207,9 +219,7 @@
 	pointer-events: none;
 	width: 100%;
 	height: 1.7em;
-	background-image: 	linear-gradient(to bottom, 
-						rgba(245, 157, 120, 0.1), 
-						rgba(245, 157, 120, 1) 80%);
+	background-image: linear-gradient(to bottom, rgba(245, 157, 120, 0.1), rgba(38, 168, 153, 1));
 	transition: 0.05s;
 	opacity: 0;
 }
@@ -218,16 +228,14 @@
 }
 
 /*The fade out for when a healer items description is too long. This is the white version that shows normally.*/
-.healerColumn2:after { 
+.healerColumn2:after {
 	content: "";
 	position: absolute;
 	z-index: 1;
 	bottom: 0;
 	left: 0;
 	pointer-events: none;
-	background-image: 	linear-gradient(to bottom, 
-						rgba(255,255,255, 0.1), 
-						rgba(255,255,255, 1) 80%);
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 1) 80%);
 	width: 100%;
 	height: 1.7em;
 	transition: 0.05s;
@@ -237,63 +245,53 @@
 	opacity: 0;
 }
 
-/*The slightly lighter shade of orange when you hover over one of the icons on a healer item.*/
+/*The slightly lighter shade of purple when you hover over one of the icons on a healer item.*/
 .healerImgHovered:hover {
-	background-color: #ffb596; 
-	
-	/*Alternative options:*/
-	/*background-color: initial;*/ /*This just reverts the background color to it's usual white color*/
-	/*-webkit-filter: brightness(90%);*/ /*This darkens the div a bit, however this also affects child divs. 
-	Can set the brightness over 100% to brighten the div instead*/
+	background-color: #9c70f3;
+	color: white;
 }
 
 /*Unused. Early alternative to healerColumn2*/
 .healerColumn1 {
-    height: 12em;
-    padding: 10px;
-    margin: 10px;
+	height: 12em;
+	padding: 10px;
+	margin: 10px;
 }
 
 /*Inner container for a healer item.*/
 .healerColumn2 {
-    /*padding: 10px 0 10px 0;*/
-    /*margin: 10px 10px 0 10px;*/
-    height: 100%;
+	height: 100%;
 	width: 100%;
 	overflow-y: hidden;
-	-webkit-transition: all 0.1s ease;
-    -moz-transition: all 0.1s ease;
-    -o-transition: all 0.1s ease;
-    -ms-transition: all 0.1s ease;
-    transition: all 0.1s ease;
+	transition: all 0.1s ease;
 }
 
 /*Container for the healers name and modal buttons in a healer item*/
 .healerTop {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-content: space-between;
-    margin: 0;
-    padding: 0;
-    height: 1.2em;
-    margin-top: 0em;
-    font-size: xx-large;
-    padding-left: 10px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: space-between;
+	margin: 0;
+	padding: 0;
+	height: 1.2em;
+	margin-top: 0em;
+	font-size: xx-large;
+	padding-left: 10px;
 }
 
 /*Container for the healers services in a healer item*/
 .healerMiddle {
-    align-items: center;
-    font-size: x-large;
-    height: 1em;
+	align-items: center;
+	font-size: x-large;
+	height: 1em;
 	padding-left: 10px;
 }
 
 /*Container for a healers description in a healer item*/
 .healerBottom {
-    height: 100%;
-    vertical-align: middle;
+	height: 100%;
+	vertical-align: middle;
 	padding-left: 10px;
 	width: 100%;
 	display: flex;
@@ -307,12 +305,12 @@
 }
 
 /*Container for the modal buttons in a healer item*/
-.icons{
+.icons {
 	margin-right: 0;
 }
 
 /*Styling applied to each individual modal button in a healer item*/
-.icon{
+.icon {
 	margin-left: 0.2em;
 	vertical-align: top;
 	height: 1em;
@@ -320,7 +318,6 @@
 
 /*Inner container for a healers pop up on the map screen on the search page (Outer container is rendered by Google Maps)*/
 .markerContainer {
-	/*min-height: 100px;*/
 	position: relative;
 	max-height: 200px;
 	min-width: 200px;
@@ -330,11 +327,12 @@
 
 /*Container for a healers name in the pop up on the map screen on the search page.*/
 .markerHealer {
-	/*height: 50%;*/
 	font-size: large;
 	text-align: center;
 	width: 100%;
-	background: #B896A0;
+	background: #26a899;
+	color: white;
+	font-weight: bold;
 }
 
 /*Container for a healers description in the pop up on the map screen on the search page.*/
@@ -344,10 +342,11 @@
 	overflow-y: auto;
 	margin-top: 10px;
 	position: relative;
+	scrollbar-color: #26a899 #ffffff;
 }
 
 @media (max-width: 767.98px) {
-    .mapFrame {
-        margin-top: 20px; /* Adding margin between the dropdowns and the map */
-    }
+	.mapFrame {
+		margin-top: 20px;
+	}
 }

@@ -17,29 +17,32 @@ const HealerModal = ({
   setBookingModal,
   reviewModal,
   setReviewModal,
-  availability,
-  clientAvailability,
 }) => {
   const [reviews, setReviews] = useState([]);
   const [avgReview, setAvgReview] = useState(0);
   const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
 
-  const toFormattedDateString = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const minutes = date.getMinutes();
-    const hours = date.getHours();
-    const timeString =
-      hours >= 12
-        ? `${hours - 12 || 12}:${minutes.toString().padStart(2, "0")} PM`
-        : `${hours || 12}:${minutes.toString().padStart(2, "0")} AM`;
+  // Generate time slots from 10:00 AM to 3:30 PM in 30-min intervals
+  const generateTimeSlots = () => {
+    const slots = [];
+    let start = new Date();
+    start.setHours(10, 0, 0, 0); // 10:00 AM
+    const end = new Date();
+    end.setHours(15, 30, 0, 0); // 3:30 PM
 
-    return `${year}-${month.toString().padStart(2, "0")}-${day
-      .toString()
-      .padStart(2, "0")} ${timeString}`;
+    while (start <= end) {
+      const hour = start.getHours();
+      const minute = start.getMinutes();
+      const formatted = `${((hour + 11) % 12) + 1}:${minute === 0 ? "00" : minute} ${
+        hour >= 12 ? "PM" : "AM"
+      }`;
+      slots.push(formatted);
+      start = new Date(start.getTime() + 30 * 60000); // add 30 mins
+    }
+    return slots;
   };
+
+  const timeSlots = generateTimeSlots();
 
   useEffect(() => {
     const fetchCurrentUser = () => {
@@ -118,6 +121,8 @@ const HealerModal = ({
       actions.resetForm();
     } catch (error) {
       console.error("Error submitting review:", error);
+    } finally {
+      setReviewModal(false); // close modal always after submit
     }
   };
 
@@ -127,7 +132,6 @@ const HealerModal = ({
         <div className="singleHealer">
           {healerState.name}
           <div className="bookerSelected">
-            {/* Close X Button */}
             <button
               className="modal-close-button"
               onClick={() => {
@@ -161,7 +165,6 @@ const HealerModal = ({
         <div className="singleHealer">
           {healerState.name}
           <div className="reviewSelected">
-            {/* Close X Button */}
             <button
               className="modal-close-button"
               onClick={() => {
@@ -180,8 +183,89 @@ const HealerModal = ({
             </div>
             <div className="healerSelectedMiddle">
               <p>{healerState.services}</p>
+              <Stars value={avgReview} />
+              <p style={{ fontSize: "14px", color: "#666" }}>
+                {avgReview.toFixed(1)} out of 5
+              </p>
+
+              {/* Reviews Container */}
+              <div
+                className="reviewsContainer"
+                style={{
+                  marginTop: 0,
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "8px",
+                  overflowX: "auto",
+                  paddingBottom: "10px",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#ccc transparent",
+                }}
+              >
+                {reviews.length > 0 ? (
+                  reviews.map((review) => (
+                    <div
+                      className="singleReview"
+                      key={review.rid}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "12px",
+                        border: "1px solid #eee",
+                        borderRadius: "6px",
+                        fontWeight: "300",
+                        fontSize: "14px",
+                        color: "#444",
+                        lineHeight: "1.4",
+                        backgroundColor: "#fff",
+                        minHeight: "100px",
+                        minWidth: "220px",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <Stars value={review.rating} color="#f39c12" />
+                        <span
+                          style={{
+                            fontSize: "11px",
+                            color: "#999",
+                          }}
+                        >
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div
+                        className="reviewText"
+                        style={{ whiteSpace: "pre-wrap", flexGrow: 1, color: "#333" }}
+                      >
+                        {review.comment}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p
+                    style={{
+                      fontWeight: "300",
+                      color: "#999",
+                      fontSize: "14px",
+                    }}
+                  >
+                    No Reviews Yet!
+                  </p>
+                )}
+              </div>
             </div>
+
             <hr />
+
+            {/* Review form */}
             <Formik
               initialValues={{
                 rating: 0,
@@ -194,31 +278,30 @@ const HealerModal = ({
                   <Form
                     className="reviewForm"
                     onSubmit={handleSubmit}
-                    style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                    }}
                   >
                     <div className="reviewPageContainer">
-                      <div className="reviewRatingContainer">
-                        <p>Rating:</p>
+                      <div
+                        className="reviewRatingContainer"
+                        style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                      >
+                        <p style={{ margin: 0 }}>Rating:</p>
                         <Field
                           name="rating"
                           as={FormRatings}
                           id="reviewRating"
                           className="star-rating"
                         />
-                      </div>
-                      <div className="reviewDescriptionContainer">
-                        <p>Review:</p>
-                        <Field
+                         <Field
                           name="comment"
                           as="textarea"
                           id="reviewDescription"
-                          rows={4}
+                          rows={1}
                         />
-                      </div>
-                      <div
-                        className="reviewSubmitButton"
-                        style={{ display: "flex", gap: "10px", justifyContent: "flex-start" }}
-                      >
                         <button
                           type="submit"
                           id="bookingSubmitButton"
@@ -239,87 +322,7 @@ const HealerModal = ({
     );
   }
 
-  // Default display (no modals open)
-  return (
-    <div className="healerClicked">
-      <div className="singleHealer">
-        {healerState.name}
-        <div className="healerSelected">
-          <div className="healerSelectedColumn2">
-            <div className="healerSelectedTop">
-              <p>
-                {healerState.firstName} {healerState.lastName}
-              </p>
-            </div>
-            <div className="healerSelectedMiddle">
-              <p>{healerState.services.replace(/,/g, ", ")}</p>
-            </div>
-            <hr />
-          </div>
-          <div className="description">
-            <pre>{healerState.description}</pre>
-          </div>
-        </div>
-        <div className="availabilityContainer">
-          <div className="availabilityHeader">
-            <h2>Availability</h2>
-            <hr />
-          </div>
-          <div className="availabilityDetails">
-            {availability ? (
-              availability.map((slot, index) => (
-                <div key={index}>
-                  <p>
-                    {toFormattedDateString(slot.start)} -{" "}
-                    {toFormattedDateString(slot.end)}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p>Loading availability...</p>
-            )}
-          </div>
-        </div>
-        <div className="reviewContainer">
-          <div className="reviewHeaderContainer">
-            <div className="reviewTop">
-              <h1 className="reviewHeader">Reviews</h1>
-            </div>
-            <div className="reviewMiddle">
-              <div className="reviewStars">
-                {avgReview === 0 ? (
-                  <p>No Reviews Yet</p>
-                ) : (
-                  <Stars value={avgReview} />
-                )}
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="reviewsContainer">
-            {reviews.length > 0 ? (
-              reviews.map((review) => (
-                <div className="singleReview" key={review.rid}>
-                  <div>
-                    <p>{toFormattedDateString(review.createdAt)}</p>
-                  </div>
-                  <div className="reviewStars">
-                    <Stars value={review.rating} color="grey" />
-                  </div>
-                  <div className="reviewText">
-                    <pre>{review.comment}</pre>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p id="noReviewText">No Reviews Yet!</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return null;
 };
 
 export default HealerModal;

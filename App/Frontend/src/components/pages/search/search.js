@@ -338,8 +338,8 @@ const Search = () => {
     }, [range]);
 
     return (
-        <div className="container">
-            <div className="row">
+        <div className="container"><div className="row">
+
                 <div className="col-lg-4 col-md-12 mb-3">
                     <div className='healerFrame'>
                         {initHealers ? (

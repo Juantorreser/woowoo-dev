@@ -1,6 +1,21 @@
-/*Styling applied to the footer that can be seen on all pages*/
+/* Make html, body, and root take full height */
+html, body, #root {
+  margin: 0;
+}
 
-/*Generic styling for the footer*/
+/* Wrap the entire page in a flex column */
+.page-container {
+  min-height: 100vh;        /* full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content grows to take available space */
+.content {
+  flex: 1 0 auto;
+}
+
+/* Footer sticks to bottom if content is short */
 footer {
   width: 100%;
   background-color: #26a899;
@@ -11,12 +26,14 @@ footer {
   padding: 30px 1px;
   color: aliceblue;
   text-align: center;
+  flex-shrink: 0;
 }
+
 footer h1 {
   color: aliceblue !important;
   margin-bottom: 5px;
 }
-/*Styling applied to the link that is shown on the footer*/
+
 .footerLink {
   display: block;
   text-decoration: underline;
