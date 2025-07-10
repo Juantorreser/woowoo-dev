@@ -3,9 +3,12 @@ import './hero.css';
 import './loading.css';
 import { Button } from '../Button/button';
 
+import Footer from '../footer/Footer';
+
 class Hero extends React.Component {
     render() {
         return (
+            <>
             <div className="hero">
                 <div className="hero-container d-flex flex-column justify-content-between m-0 p-0 h-100">
                     <div>
@@ -60,7 +63,8 @@ class Hero extends React.Component {
                     </div> */}
                 </div>
             </div>
-        );
+            <Footer />
+        </>);
     }
 }
 

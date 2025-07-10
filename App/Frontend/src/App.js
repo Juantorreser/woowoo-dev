@@ -9,7 +9,7 @@ const App = () => {
 		<>    
 			<Navbar />
 			<Main />
-			<Footer />
+			{/* <Footer /> */}
 		</>
 	)
 	//footer after main
