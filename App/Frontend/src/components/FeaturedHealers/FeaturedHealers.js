@@ -1,105 +1,87 @@
-import React from 'react';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const FeaturedHealers = () => {
+  const cards = [
+    { id: 1, title: "Card 1", text: "Some quick example text." },
+    { id: 2, title: "Card 2", text: "Some more example text." },
+    { id: 3, title: "Card 3", text: "Even more example text." },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const prevCard = () => {
+    setCurrentIndex((prev) => (prev === 0 ? cards.length - 1 : prev - 1));
+  };
+
+  const nextCard = () => {
+    setCurrentIndex((prev) => (prev === cards.length - 1 ? 0 : prev + 1));
+  };
+
   return (
-    <div
-      className="d-flex flex-column justify-content-center align-items-center"
-      style={{ minHeight: '50vh', padding: '2rem', backgroundColor: '#f8f9fa' }}
-    >
-      <div
-        style={{
-          fontSize: '1.8rem',
-          fontWeight: 'bold',
-          color: '#1ABC9C',
-          paddingBottom: '1rem',
-        }}
+    <div className="container py-4">
+      <h2
+        className="text-center mb-4"
+        style={{ fontWeight: "bold", color: "#1ABC9C" }}
       >
         Featured Healers
-      </div>
+      </h2>
 
-      <div
-        id="carouselFeaturedHealers"
-        className="carousel slide"
-        data-bs-ride="carousel"
-        style={{ maxWidth: '540px' }}
-      >
-        <div className="carousel-inner text-center">
-
-          {/* First Slide */}
-          <div className="carousel-item active">
-            <div className="card mb-3" style={{ maxWidth: '540px', margin: '0 auto' }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://via.placeholder.com/150" className="img-fluid rounded-start" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">Healer One</h5>
-                    <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Second Slide */}
-          <div className="carousel-item">
-            <div className="card mb-3" style={{ maxWidth: '540px', margin: '0 auto' }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://via.placeholder.com/150" className="img-fluid rounded-start" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">Healer Two</h5>
-                    <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p className="card-text"><small className="text-body-secondary">Last updated 5 mins ago</small></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Third Slide */}
-          <div className="carousel-item">
-            <div className="card mb-3" style={{ maxWidth: '540px', margin: '0 auto' }}>
-              <div className="row g-0">
-                <div className="col-md-4">
-                  <img src="https://via.placeholder.com/150" className="img-fluid rounded-start" alt="..." />
-                </div>
-                <div className="col-md-8">
-                  <div className="card-body">
-                    <h5 className="card-title">Healer Three</h5>
-                    <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p className="card-text"><small className="text-body-secondary">Last updated 10 mins ago</small></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Controls */}
+      {/* Always horizontal row */}
+      <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
+        {/* Prev Button */}
         <button
-          className="carousel-control-prev"
           type="button"
-          data-bs-target="#carouselFeaturedHealers"
-          data-bs-slide="prev"
+          onClick={prevCard}
+          className="btn btn-success"
+          style={{ borderRadius: "4px" }}
         >
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Previous</span>
+          &lt;
         </button>
 
-        <button
-          className="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselFeaturedHealers"
-          data-bs-slide="next"
+        {/* Card(s) */}
+        <div
+          className="d-flex justify-content-center flex-wrap gap-3"
+          style={{ flex: "1 1 auto", maxWidth: "900px" }}
         >
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="visually-hidden">Next</span>
+          {/* On mobile, show only current card; on larger screens, show all */}
+          {window.innerWidth < 768
+            ? (
+              <div
+                key={cards[currentIndex].id}
+                className="card shadow-sm mx-auto"
+                style={{ maxWidth: "300px", minHeight: "150px", flex: "1 1 300px" }}
+              >
+                <div className="card-body text-center">
+                  <h5 className="card-title">{cards[currentIndex].title}</h5>
+                  <p className="card-text">{cards[currentIndex].text}</p>
+                </div>
+              </div>
+            )
+            : (
+              cards.map((card) => (
+                <div
+                  key={card.id}
+                  className="card shadow-sm"
+                  style={{ width: "250px", minHeight: "150px" }}
+                >
+                  <div className="card-body text-center">
+                    <h5 className="card-title">{card.title}</h5>
+                    <p className="card-text">{card.text}</p>
+                  </div>
+                </div>
+              ))
+            )}
+        </div>
+
+        {/* Next Button */}
+        <button
+          type="button"
+          onClick={nextCard}
+          className="btn btn-info"
+          style={{ borderRadius: "4px" }}
+        >
+          &gt;
         </button>
       </div>
     </div>
@@ -107,4 +89,3 @@ const FeaturedHealers = () => {
 };
 
 export default FeaturedHealers;
-
