@@ -1,6 +1,5 @@
 /* Make html, body, and root take full height */
 html, body, #root {
-  height: 100%;
   margin: 0;
 }
 
