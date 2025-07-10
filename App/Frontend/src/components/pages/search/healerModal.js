@@ -287,7 +287,7 @@ const HealerModal = ({
                     <div className="reviewPageContainer">
                       <div
                         className="reviewRatingContainer"
-                        style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                        style={{ display: "flex", alignItems: "center", gap: "10px" }}
                       >
                         <p style={{ margin: 0 }}>Rating:</p>
                         <Field
@@ -296,24 +296,12 @@ const HealerModal = ({
                           id="reviewRating"
                           className="star-rating"
                         />
-                      </div>
-                      <div className="reviewDescriptionContainer">
-                        <p>Review:</p>
-                        <Field
+                         <Field
                           name="comment"
                           as="textarea"
                           id="reviewDescription"
-                          rows={4}
+                          rows={1}
                         />
-                      </div>
-                      <div
-                        className="reviewSubmitButton"
-                        style={{
-                          display: "flex",
-                          gap: "10px",
-                          justifyContent: "flex-start",
-                        }}
-                      >
                         <button
                           type="submit"
                           id="bookingSubmitButton"
