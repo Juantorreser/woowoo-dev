@@ -60,7 +60,7 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 			})()}
 			<div className="top_left">
 				<div className="healerResults">
-					<div className="page-deets">
+					<div className="page-deets mt-5">
 						{/* <img className="img_region" 
 							src={require("../../../Images/regions/mario-mendez-MxxLminkATY-unsplash.jpg")}
 							alt=""
