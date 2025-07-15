@@ -4,7 +4,7 @@ import "./search.css";
 import "./healerFrame.css";
 import Booking from "../Booking";
 import { Formik, Form, Field } from "formik";
-import FormRatings, { Stars } from "form-ratings";
+import { Rating } from 'react-simple-star-rating';
 import { getAuth } from "firebase/auth";
 import { app } from "../../firebase/firebase-config";
 
@@ -33,9 +33,8 @@ const HealerModal = ({
     while (start <= end) {
       const hour = start.getHours();
       const minute = start.getMinutes();
-      const formatted = `${((hour + 11) % 12) + 1}:${minute === 0 ? "00" : minute} ${
-        hour >= 12 ? "PM" : "AM"
-      }`;
+      const formatted = `${((hour + 11) % 12) + 1}:${minute === 0 ? "00" : minute} ${hour >= 12 ? "PM" : "AM"
+        }`;
       slots.push(formatted);
       start = new Date(start.getTime() + 30 * 60000); // add 30 mins
     }
@@ -290,13 +289,16 @@ const HealerModal = ({
                         style={{ display: "flex", alignItems: "center", gap: "10px" }}
                       >
                         <p style={{ margin: 0 }}>Rating:</p>
-                        <Field
-                          name="rating"
-                          as={FormRatings}
-                          id="reviewRating"
-                          className="star-rating"
+                        <Rating
+                          onClick={(rate) => setFieldValue("rating", rate / 20)} // stars: 1–5
+                          ratingValue={values.rating * 20} // convert back: 5 => 100
+                          size={25}
+                          fillColor="#f39c12"
+                          emptyColor="#ddd"
+                          allowHover
                         />
-                         <Field
+
+                        <Field
                           name="comment"
                           as="textarea"
                           id="reviewDescription"
