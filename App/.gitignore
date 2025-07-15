@@ -1,4 +1,4 @@
 .env
-./Frontend/build/
-./Frontend/node_modules/
+Frontend/build/
+Frontend/node_modules/
 ./Backend/node_modules/
