@@ -21,6 +21,7 @@ const HealerModal = ({
   const [reviews, setReviews] = useState([]);
   const [avgReview, setAvgReview] = useState(0);
   const [currentUserNumericId, setCurrentUserNumericId] = useState(null);
+  const [fieldValue, setFieldValue] = useState()
 
   // Generate time slots from 10:00 AM to 3:30 PM in 30-min intervals
   const generateTimeSlots = () => {
@@ -182,7 +183,7 @@ const HealerModal = ({
             </div>
             <div className="healerSelectedMiddle">
               <p>{healerState.services}</p>
-              <Stars value={avgReview} />
+              {/* <Stars value={avgReview} /> */}
               <p style={{ fontSize: "14px", color: "#666" }}>
                 {avgReview.toFixed(1)} out of 5
               </p>
@@ -230,7 +231,7 @@ const HealerModal = ({
                           marginBottom: "8px",
                         }}
                       >
-                        <Stars value={review.rating} color="#f39c12" />
+                        {/* <Stars value={review.rating} color="#f39c12" /> */}
                         <span
                           style={{
                             fontSize: "11px",
@@ -272,7 +273,8 @@ const HealerModal = ({
               }}
               onSubmit={handleReviewSubmit}
             >
-              {({ handleSubmit }) => (
+              {({ handleSubmit, values, setFieldValue }) => (
+
                 <div className="reviewFormContainer">
                   <Form
                     className="reviewForm"
