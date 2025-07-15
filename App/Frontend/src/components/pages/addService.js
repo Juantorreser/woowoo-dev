@@ -30,7 +30,7 @@ const AddService = () => {
                         // console.log(values);
                         (async () => {
                             // submit to DB
-                            axios.post('http://localhost:8080/services', values);
+                            axios.post(`${process.env.REACT_APP_API_BASE_URL}/services`, values);
                             window.location.assign('/');
                             actions.setSubmitting(false);
                         })();

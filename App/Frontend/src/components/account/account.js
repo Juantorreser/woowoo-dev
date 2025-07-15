@@ -13,7 +13,7 @@ const Account = () => {
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                axios.get('http://localhost:8080/users')
+                axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`)
                     .then((response) => {
                         const foundUser = response.data.find(
                             (u) => u.email.toLowerCase() === user.email.toLowerCase()
@@ -72,7 +72,7 @@ const Account = () => {
                             services: values.services
                         };
 
-                        axios.put(`http://localhost:8080/users/${values.uid}`, payload)
+                        axios.put(`${process.env.REACT_APP_API_BASE_URL}/users/${values.uid}`, payload)
                             .then((res) => {
                                 alert("Changes saved!");
                             })

@@ -429,7 +429,7 @@ const Schedule = () => {
 			console.log(user);
 			//setUserState(user);
 			if(user){
-				await axios.get('http://localhost:8080/users').then(  (response) => {
+                await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`).then(  (response) => {
 					////self added in from CodeGuru
 					//setUserDetails(chosenUser);
 					console.log(response.data);
@@ -478,7 +478,7 @@ const HistoryBox = ({ userDetails, view}) => {
     const endpoint = userDetails.account === 1 ? `appointments?healer=${userDetails.uid}` : `appointments/clients/${userDetails.uid}`;
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/${endpoint}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/${endpoint}`)
             .then(result => {
                 setHistory(result.data);
                 setLoading(false);
@@ -570,7 +570,7 @@ const ConfirmBox = ({ userDetails, view }) => {
 
     useEffect(() => {
         view == "1"?  //if the healer wants to be viewed as client or healer
-        axios.get(`http://localhost:8080/appointments?healer=${userDetails.uid}`)
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/appointments?healer=${userDetails.uid}`)
             .then((response) => {
                 const pendingAppointments = response.data.filter(x => x.healerAccepted === null);
                 setHealerAppointment(pendingAppointments);
@@ -579,7 +579,7 @@ const ConfirmBox = ({ userDetails, view }) => {
                 console.error("Error at schedule: ", err);
             })
         :
-        axios.get(`http://localhost:8080/appointments/clients/${userDetails.uid}`)
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/appointments/clients/${userDetails.uid}`)
         .then((response) => {
             const pendingAppointments = response.data.filter(x => x.healerAccepted === null);
             setHealerAppointment(pendingAppointments);
@@ -622,7 +622,7 @@ const ClientBox = ({ appointment, user }) => {
     const receiver = user.account === 1 ? "Client:" : "Healer:";
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/users/${endpoint}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/${endpoint}`)
             .then(result => {
                 setClientInfo(result.data);
             })
@@ -643,7 +643,7 @@ const ClientBox = ({ appointment, user }) => {
 
 const ConfirmButton = ({ appointment, confirm, healerID, setConfirm }) => {
     const handleConfirm = () => {
-        axios.put(`http://localhost:8080/appointments/${appointment.aid}`, {
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/appointments/${appointment.aid}`, {
             healerAccepted: confirm,
             client: appointment.client,
             aid: appointment.aid,
@@ -671,7 +671,7 @@ const ConfirmButton = ({ appointment, confirm, healerID, setConfirm }) => {
 
 const CancelButton = ({ appointment }) => {    //cancel the appointment and make a re-fund feature(not yet).
     const handleCancel = () => {
-        axios.delete(`http://localhost:8080/appointments/${appointment.aid}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/appointments/${appointment.aid}`)
             .then(() => {
                 alert("Appointment cancelled");
             })
@@ -701,7 +701,7 @@ const RescheduleButton = ({ appointment, setConfirm }) => {
     };
 
     const handleReschedule = () => {
-        axios.put(`http://localhost:8080/appointments/${appointment.aid}`, {
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/appointments/${appointment.aid}`, {
             ...appointment,
             date: newDate,
             time: newTime,

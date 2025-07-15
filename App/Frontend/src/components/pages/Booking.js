@@ -84,7 +84,7 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
         if (selectedDate && selectedService) {
             const formattedDate = selectedDate.toISOString().split('T')[0];
             console.log(`Fetching availability for healer ID: ${healer.uid} on date: ${formattedDate} service: ${selectedService}`);
-            axios.get(`http://localhost:8080/availability/:uid?healer=${healer.uid}&date=${formattedDate}&service=${selectedService}`)
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/availability/:uid?healer=${healer.uid}&date=${formattedDate}&service=${selectedService}`)
                 .then(response => {
                     console.log('API Response:', response.data);
                     const availabilities = response.data;
@@ -148,7 +148,7 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                     date: selectedDate.toISOString(),
                 };
 
-                await axios.post('http://localhost:8080/appointments', appointmentData)
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/appointments`, appointmentData)
                     .then(response => {
                         console.log('Appointment Response:', response.data);
                         actions.setSubmitting(false);
@@ -165,7 +165,7 @@ const BookingForm = ({ healer, selectedDate, uid }) => {
                         }
                     });
                 console.log(paymentData);
-                await axios.post('http://localhost:8080/payment', paymentData)
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/payment`, paymentData)
                     .then(response => {
                         actions.setSubmitting(false);
                         setErrorMessage('');
@@ -227,7 +227,7 @@ const BookingPage = (props) => {
         auth.onAuthStateChanged((user) => {
             if (user) {
                 setUserState(user);
-                axios.get('http://localhost:8080/users').then((response) => {
+                axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`).then((response) => {
                     for (const i of response.data) {
                         if (i.email.toLowerCase() === user.email.toLowerCase()) {
                             setUserDetails(i);

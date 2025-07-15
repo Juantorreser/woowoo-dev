@@ -258,12 +258,12 @@ const Account = () => {
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
 			setUserState(user);
-			axios.post('http://localhost:8080/users/healers', {
+			axios.post(`http://${process.env.REACT_APP_API_BASE_URL}:8080/users/healers`, {
 				fbid: user.uid
 			}).then((response) => {	
 				setUserDetails(response.data[0]);
 				try{
-					axios.post('http://localhost:8080/locations', 
+					axios.post(`http://${process.env.REACT_APP_API_BASE_URL}:8080/locations`, 
 						response.data.map((user) => user.uid)
 					).then((response) => {
 						setUserLocation(response.data[0]);

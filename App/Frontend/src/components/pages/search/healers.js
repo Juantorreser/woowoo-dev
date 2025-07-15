@@ -25,7 +25,7 @@ const Healers = ({ data, getHealersWithFilter, setHealers, range, setRange, getM
 	
 	const fetchAvailability = async (uid) => {
 		try {
-			const response = await axios.get(`http://localhost:8080/availability/:uid?healer=${uid}`);
+			const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/availability/:uid?healer=${uid}`);
 			setAvailability(response.data);
 		} catch (error) {
 			console.error("Error fetching availability:", error);

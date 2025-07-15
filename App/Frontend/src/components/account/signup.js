@@ -23,7 +23,7 @@ const SignUp = () => {
 	const [servicePrices, setServicePrices] = useState([]);
 	//a reusable call to get the services listing from the API. 
 	const getServices = () => {
-		axios.get('http://localhost:8080/enabledServices')   //not sure yet. Just added in
+		axios.get(`${process.env.REACT_APP_API_BASE_URL}/enabledServices'`)   //not sure yet. Just added in
 		.then((response) => {
 			const responseOptions = response.data.map((service) => {
 				return {label: service.service, value: service.sid};
@@ -107,7 +107,7 @@ const SignUp = () => {
 										.then(() => {
 											console.log(values);
 										//the database entry should only happen after a successful firebase insert
-										axios.post('http://localhost:8080/users', values)
+											axios.post(`${process.env.REACT_APP_API_BASE_URL}/users`, values)
 											.then((response)=>{
 												if(response.data){
 													console.log(response.data);

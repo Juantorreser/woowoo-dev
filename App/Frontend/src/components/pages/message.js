@@ -20,7 +20,7 @@ const MessageBox = () => {
     useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                await axios.get('http://localhost:8080/users').then((response) => {
+                await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`).then((response) => {
                     for (const i of response.data) {
                         if (i.email.toLowerCase() === user.email.toLowerCase()) {
                             console.log(i);
@@ -63,7 +63,7 @@ const UserBox = ({ userDetails }) => {
 
     useEffect(() => {
         if (userDetails.uid) {
-            axios.get('http://localhost:8080/message/' + userDetails.uid).then((result) => {
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/message/` + userDetails.uid).then((result) => {
                 setUserMessage(result.data);
             }).catch(err => {
                 console.log(err);
@@ -97,7 +97,7 @@ const UserInfo = ({ message }) => {
 
     useEffect(() => {
         if (message.from_user != null) {
-            axios.get('http://localhost:8080/users/' + message.from_user).then(result => {
+            axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/` + message.from_user).then(result => {
                 setUserInformation(result.data);
             });
         }
@@ -122,7 +122,7 @@ const ReplyBox = ({ message }) => {
                 reply: ''
             }}
             onSubmit={(values, actions) => {
-                axios.put('http://localhost:8080/message/' + message.mid, { values })
+                axios.put(`${process.env.REACT_APP_API_BASE_URL}/message/` + message.mid, { values })
                     .then(result => {
                         console.log("Successfully sent");
                     })
@@ -162,7 +162,7 @@ const NewMessage = ({ userDetails }) => {
                         message: ''
                     }}
                     onSubmit={(values, actions) => {
-                        axios.post('http://localhost:8080/message/', { values })
+                        axios.post(`${process.env.REACT_APP_API_BASE_URL}/message/`, { values })
                             .then(result => {
                                 console.log("Successfully sent");
                             })

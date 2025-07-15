@@ -434,7 +434,7 @@ const AdminAccountSearch = () => {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/users')
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`)
       .then(response => {
         setUsers(response.data);
       })
@@ -465,10 +465,10 @@ const AdminAccountSearch = () => {
 
     try {
       if (!isNaN(searchQuery) && searchQuery !== '') {
-        const { data } = await axios.get(`http://localhost:8080/users/${searchQuery}`);
+        const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/${searchQuery}`);
         setUsers([data]);
       } else {
-        const { data } = await axios.get(`http://localhost:8080/users?search=${searchQuery}`);
+        const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users?search=${searchQuery}`);
         setUsers(data);
       }
     } catch (error) {
@@ -480,7 +480,7 @@ const AdminAccountSearch = () => {
   const toggleStatus = async (userId, currentStatus) => {
     const newStatus = !currentStatus; // Toggle the boolean value
     try {
-      await axios.put(`http://localhost:8080/users/${userId}`, { enabled: newStatus });
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`, { enabled: newStatus });
       setUsers(prevUsers => prevUsers.map(user => user.uid === userId ? { ...user, enabled: newStatus } : user));
     } catch (error) {
       alert('There was an error updating the user status!', error);
@@ -501,7 +501,7 @@ const AdminAccountSearch = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`http://localhost:8080/users/${userId}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`);
       setUsers(prevUsers => prevUsers.filter(user => user.uid !== userId));
     } catch (error) {
       console.error('There was an error deleting the user!', error);

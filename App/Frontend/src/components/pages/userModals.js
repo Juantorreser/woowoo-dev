@@ -36,7 +36,7 @@ const UserModals = ({show, showList, users, handleClose})=> {
   
   useEffect(async ()=> {
     if(selectedUser.account == 1){
-      await axios.get("http://localhost:8080/appointments?healer="+selectedUser.uid)
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/appointments?healer=${selectedUser.uid}`)
         .then(response=> {
             setAppointmentHistory(response.data);
         })
@@ -45,7 +45,7 @@ const UserModals = ({show, showList, users, handleClose})=> {
         })
     }
     else{
-        axios.get("http://localhost:8080/appointments/clients/"+ selectedUser.uid)
+      axios.get(`${process.env.REACT_APP_API_BASE_URL}/appointments/clients/${selectedUser.uid}`)
         .then(response=> {
           setAppointmentHistory(response.data);
         })
@@ -58,7 +58,7 @@ const UserModals = ({show, showList, users, handleClose})=> {
 
   useEffect(async ()=> {
     if(selectedUser.stripeAccount != null){
-      await axios.get("http://localhost:8080/financeReport/"+ selectedUser.stripeAccount)
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/financeReport/${selectedUser.stripeAccount}`)
       .then(response=> {
         setPaymentHistory(response.data);
       })
@@ -73,7 +73,7 @@ const UserModals = ({show, showList, users, handleClose})=> {
 
   useEffect(async ()=> {
     if(selectedUser.stripeAccount != null){
-      await axios.get("http://localhost:8080/stripeAccount/"+ selectedUser.stripeAccount)
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/stripeAccount/${selectedUser.stripeAccount}`)
       .then(response=> {
         setStripeError(response.data.errors);
       })

@@ -28,7 +28,7 @@
 //         setActive(marker);
 //     };
 
-    
+
 
 //     /**
 //      * using the response from the healers API, sets the healer and marker states based on the filtered response
@@ -40,7 +40,7 @@
 //      * @param {*} filters 
 //      */
 //     const getHealersWithFilter = async (filters) => {
-        
+
 // 		if (filters.Cities) {
 // 			//console.log("city found: " + filters.param);
 // 			city = filters.param;
@@ -53,7 +53,7 @@
 // 			console.log("delivery format found: " + filters.deliveryFormat);
 // 			deliveryFormat = filters.deliveryFormat;
 // 		}
-        
+
 
 // 		filters = {
 // 			Cities: 'Cities', cityParam: city,
@@ -66,9 +66,9 @@
 //         .then((response) => {
 //             //filter the healer response by the selected range (default 50)
 //             let inRangeResponse = response.data.filter((healer) => {
-                
+
 //                 let currMarkerPos = markers.find(mrkrObj => mrkrObj.id === healer.uid);
-                
+
 //                 if(currMarkerPos){
 //                     let distanceBetweenPoints = window.google.maps.geometry.spherical.computeDistanceBetween(
 //                         {lat: parseFloat(location.view.lat), lng: parseFloat(location.view.lng)},
@@ -92,7 +92,7 @@
 //         });
 //     };
 
-    
+
 
 //     /**
 //      * uses healers to get each individual id, saves those to an array,
@@ -139,7 +139,7 @@
 //         console.log('getReviews ', healerID)
 // 		await axios.get(`http://localhost:8080/review/${healerID}`)
 // 			.then((response) => {
-				
+
 // 				let reviewTotal = 0;
 // 				const reviewAvgArray = response.data.map((review) => {
 // 					reviewTotal += review.rating;
@@ -196,7 +196,7 @@
 //                         )}
 //                     </div>
 //                 </div>
-    
+
 //                 {/* Map section: Takes 8 columns on larger screens and full width on smaller ones */}
 //                 <div className="col-lg-8 col-md-12">
 //                     <div className='mapFrame'>
@@ -221,7 +221,7 @@
 //             </div>
 //         </div>
 //     );
-    
+
 // }
 
 // export default Search
@@ -239,7 +239,7 @@ let deliveryFormat = '0';
 
 const Search = () => {
     const victoria = { view: { lat: 48.407326, lng: -123.329773 } };
-    
+
     const [initHealers, setInitHealers] = useState(null);
     const [markers, setMarkers] = useState(null);
     const [currMarkers, setCurrMarkers] = useState(null);
@@ -268,7 +268,7 @@ const Search = () => {
             deliveryFormat: deliveryFormat
         };
 
-        await axios.post('http://localhost:8080/users/healers', filters)
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/healers`, filters)
             .then((response) => {
                 const inRangeResponse = response.data.filter((healer) => {
                     const currMarkerPos = markers?.find(m => m.id === healer.uid);
@@ -291,7 +291,7 @@ const Search = () => {
     const getMarkers = async (returnedHealers, first) => {
         const ids = returnedHealers.map(healer => healer.uid);
 
-        await axios.post('http://localhost:8080/locations', ids)
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/locations`, ids)
             .then((markerResponse) => {
                 const responseMarkers = markerResponse.data.map((mrkr) => {
                     const currHealer = returnedHealers.find(h => h.uid === mrkr.uid);
@@ -320,7 +320,7 @@ const Search = () => {
     // Initial load of all healers and markers
     useEffect(() => {
         const getInitialHealers = async () => {
-            await axios.get('http://localhost:8080/users/healers')
+            await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/healers`)
                 .then((response) => {
                     setInitHealers(response.data);
                     setHealers(response.data);
@@ -340,50 +340,50 @@ const Search = () => {
     return (
         <div className="container"><div className="row">
 
-                <div className="col-lg-4 col-md-12 mb-3">
-                    <div className='healerFrame'>
-                        {initHealers ? (
-                            <Healers
-                                data={{
-                                    healers,
-                                    initHealers,
-                                    markers: currMarkers
-                                }}
-                                getHealersWithFilter={getHealersWithFilter}
-                                setHealers={setHealers}
-                                range={range}
-                                setRange={setRange}
-                                getMarkers={getMarkers}
-                            />
-                        ) : (
-                            <div className="loaderContainer">
-                                <div className="loader"></div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="col-lg-8 col-md-12">
-                    <div className='mapFrame'>
-                        <div className='center_bar'></div>
-                        {markers && initHealers ? (
-                            <Map
-                                data={{ healers: initHealers, markers: currMarkers }}
-                                handleActiveMarker={handleActiveMarker}
-                                active={active}
-                                setActive={setActive}
-                                range={range}
-                                location={location}
-                                setLocation={setLocation}
-                            />
-                        ) : (
-                            <div className="loaderContainer">
-                                <div className="loader"></div>
-                            </div>
-                        )}
-                    </div>
+            <div className="col-lg-4 col-md-12 mb-3">
+                <div className='healerFrame'>
+                    {initHealers ? (
+                        <Healers
+                            data={{
+                                healers,
+                                initHealers,
+                                markers: currMarkers
+                            }}
+                            getHealersWithFilter={getHealersWithFilter}
+                            setHealers={setHealers}
+                            range={range}
+                            setRange={setRange}
+                            getMarkers={getMarkers}
+                        />
+                    ) : (
+                        <div className="loaderContainer">
+                            <div className="loader"></div>
+                        </div>
+                    )}
                 </div>
             </div>
+
+            <div className="col-lg-8 col-md-12">
+                <div className='mapFrame'>
+                    <div className='center_bar'></div>
+                    {markers && initHealers ? (
+                        <Map
+                            data={{ healers: initHealers, markers: currMarkers }}
+                            handleActiveMarker={handleActiveMarker}
+                            active={active}
+                            setActive={setActive}
+                            range={range}
+                            location={location}
+                            setLocation={setLocation}
+                        />
+                    ) : (
+                        <div className="loaderContainer">
+                            <div className="loader"></div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
         </div>
     );
 };

@@ -30,7 +30,7 @@ const ManageUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8080/users/${userId}`);
+        const { data } = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`);
         setUser(data);
         setFormData({
           firstName: data.firstName || '',
@@ -68,7 +68,7 @@ const ManageUser = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/users/${userId}`, {
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`, {
         uid: userId, // Include uid as expected by the backend
         ...formData,
       });

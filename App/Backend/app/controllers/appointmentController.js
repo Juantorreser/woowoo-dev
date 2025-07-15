@@ -4,26 +4,26 @@ const Appointment = db.appointment;
 const User = db.user;
 const Op = db.Sequelize.Op;
 const nodemailer = require('nodemailer');
-const {EMAIL_PASS} = require('../config/db.config.js');
+const { EMAIL_PASS } = require('../config/db.config.js');
 const { emitWarning } = require("process");
 const axios = require('axios');
 // const userFunction = require('./userController.js');
-const {STRIPE_SECRET_KEY} = require('../config/stripe.config.js');
+const { STRIPE_SECRET_KEY } = require('../config/stripe.config.js');
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
 const transporter = nodemailer.createTransport({
   host: "woo-woo-network.firebaseapp.com",
   port: 4200,
-  secure: false, 
+  secure: false,
   service: "gmail",
   auth: {
-    type: 'OAuth2', 
+    type: 'OAuth2',
     //clientId: process.env.OAUTH_CLIENT_ID, 
     clientId: "257418938856-8pck88n3cvhgf0ibi65iiuukv6aeo715.apps.googleusercontent.com",
     //clientSecret: process.env.OAUTH_CLIENT_SECRET,
     clientSecret: "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",
     //refreshToken: process.env.OAUTH_REFRESH_TOKEN,
     refreshToken: "1//04gSd7p_7b3MhCgYIARAAGAQSNwF-L9Iryu7d520tG2gwzF_4_9rMmwXW7Pw_aqEzMVv40ccCaB5rSUoRSRhgGEZguhnKiquiSBQ",
-    user: "woowoonetworkcanada@gmail.com", 
+    user: "woowoonetworkcanada@gmail.com",
     pass: EMAIL_PASS
   }
 })
@@ -35,89 +35,89 @@ const transporter = nodemailer.createTransport({
 // // Otherwise, it generates a new aid for the appointment, constructs the appointment object, 
 // // and saves it to the database using Appointment.create().
 exports.createAppointment = async (req, res) => {
-    // Validate request
-    console.log(req.body);
-    var healerEmail = "";
-    var clientName = "";
-    var serviceDuration = "";   //not yet determined
-    if (!req.body.healer) {
-      let message = "healer id can not be empty!";
-      await res.status(400).send({
-        message: message
-      });
-      return;
-    }
+  // Validate request
+  console.log(req.body);
+  var healerEmail = "";
+  var clientName = "";
+  var serviceDuration = "";   //not yet determined
+  if (!req.body.healer) {
+    let message = "healer id can not be empty!";
+    await res.status(400).send({
+      message: message
+    });
+    return;
+  }
 
-    console.log(!req.body.uid);
-    // if (!req.body.fbid || !req.body.uid) {
-      if (!req.body.uid) {
-      let message = "id can not be empty!";
-      await res.status(400).send({
-        message: message
-      });
-      return;
-    }
-    //find the email of the healer.
-    await User.findAll({   //find the account of the one being deleted.
-      where: {uid: req.body.healer}   //find the email fo the healer.
-    })
-    .then(async data=> {
-        try{
-          healerEmail = data[0].email;
-          
-        }
-        catch(err){
-          console.log(err);
-        }
-    })
+  console.log(!req.body.uid);
+  // if (!req.body.fbid || !req.body.uid) {
+  if (!req.body.uid) {
+    let message = "id can not be empty!";
+    await res.status(400).send({
+      message: message
+    });
+    return;
+  }
+  //find the email of the healer.
+  await User.findAll({   //find the account of the one being deleted.
+    where: { uid: req.body.healer }   //find the email fo the healer.
+  })
+    .then(async data => {
+      try {
+        healerEmail = data[0].email;
 
-    
-
-    //find the name of the client
-
-    console.log("Healer email is: "+ healerEmail);
-    const lastid = await Appointment.max('aid');
-    const appointment = {
-      aid: lastid !== 0 && lastid ? lastid + 1 : 1,
-      healer: req.body.healer,
-      //client: req.body.ufbid,
-      client: req.body.uid,
-      timezone: req.body.timezone,
-      date: req.body.date,
-      time: req.body.time,
-      createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
-      updatedAt: null,
-      healerAccepted: null,   //will be decided at the healer's schedule side.
-      appointmentService: req.body.service,
-      appointmentDuration: null
-    };
-    //find the email of the user as well as the intended healer:
-
-    
-    //find the name of the client
-    await User.findAll({
-      where: {uid: appointment.client}
-    })
-    .then(async data=>{
-      try{
-        console.log(data[0]);
-        clientName = data[0].firstName + " "+ data[0].lastName;
       }
-      catch(err){
+      catch (err) {
         console.log(err);
       }
     })
 
 
-    //get the token:
-    //getTokenFromFirebase();
-    const mailOptions = {
-      from: "woowoonetworkcanada@gmail.com", 
-      //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
-      to: healerEmail,   //this is the real one.
-      subject: "Testing", 
-      text: "Hello world", 
-      html: ` <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+
+  //find the name of the client
+
+  console.log("Healer email is: " + healerEmail);
+  const lastid = await Appointment.max('aid');
+  const appointment = {
+    aid: lastid !== 0 && lastid ? lastid + 1 : 1,
+    healer: req.body.healer,
+    //client: req.body.ufbid,
+    client: req.body.uid,
+    timezone: req.body.timezone,
+    date: req.body.date,
+    time: req.body.time,
+    createdAt: new Date('YYYY-MM-DD HH:MM:SS'),
+    updatedAt: null,
+    healerAccepted: null,   //will be decided at the healer's schedule side.
+    appointmentService: req.body.service,
+    appointmentDuration: null
+  };
+  //find the email of the user as well as the intended healer:
+
+
+  //find the name of the client
+  await User.findAll({
+    where: { uid: appointment.client }
+  })
+    .then(async data => {
+      try {
+        console.log(data[0]);
+        clientName = data[0].firstName + " " + data[0].lastName;
+      }
+      catch (err) {
+        console.log(err);
+      }
+    })
+
+
+  //get the token:
+  //getTokenFromFirebase();
+  const mailOptions = {
+    from: "woowoonetworkcanada@gmail.com",
+    //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
+    to: healerEmail,   //this is the real one.
+    subject: "Testing",
+    text: "Hello world",
+    html: ` <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <h2 style="background-color: #f4f4f4; padding: 10px; border-bottom: 2px solid #e6e6e6; text-align: center; color: #2c3e50;">New Appointment Scheduled</h2>
       <div style="padding: 20px;">
         <p style="font-size: 16px;">Dear Healer,</p>
@@ -141,44 +141,44 @@ exports.createAppointment = async (req, res) => {
         <p style="font-size: 16px;">Woo Woo Network</p>
       </div>
     </div>`
-    };
+  };
 
-    const info = await transporter.sendMail(mailOptions, function(err, data){
-      if(err){
-        console.log("Error with sending mail: " + err)
-      }
-      else{
-        console.log("Email sent successfully");
-      }
-    })
-    
-    //Check if the time slot is already booked
-      const existingAppointment = await Appointment.findOne({
-          where: {
-              healer: req.body.healer,
-              date: req.body.date,
-              time: req.body.time,
-              healerAccepted: 1 // Only consider confirmed appointments
-          }
-      });
-
-      if (existingAppointment) {
-        console.log("c");
-          return res.status(400).send({
-              message: "This time slot is already booked. Please choose another time."
-          });
-      }
-
-    await Appointment.create(appointment)
-      .then(data => {
-        console.log('received: ' + data);
-        res.send(data);
-      })
-      .catch(err => {
-        console.log("Some error occurred while creating the User.");
-      });
-
+  const info = await transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
+      console.log("Error with sending mail: " + err)
     }
+    else {
+      console.log("Email sent successfully");
+    }
+  })
+
+  //Check if the time slot is already booked
+  const existingAppointment = await Appointment.findOne({
+    where: {
+      healer: req.body.healer,
+      date: req.body.date,
+      time: req.body.time,
+      healerAccepted: 1 // Only consider confirmed appointments
+    }
+  });
+
+  if (existingAppointment) {
+    console.log("c");
+    return res.status(400).send({
+      message: "This time slot is already booked. Please choose another time."
+    });
+  }
+
+  await Appointment.create(appointment)
+    .then(data => {
+      console.log('received: ' + data);
+      res.send(data);
+    })
+    .catch(err => {
+      console.log("Some error occurred while creating the User.");
+    });
+
+}
 //---------------------------------------------------------------------------------------
 // exports.createAppointment = async (req, res) => {
 //   // Validate request
@@ -282,7 +282,7 @@ exports.createAppointment = async (req, res) => {
 //       };
 
 //       await transporter.sendMail(mailOptions);
-      
+
 //       // Save the appointment to the database
 //       const newAppointment = await Appointment.create(appointment);
 //       res.status(201).send(newAppointment);
@@ -317,20 +317,20 @@ exports.findAllAppointments = async (req, res) => {
 };
 
 // //fiding the history of appointments from a specific client:
-exports.getClientAppointments = async (req, res)=> {
+exports.getClientAppointments = async (req, res) => {
   const id = req.params.uid;
   await Appointment.findAll({
     where: {
       client: id
     }
   })
-  .then(data=> {
-    console.log(data);
-    res.send(data);
-  })
-  .catch(err=> {
-    res.status(500).send(err);
-  })
+    .then(data => {
+      console.log(data);
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    })
 }
 
 // This function is used to update an existing appointment based on its aid (appointment ID). 
@@ -342,26 +342,26 @@ exports.updateAppointment = async (req, res) => {
   const userId = req.body.client;
   var userEmail = "";
   //find the email of the user ID
-  await axios.get("http://localhost:8080/users/"+ userId).then((result)=> {
+  await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`).then((result) => {
     console.log(result.data.email);
     userEmail = result.data.email;
   })
 
   console.log(userEmail);
   const mailOptions = {
-    from: "woowoonetworkcanada@gmail.com", 
+    from: "woowoonetworkcanada@gmail.com",
     //to: "woowoonetworkcanada@gmail.com",  //this is just testing.
     to: userEmail,   //this is the real one. (Not tested yet)
-    subject: "Testing", 
-    text: "Hello world", 
+    subject: "Testing",
+    text: "Hello world",
     html: `<div><h3>Update on your appointment: </h3> <p>Client:${req.body.client}</p> <p>Time: ${req.body.time}</p> <p>Date: ${req.body.date}</p> <p>Healer Accepted: ${req.body.healerAccepted == 1 ? "Confirm" : "Deny"}</p></div>`
   };
 
-  const info = await transporter.sendMail(mailOptions, function(err, data){
-    if(err){
+  const info = await transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
       console.log("Error with sending mail: " + err)
     }
-    else{
+    else {
       console.log("Email sent successfully");
     }
   })
@@ -395,7 +395,7 @@ exports.deleteAppointment = async (req, res) => {
 
   //re-fund money first. Need to find the id of the payment as well as the amount.
   const refund = await stripe.refunds.create({
-    
+
   })
   //find if the healer has accepted it or not. If accepted, might need to pay some extra fee
 

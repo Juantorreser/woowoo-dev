@@ -30,7 +30,7 @@ const NavbarComponent = () => {
 				console.log(`Logged in user's email: ${email}`);
 
 				// Fetch all users from the backend
-				const response = await axios.get("http://localhost:8080/users");
+				const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`);
 				console.log("Fetched users:", response.data);
 
 				// Find the logged-in user by matching the email

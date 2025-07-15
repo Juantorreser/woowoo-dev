@@ -49,7 +49,7 @@ const HealerModal = ({
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           try {
-            const response = await axios.get("http://localhost:8080/users");
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`);
             const users = response.data;
             const currentUser = users.find((u) => u.email === user.email);
             if (currentUser) {
@@ -69,7 +69,7 @@ const HealerModal = ({
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/review/${healerState.uid}`
+          `${process.env.REACT_APP_API_BASE_URL}/review/${healerState.uid}`
         );
         const reviewsData = response.data;
         const reviewTotal = reviewsData.reduce(
@@ -103,10 +103,10 @@ const HealerModal = ({
         reviewer: currentUserNumericId,
       };
 
-      await axios.post("http://localhost:8080/review", payload);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/review`, payload);
 
       const response = await axios.get(
-        `http://localhost:8080/review/${healerState.uid}`
+        `${process.env.REACT_APP_API_BASE_URL}/review/${healerState.uid}`
       );
       const reviewsData = response.data;
       const reviewTotal = reviewsData.reduce(
