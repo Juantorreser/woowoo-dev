@@ -10,9 +10,10 @@ const stripeConfig = require("./app/config/stripe.config.js");
 const Stripe = require('stripe');
 const stripeAPI = new Stripe(stripeConfig.STRIPE_API_KEY);
 const appSecret = stripeConfig.STRIPE_SECRET_KEY;
+require('dotenv').config();
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: process.env.CLIENT_URL,
 };
 
 app.use(express.json());
