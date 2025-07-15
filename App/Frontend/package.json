@@ -27,6 +27,7 @@
     "react-multi-select-component": "^4.2.9",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.1",
+    "react-simple-star-rating": "^4.0.5",
     "star-rating.js": "^4.2.3",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
